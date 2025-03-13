@@ -3,6 +3,7 @@ const util = require('util');
 const fs = require('fs/promises');
 const { argv } = require('process');
 const parse = require('html-dom-parser').default;
+const fetch = require ("cross-fetch");
 let cacheDir = "cache";
 let logFile="log.log";
 

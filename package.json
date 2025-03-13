@@ -1,0 +1,14 @@
+{
+  "name": "gigsmash",
+  "version": "1.0.0",
+  "description": "Mashup of North Pembs gigs",
+  "scripts": {
+    "start": "node server.js 8080",
+    "test": "echo \"No tests yet...\""
+  },
+  "dependencies": {
+    "html-dom-parser": "^5.0.13",
+    "http": "^0.0.1-security",
+    "util": "^0.12.5"
+  }
+}

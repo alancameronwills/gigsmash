@@ -8,7 +8,7 @@ Run locally:
 * `npm start` 
 
 To test locally:
-* `npm --test`
+* `npm test`
 
 To install on Azure:
 

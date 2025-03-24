@@ -37,10 +37,17 @@ const contentTypes = {
 	".txt": "text/plain"
 };
 
+var server = null;
+
 const handlers = {
 	ping: async (request, response) => {
 		response.writeHead(200, { "Content-Type": "text/plain" });
 		response.end("pong " + new Date().toISOString());
+	},
+	stopserver: (request, response) => {
+		setTimeout (() => server.close(), 1000);
+		response.writeHead(200, { "Content-Type": "text/plain" });
+		response.end("Stopped " + new Date().toISOString());
 	}
 };
 
@@ -53,8 +60,8 @@ async function runFile(fPath, req, response) {
 	} catch (e) {
 		context = { body: e.toString(), status: 500, contentType: "text/plain" };
 	}
-	response.writeHead(context.res.status, context.res.headers);
-	response.end(context.res.body);
+	response.writeHead(context.res?.status ?? 500, context.res?.headers ?? {});
+	response.end(context.res?.body??"");
 }
 
 
@@ -105,7 +112,7 @@ async function runFile(fPath, req, response) {
 						h(request, response);
 					} else {
 						response.writeHead(400);
-						response.end(`Content not found "${fPath}"`);
+						response.end(`Content not found "${req.path}"`);
 					}
 				}
 			}
@@ -113,15 +120,18 @@ async function runFile(fPath, req, response) {
 			log("Serve exception " + util.inspect(err));
 		}
 	}
-	const server = http.createServer(serve);
+	server = http.createServer(serve);
 	const port = process.argv[2] || 80;
 	server.listen(port);
 	log(`Server running at http://localhost:${port}`);
+	server.on('close', () => {
+		log("Server closing");
+	})
 })()
 
 
 function parseReq(request, defaultPage = "/index.html") {
-	let url = request.url;
+	let url = request.url.toLowerCase();
 	let method = request.method;
 	let headers = {};
 	for (let i = 0; i < request.rawHeaders.length; i += 2) {

@@ -124,6 +124,13 @@ let handlers = [];
                 ri.venue = "Cellar Cardigan";
                 ri.text = "";
                 ri.price = m(event, /<span class="price">(.*?)<\/span>/s);
+                if (!ri.dt) {
+                    // try harder - might be a date range
+                    let day = m(titleLine, /([0-9]{1,2})[^0-9]/);
+                    let monthYear = m(titleLine, /( [A-Za-z]+ 202[5-9])/);
+                    ri.date = day + " " + monthYear;
+                    ri.dt = new Date(datex(ri.date))?.valueOf() || 0;
+                }
                 r.push(ri);
             }) 
             

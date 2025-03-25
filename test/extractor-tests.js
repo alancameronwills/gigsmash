@@ -36,7 +36,7 @@ test('extractor tests', async (t) => {
                 let rr = await extract(venue);
                 //console.log(rr);
                 let items = JSON.parse(rr.res.body);
-                assert(items.length > 0);
+                assert(items.length > 0, "Got no items");
                 items.forEach(x => {
                     //console.log(`URL: ${x.url}`);
                     assert(x.url && x.dt, (x.url || "[no url] ") + x.dt + x.date);

@@ -14,7 +14,7 @@ async function stop(t) {
     assert(r.startsWith("Stopped"), "no stop");
 }
 
-test('server tests', async (t) => {
+test('local server tests', async (t) => {
     try {
         await t.test('ping', async (t) => {
             let r = await fetch(`${service}/ping`).then(t => t.text());
@@ -47,7 +47,7 @@ test('server tests', async (t) => {
             `);
             try {
                 let pvalue = 42;
-                let retrieved = await fetch(`${service}/api/${f.name}?parameter=${pvalue}`).then(t => t.json());
+                let retrieved = await fetch(`${service}/api/${f.name}?parameter=${pvalue}&x=Date.now()`).then(t => t.json());
                 f.content.push(pvalue);
                 assert.deepEqual(retrieved, f.content);
             } finally {

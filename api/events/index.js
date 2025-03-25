@@ -27,6 +27,15 @@ let handlers = [];
             date: date,
             dt: new Date(date).valueOf()
         };});
+        events.push ({
+            title: "Ríoghnach Connolly with/gydaf John Ellis",
+            text: "Fishguard Folk Festival presents Ríoghnach Connolly RTE 1 folk Singer of the Year 2025 (Ireland). BBC Radio 2 Folk Singer of the Year 2017.",
+            image: "https://static.wixstatic.com/media/2943ab_19dea7936d2a4e9394ba9af872356873~mv2.jpeg/v1/crop/x_0,y_0,w_858,h_857/fill/w_402,h_402,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/rioghnach2.jpeg",
+            url: "https://www.eventbrite.com/e/rioghnach-connolly-withgydaf-john-ellis-support-tickets-1094500443289?aff=ebdsshios",
+            venue: "Capel Bethel, Fishguard",
+            date: "Friday 23 May 2025 7:30pm",
+            dt: new Date("2025-05-23 19:30").valueOf()
+        });
         return events;
     }
 

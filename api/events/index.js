@@ -211,7 +211,9 @@ let handlers = [];
             ri.title = m(show, /<h1.*?>(.*?)<\/h1>/s).replace(/<.*?>/s,"");
             ri.venue = "SmallWorld";
             ri.text = "";
-            ri.date = m(show, /datetime=['"](.*?)['"]/s);
+            //ri.date = m(show, /event-time[^>]+datetime=['"](.*?)['"](?:>[0-9:]+)?)/s).replace(/['"]>/, " ");
+            ri.date = m(show, /event-time[^>]+datetime=['"](.*?['"](?:>[0-9:]+)?)/s).replace(/['"]>/, " ");
+            //ri.date = m(show, /datetime=['"](.*?)['"]/s);
             ri.dt = new Date(ri.date).valueOf();
             if (ri.dt) {
                 r.push(ri);

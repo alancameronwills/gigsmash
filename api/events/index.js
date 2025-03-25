@@ -406,7 +406,7 @@ handlers["rhosygilwen"] = async () => {
 module.exports = async function (context, req) {
 
     const venue = req.query?.venue || "";
-    context.log("Events index venue=" + venue);
+    //context.log("Events index venue=" + venue);
     let r = [];
     if (venue) {
         let handler = handlers [venue];

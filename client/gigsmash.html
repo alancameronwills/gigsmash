@@ -52,12 +52,12 @@
                 day: "numeric"
             })}
                     </div>` : "")
-                + `<div class='show'>
-                    <div class='date'>${show.date}</div>
+                + `<div class='show ${show.category || ""}'>
                     <div class='venue'>${show.venue}</div>
                     <div class='image'><img src='${show.image}'/></div>
                     <div class='title'><a href='${show.url}'>${show.title}</a></div>
                     <div class='subtitle'>${show.subtitle || ""}</div>
+                    <div class='date'>${show.date}</div>
                     <div class='description'>${show.text}</div>
                 </div>`;
         }
@@ -84,133 +84,6 @@
         }
     </script>
     <style>
-        /*      body {
-            font-family: Arial, Geneva, Helvetica, sans-serif;
-        }
-
-        .dateHeading {
-            width: 100%;
-            background-color: darkblue;
-            color: white;
-            font-weight: bold;
-            padding: 6px;
-        }
-
-        @media (min-width: 601px) {
-            .image>img {
-                width: 200px;
-            }
-
-
-            .show {
-                column-gap: 20px;
-                display: grid;
-                justify-content: start;
-                grid-template-columns: 220px 220px;
-                padding: 10px 5px;
-            }
-
-            .date {
-                grid-column: 2;
-                grid-row: 4;
-            }
-
-            .venue {
-                grid-column: 2;
-                grid-row: 1;
-            }
-
-            .title {
-                font-weight: bold;
-                grid-column: 2;
-                grid-row: 2;
-            }
-
-            .subtitle {
-                grid-column: 2;
-                grid-row: 3;
-            }
-
-            .image {
-                grid-row-start: 1;
-                grid-row-end: 5;
-                grid-column: 1;
-            }
-
-            .description {
-                grid-column: 3;
-                grid-row-start: 1;
-                grid-row-end: 5;
-                max-height: 200px;
-                overflow: hidden;
-            }
-            
-        }
-
-        @media (max-width:600px) {
-            .image>img {
-                width: 200px;
-            }
-
-            .show {
-                display: grid;
-                row-gap: 10px;
-                padding: 4px 10%;
-                border-top: darkblue 1px solid;
-            }
-
-            .date {
-                grid-column: 1;
-                grid-row: 4;
-            }
-
-            .venue {
-                grid-column: 1;
-                grid-row: 1;
-            }
-
-            .title {
-                grid-column: 1;
-                grid-row: 2;
-                font-weight: bold;
-            }
-
-            .subtitle {
-                grid-column: 1;
-                grid-row: 3;
-            }
-
-            .image {
-                grid-column: 1;
-                grid-row: 5;
-            }
-
-            .description {
-                display: none;
-            }
-        }
-
-        .table>.show:nth-child(2n+1):not(.dateHeading) {
-            background-color: #d7f9f9;
-        }
-
-        
-        #sources {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            background-color: azure;
-            padding: 3px;
-            transition: all 2s;
-        }
-
-        @media (max-width:1200px) {
-            #sources {
-                display: none;
-            }
-        }
-*/
-
 
         body {
             font-family: Arial, Geneva, Helvetica, sans-serif;
@@ -223,8 +96,9 @@
             font-weight: bold;
             padding: 6px;
         }
-
+/*
         @media (min-width: 601px) {
+*/
             .image>img {
                 width: 200px;
             }
@@ -257,7 +131,7 @@
             .date {
                 grid-column: 2;
                 grid-row: 4;
-                display: none;
+                font-size: small;
             }
 
             .venue {
@@ -291,7 +165,7 @@
                 font-size: small;
                 display: none;
             }
-
+/*
         }
 
         @media (max-width:600px) {
@@ -340,7 +214,7 @@
         .table>.show:nth-child(2n+1):not(.dateHeading) {
             /* background-color: #d7f9f9; */
         }
-
+*/
 
         #sources {
             display: flex;
@@ -351,6 +225,11 @@
             transition: all 2s;
         }
 
+        @media (max-width:600px) {
+            .table {
+                justify-content: space-evenly;
+            }
+        }
         @media (max-width:1200px) {
             #sources {
                 display: none;

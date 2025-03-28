@@ -320,7 +320,7 @@ handlers["gwaun"] = async (x) => {
                 eventSources.forEach(eventSource => {
                     let ri = {};
                     ri.category = sectionCategories[section];
-                    ri.venue = "Theatr GWaun";
+                    ri.venue = "Theatr Gwaun";
                     ri.image = m(eventSource, /<img[^>]*src="(.*?)"/s);
                     ri.title = m(eventSource, /"wp_theatre_event_title".*?>(.*?)<\/div>/s).replace(/<.*?>/gs, "");
                     ri.url = m(eventSource, /"wp_theatre_event_tickets".*?href="(.*?)"/s);

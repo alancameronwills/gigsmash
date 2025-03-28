@@ -43,7 +43,7 @@
             document.getElementById('table').innerHTML = table;
         }
         function showOne(show) {
-            if (show.dt < Date.now() - 24*3600*1000) return "";
+            if (show.dt < Date.now() - 24 * 3600 * 1000) return "";
             return (show.newDate ? `<div class="dateHeading">
                         ${new Date(show.dtDayValue).toLocaleDateString(undefined, {
                 weekday: "long",
@@ -79,12 +79,12 @@
                 if (allDone) {
                     let sourcesDiv = document.getElementById("sources");
                     sourcesDiv.style.display = "none";
-                } 
+                }
             }, 1000);
         }
     </script>
     <style>
-        body {
+        /*      body {
             font-family: Arial, Geneva, Helvetica, sans-serif;
         }
 
@@ -209,7 +209,153 @@
                 display: none;
             }
         }
+*/
 
+
+        body {
+            font-family: Arial, Geneva, Helvetica, sans-serif;
+        }
+
+        .dateHeading {
+            width: 100%;
+            background-color: darkblue;
+            color: white;
+            font-weight: bold;
+            padding: 6px;
+        }
+
+        @media (min-width: 601px) {
+            .image>img {
+                width: 200px;
+            }
+
+            .table {
+                display: flex;
+                flex-wrap: wrap;
+                column-gap: 10px;
+                background-color: gray;
+                row-gap: 6px;
+                justify-content: flex-start;
+                padding: 0 6px;
+            }
+
+            .dateHeading {
+                margin: 0 -6px -2px -6px;
+            }
+
+            .show {
+                column-gap: 20px;
+                display: flex;
+                justify-content: start;
+                padding: 10px 5px;
+                width: 200px;
+                flex-wrap: wrap;
+                align-content: flex-start;
+                background-color: white;
+            }
+
+            .date {
+                grid-column: 2;
+                grid-row: 4;
+                display: none;
+            }
+
+            .venue {
+                grid-column: 2;
+                grid-row: 1;
+            }
+
+            .title {
+                font-weight: bold;
+                grid-column: 2;
+                grid-row: 2;
+            }
+
+            .subtitle {
+                grid-column: 2;
+                grid-row: 3;
+            }
+
+            .image {
+                grid-row-start: 1;
+                grid-row-end: 5;
+                grid-column: 1;
+            }
+
+            .description {
+                grid-column: 3;
+                grid-row-start: 1;
+                grid-row-end: 5;
+                max-height: 100px;
+                overflow: hidden;
+                font-size: small;
+                display: none;
+            }
+
+        }
+
+        @media (max-width:600px) {
+            .image>img {
+                width: 200px;
+            }
+
+            .show {
+                display: grid;
+                row-gap: 10px;
+                padding: 4px 10%;
+                border-top: darkblue 1px solid;
+            }
+
+            .date {
+                grid-column: 1;
+                grid-row: 4;
+            }
+
+            .venue {
+                grid-column: 1;
+                grid-row: 1;
+            }
+
+            .title {
+                grid-column: 1;
+                grid-row: 2;
+                font-weight: bold;
+            }
+
+            .subtitle {
+                grid-column: 1;
+                grid-row: 3;
+            }
+
+            .image {
+                grid-column: 1;
+                grid-row: 5;
+            }
+
+            .description {
+                display: none;
+            }
+        }
+
+        .table>.show:nth-child(2n+1):not(.dateHeading) {
+            /* background-color: #d7f9f9; */
+        }
+
+
+        #sources {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            background-color: azure;
+            padding: 3px;
+            transition: all 2s;
+        }
+
+        @media (max-width:1200px) {
+            #sources {
+                display: none;
+            }
+        }
     </style>
 </head>
 

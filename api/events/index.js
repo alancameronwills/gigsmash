@@ -50,7 +50,7 @@ handlers["manual"] = async () => {
         text: "Conducted by Alistair Auld",
         image: "https://pembrokeshireinspired.wales/wp-content/uploads/2023/07/IMG_3707-Small-1024x530.jpg",
         category: "live",
-        url: "",
+        url: "https://www.facebook.com/profile.php?id=61570905390613",
         venue: "St Mary's Church Cardigan",
         date: "12 April 2025 19:30",
         dt: new Date("12 April 2025 19:30").valueOf()

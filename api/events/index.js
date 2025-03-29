@@ -33,6 +33,101 @@ async function ftext(url, sendHeaders = false) {
 
 let handlers = [];
 
+handlers["manual"] = async () => {
+    let r = [];
+    r.push({
+        title: "Come and Sing Mozart - Côr Dyfed",
+        text: "",
+        category: "live",
+        venue: "St Mary's Church Haverfordwest",
+        url: "https://www.dyfedchoir.co.uk/event-details.php",
+        date: "12 April 2025 10:15am - 7:30pm",
+        dt: new Date("12 April 2025").valueOf(),
+        image: "https://www.dyfedchoir.co.uk/concert_posters/April_poster_en.jpg"
+    })
+    r.push ({
+        title: "Puccini - Cantorion Aberteifi",
+        text: "Conducted by Alistair Auld",
+        image: "https://pembrokeshireinspired.wales/wp-content/uploads/2023/07/IMG_3707-Small-1024x530.jpg",
+        category: "live",
+        url: "",
+        venue: "St Mary's Church Cardigan",
+        date: "12 April 2025 19:30",
+        dt: new Date("12 April 2025 19:30").valueOf()
+    });
+    r.push({
+        title: "Measure for Measure",
+        text: "Summer outdoor performance",
+        venue: "St Dogmael's Abbey",
+        url: "https://www.abbeyshakespeare.co.uk/en/productions/measure-for-measure",
+        category: "live",
+        image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/06.measure-for-measure/rose%20pained.jpg",
+        date: "30 July 2025",
+        dt: new Date("30 July 2025").valueOf()
+    });
+    r.push({
+        title: "Measure for Measure",
+        text: "Summer outdoor performance",
+        venue: "St Dogmael's Abbey",
+        url: "https://www.abbeyshakespeare.co.uk/en/productions/measure-for-measure",
+        category: "live",
+        image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/06.measure-for-measure/rose%20pained.jpg",
+        date: "30 July 2025",
+        dt: new Date("31 July 2025").valueOf()
+    });
+    r.push({
+        title: "Measure for Measure",
+        text: "Summer outdoor performance",
+        venue: "St Dogmael's Abbey",
+        url: "https://www.abbeyshakespeare.co.uk/en/productions/measure-for-measure",
+        category: "live",
+        image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/06.measure-for-measure/rose%20pained.jpg",
+        date: "30 July 2025",
+        dt: new Date("1 August 2025").valueOf()
+    });
+    r.push({
+        title: "Measure for Measure",
+        text: "Summer outdoor performance",
+        venue: "St Dogmael's Abbey",
+        url: "https://www.abbeyshakespeare.co.uk/en/productions/measure-for-measure",
+        category: "live",
+        image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/06.measure-for-measure/rose%20pained.jpg",
+        date: "30 July 2025",
+        dt: new Date("2 August 2025").valueOf()
+    });
+    r.push({
+        title: "Chamber Music Festival",
+        text: "Three small concerts by leading musicians, with open gardens and cake",
+        url: "https://www.nantwen.co.uk/nantwen-chamber-music-festival",
+        category: "live",
+        venue: "Nantwen",
+        image: "https://images.squarespace-cdn.com/content/v1/611672a965ba847a959f198c/67fdb253-86c3-4d45-8f95-3bd802615b56/8B3AAB7D-8B83-4711-919F-65654662B100.jpeg?format=500w",
+        date: "5 July 2025",
+        dt: new Date("5 July 2025").valueOf()
+    });
+    r.push({
+        title: "Chamber Music Festival",
+        text: "Three small concerts by leading musicians, with open gardens and cake",
+        url: "https://www.nantwen.co.uk/nantwen-chamber-music-festival",
+        category: "live",
+        venue: "Nantwen",
+        image: "https://images.squarespace-cdn.com/content/v1/611672a965ba847a959f198c/67fdb253-86c3-4d45-8f95-3bd802615b56/8B3AAB7D-8B83-4711-919F-65654662B100.jpeg?format=500w",
+        date: "6 July 2025",
+        dt: new Date("6 July 2025").valueOf()
+    });
+    r.push({
+        title: "Summer Concert",
+        text: "Music by a distinguished chamber ensemble",
+        url: "https://www.nantwen.co.uk/nantwen-summer-concert",
+        image: "https://images.squarespace-cdn.com/content/v1/611672a965ba847a959f198c/d110923e-eaf9-4179-b4e1-57adb7e70afc/Heather_Birnie_Nantwen_Summer_Concert_2024_064.jpg",
+        category: "live",
+        venue: "Nantwen",
+        date: "9 August 2025",
+        dt: new Date("9 August 2025").valueOf()
+    })
+    return r;
+}
+
 handlers["folkfest"] = async () => {
     let events = ["23 May 2025", "24 May 2025", "25 May 2025", "26 May 2025"].map(date => {
         return {
@@ -453,22 +548,25 @@ handlers["moylgrove"] = async () => {
     let r = [];
     eventLi.forEach(li => {
         let ri = {};
-        ri.url = m(li, /data-url=['"](.*?)['"]/);
-        ri.image = m(li, /<img [^>]*src=['"](.*?)['"]/s);
-        ri.title = attr(li, "eventTitle");
-        ri.subtitle = attr(li, "subtitle");
-        ri.venue = attr(li, "where") || "Moylgrove";
-        ri.price = attr(li, "eventPrice");
-        ri.text = attr(li, "eventDescription");
-        ri.category = "live";
+        try {
+            ri.url = m(li, /data-url=['"](.*?)['"]/);
+            ri.image = m(li, /<img [^>]*src=['"](.*?)['"]/s);
+            ri.title = attr(li, "eventTitle");
+            ri.subtitle = attr(li, "subtitle");
+            ri.venue = attr(li, "where") || "Moylgrove";
+            ri.price = attr(li, "eventPrice");
+            ri.text = attr(li, "eventDescription");
+            ri.category = "live";
 
-        let dsm = m(attr(li, "eventDate"), /^.*?:[0-9][0-9]/, 0).replace(/th|at|nd|st|rd/, '');
-        if (dsm) {
-            let date = new Date(dsm);
-            ri.date = date.toISOString()?.substring(0, 16).replace("T", " ");
-            ri.dt = date?.valueOf() || 0;
-            r.push(ri);
-        }
+            let dsm = m(attr(li, "eventDate"), /^.*?:[0-9][0-9]/, 0).replace(/th | at |nd |st |rd /, ' ');
+            //console.log(`[${dsm}]`);
+            if (dsm) {
+                let date = new Date(dsm);
+                ri.date = date.toISOString()?.substring(0, 16).replace("T", " ");
+                ri.dt = date?.valueOf() || 0;
+                r.push(ri);
+            }
+        } catch (e) { console.log(e) }
     });
     return r;
 }

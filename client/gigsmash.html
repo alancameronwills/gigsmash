@@ -61,7 +61,7 @@
                     </div>` : "")
                 + `<div class='show ${show.category || ""}'>
                     <div class='venue'>${show.venue}</div>
-                    <div class='image'><img src='${show.image}'/></div>
+                    <div class='image'><a href='${show.url}'><img src='${show.image}'/></a></div>
                     <div class='title'><a href='${show.url}'>${show.title}</a></div>
                     <div class='subtitle'>${show.subtitle || ""}</div>
                     <div class='date'>${show.date}</div>
@@ -106,6 +106,10 @@
             font-family: Arial, Geneva, Helvetica, sans-serif;
         }
 
+        a:link {
+            color: darkblue;
+        }
+
         .dateHeading {
             width: 100%;
             background-color: darkblue;
@@ -114,7 +118,7 @@
             padding: 6px;
         }
 
-        .image>img {
+        .image img {
             width: 200px;
         }
 

@@ -38,8 +38,10 @@ test('extractor tests', async (t) => {
                 let items = JSON.parse(rr.res.body);
                 assert(items.length > 0, "Got no items");
                 items.forEach(x => {
-                    //console.log(`URL: ${x.url}`);
-                    assert(x.url && x.dt, (x.url || "[no url] ") + x.dt + x.date);
+                    assert(x.title, `[no title] ${x.url} ${x.date}`);
+                    assert(x.image, `[no image] ${x.title} ${x.date}`);
+                    assert(x.url, `[no url] ${x.title} ${x.date}`);
+                    assert(x.dt, `[no date] ${x.title} ${x.date}`);
                 });
             } )));
     })

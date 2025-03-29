@@ -176,7 +176,6 @@ handlers["cardicastle"] = async () => {
     let eventsRaw = ticketPage.match(/<div\s+class="item.*?<\/div>/gs);
     let r = [];
     eventsRaw.forEach(ev => {
-        console.log("")
         try {
             let date = m(ev, /<p>(.*?)<\/p>/s).
                 replace(/([0-9])st|nd|rd|th/, "$1").

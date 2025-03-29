@@ -39,7 +39,14 @@
         }
 
         function showAll(shows) {
-            let table = `<div class='table'>${shows.map(s => showOne(s)).join('\n')}</div>`;
+            let filters = [];
+            document.querySelectorAll(".filter>input").forEach(input => {
+                let filterId = input.id.replace("filter", "");
+                if (!input.checked) {
+                    filters.push("no-" + filterId);
+                }
+            });
+            let table = `<div class='table ${filters.join(" ")}'>${shows.map(s => showOne(s)).join('\n')}</div>`;
             document.getElementById('table').innerHTML = table;
         }
         function showOne(show) {
@@ -82,9 +89,19 @@
                 }
             }, 1000);
         }
+
+        
+        function filter(category) {
+            let tab = document.querySelector(".table");
+            let no = "no-" + category;
+            if(tab.classList.contains(no)) {
+                tab.classList.remove(no);
+            } else {
+                tab.classList.add(no);
+            }
+        }
     </script>
     <style>
-
         body {
             font-family: Arial, Geneva, Helvetica, sans-serif;
         }
@@ -96,125 +113,74 @@
             font-weight: bold;
             padding: 6px;
         }
-/*
-        @media (min-width: 601px) {
-*/
-            .image>img {
-                width: 200px;
-            }
 
-            .table {
-                display: flex;
-                flex-wrap: wrap;
-                column-gap: 10px;
-                background-color: gray;
-                row-gap: 6px;
-                justify-content: flex-start;
-                padding: 0 6px;
-            }
-
-            .dateHeading {
-                margin: 0 -6px -2px -6px;
-            }
-
-            .show {
-                column-gap: 20px;
-                display: flex;
-                justify-content: start;
-                padding: 10px 5px;
-                width: 200px;
-                flex-wrap: wrap;
-                align-content: flex-start;
-                background-color: white;
-            }
-
-            .date {
-                grid-column: 2;
-                grid-row: 4;
-                font-size: small;
-            }
-
-            .venue {
-                grid-column: 2;
-                grid-row: 1;
-            }
-
-            .title {
-                font-weight: bold;
-                grid-column: 2;
-                grid-row: 2;
-            }
-
-            .subtitle {
-                grid-column: 2;
-                grid-row: 3;
-            }
-
-            .image {
-                grid-row-start: 1;
-                grid-row-end: 5;
-                grid-column: 1;
-            }
-
-            .description {
-                grid-column: 3;
-                grid-row-start: 1;
-                grid-row-end: 5;
-                max-height: 100px;
-                overflow: hidden;
-                font-size: small;
-                display: none;
-            }
-/*
+        .image>img {
+            width: 200px;
         }
 
-        @media (max-width:600px) {
-            .image>img {
-                width: 200px;
-            }
-
-            .show {
-                display: grid;
-                row-gap: 10px;
-                padding: 4px 10%;
-                border-top: darkblue 1px solid;
-            }
-
-            .date {
-                grid-column: 1;
-                grid-row: 4;
-            }
-
-            .venue {
-                grid-column: 1;
-                grid-row: 1;
-            }
-
-            .title {
-                grid-column: 1;
-                grid-row: 2;
-                font-weight: bold;
-            }
-
-            .subtitle {
-                grid-column: 1;
-                grid-row: 3;
-            }
-
-            .image {
-                grid-column: 1;
-                grid-row: 5;
-            }
-
-            .description {
-                display: none;
-            }
+        .table {
+            display: flex;
+            flex-wrap: wrap;
+            column-gap: 10px;
+            background-color: gray;
+            row-gap: 6px;
+            justify-content: flex-start;
+            padding: 0 6px;
         }
 
-        .table>.show:nth-child(2n+1):not(.dateHeading) {
-            /* background-color: #d7f9f9; */
+        .dateHeading {
+            margin: 0 -6px -2px -6px;
         }
-*/
+
+        .show {
+            column-gap: 20px;
+            display: flex;
+            justify-content: start;
+            padding: 10px 5px;
+            width: 200px;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            background-color: white;
+            border-radius: 4px;
+        }
+
+        .date {
+            grid-column: 2;
+            grid-row: 4;
+            font-size: small;
+        }
+
+        .venue {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        .title {
+            font-weight: bold;
+            grid-column: 2;
+            grid-row: 2;
+        }
+
+        .subtitle {
+            grid-column: 2;
+            grid-row: 3;
+        }
+
+        .image {
+            grid-row-start: 1;
+            grid-row-end: 5;
+            grid-column: 1;
+        }
+
+        .description {
+            grid-column: 3;
+            grid-row-start: 1;
+            grid-row-end: 5;
+            max-height: 100px;
+            overflow: hidden;
+            font-size: small;
+            display: none;
+        }
 
         #sources {
             display: flex;
@@ -230,10 +196,36 @@
                 justify-content: space-evenly;
             }
         }
+
         @media (max-width:1200px) {
             #sources {
                 display: none;
             }
+        }
+
+        #filters {
+            display: flex;
+            column-gap: 10px;
+            padding: 0 6px 1px 2px;
+            background-color:whitesmoke;
+            position:fixed;
+            top:0;
+            right:0;
+            transform-origin: bottom right;
+            transform:rotate(-90deg) translateY(-10px);
+            border-radius: 4px;
+        }
+        .table.no-film>.show.film {
+            display: none;
+        }
+        .table.no-quiz>.show.quiz {
+            display: none;
+        }
+        .table.no-live>.show.live {
+            display: none;
+        }
+        .table.no-broadcast>.show.broadcast {
+            display: none;
         }
     </style>
 </head>
@@ -243,6 +235,24 @@
     <h1>What's On</h1>
     <div id="table">
 
+    </div>
+    <div id="filters">
+        <div class="filter">
+            <input type="checkbox" id="filmfilter"  onchange="filter('film', this)" />
+            <label for="filmsfilter">films</label>
+        </div>
+        <div class="filter">
+            <input type="checkbox" id="quizfilter" checked onchange="filter('quiz', this)" />
+            <label for="quizfilter">quizzes</label>
+        </div>
+        <div class="filter">
+            <input type="checkbox" id="broadcastfilter" checked onchange="filter('broadcast', this)" />
+            <label for="broadcastfilter">broadcast</label>
+        </div>
+        <div class="filter">
+            <input type="checkbox" id="livefilter" checked onchange="filter('live', this)" />
+            <label for="quizfilter">live</label>
+        </div>
     </div>
 </body>
 

@@ -8,7 +8,7 @@ function m(source, reg, ix = 1) {
 }
 
 function datex(dateString) {
-    return dateString.trim().replace(/^[A-Z][a-z]+ +/, "").replace(/st|nd|rd|th/, "").replace(/\s+/sg, " ").trim();
+    return dateString.trim().replace(/^[A-Z][a-z]+ +/, "").replace(/st|nd|rd|th|at/, "").replace(/\s+/sg, " ").trim();
 }
 
 async function ftext(url, sendHeaders = false) {
@@ -52,6 +52,7 @@ handlers["folkfest"] = async () => {
         image: "https://static.wixstatic.com/media/2943ab_19dea7936d2a4e9394ba9af872356873~mv2.jpeg/v1/crop/x_0,y_0,w_858,h_857/fill/w_402,h_402,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/rioghnach2.jpeg",
         url: "https://www.eventbrite.com/e/rioghnach-connolly-withgydaf-john-ellis-support-tickets-1094500443289?aff=ebdsshios",
         venue: "Capel Bethel, Fishguard",
+        category: "live",
         date: "Friday 23 May 2025 7:30pm",
         dt: new Date("2025-05-23 19:30").valueOf()
     });
@@ -73,6 +74,40 @@ handlers["othervoices"] = async () => {
     });
     return events;
 }
+
+
+handlers["cardicastle"] = async () => {
+    let ticketPage = await ftext("https://cardigancastle.com/shop/tickets/");
+    let eventsRaw = ticketPage.match(/<div\s+class="item.*?<\/div>/gs);
+    let r = [];
+    eventsRaw.forEach(ev => {
+        console.log("")
+        try {
+            let date = m(ev, /<p>(.*?)<\/p>/s).
+                replace(/([0-9])st|nd|rd|th/, "$1").
+                replace(/\sat\s/, " 2025 ").
+                replace(/-.*/, "");
+            let dt = new Date(date).valueOf();
+            let ri = {
+                title: m(ev, /<h3>(.*?)<\/h3>/s),
+                image: m(ev, /src="(.*?)"/s),
+                url: m(ev, /href="(.*?)"/s),
+                category: "live",
+                venue: "Cardigan Castle",
+                text: m(ev, /<\/h3>.*<p>(.*?)<\/p>/s),
+                date: date,
+                dt: dt
+            };
+            if (dt) {
+                r.push(ri);
+            } else {
+                console.log(ri)
+            }
+        } catch (e) { console.log(e.toString()) }
+    });
+    return r;
+}
+
 
 handlers["bluestone"] = async () => {
     try {
@@ -294,7 +329,7 @@ handlers["gwaun"] = async (x) => {
                         date: d,
                         dt: dt,
                         url: url,
-                        urlset: show.match(/href="(.*?)"/g).map(href=>m(href, /"(.*?)"/s)),
+                        urlset: show.match(/href="(.*?)"/g).map(href => m(href, /"(.*?)"/s)),
                         title: title,
                         image: image,
                         text: "",
@@ -344,7 +379,7 @@ handlers["gwaun"] = async (x) => {
         try {
             let notFound = [];
             let byUrl = {};
-            fromGwaun.forEach(ev => {byUrl[ev.url.trim()] = ev;});
+            fromGwaun.forEach(ev => { byUrl[ev.url.trim()] = ev; });
             fromSavoy.forEach(ev => {
                 let found = false;
                 ev.urlset?.forEach(u => {
@@ -427,7 +462,7 @@ handlers["moylgrove"] = async () => {
         ri.text = attr(li, "eventDescription");
         ri.category = "live";
 
-        let dsm = m(attr(li, "eventDate"), /^.*?:[0-9][0-9]/, 0).replace(/th|nd|st|rd/, '');
+        let dsm = m(attr(li, "eventDate"), /^.*?:[0-9][0-9]/, 0).replace(/th|at|nd|st|rd/, '');
         if (dsm) {
             let date = new Date(dsm);
             ri.date = date.toISOString()?.substring(0, 16).replace("T", " ");
@@ -468,7 +503,8 @@ let ticketsolve = async (tsid) => {
                                 image: imageUrl,
                                 title: showName,
                                 url: url,
-                                text: m(description, /<!\[CDATA\[(.*?)\]\]/s).replace(/<.*?>/gs, " ")
+                                text: m(description, /<!\[CDATA\[(.*?)\]\]/s).replace(/<.*?>/gs, " "),
+                                category: "live"
                             });
                         }
                     })

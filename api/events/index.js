@@ -35,6 +35,16 @@ let handlers = [];
 
 handlers["manual"] = async () => {
     let r = [];
+    r.push ({
+        title: "Eisteddfod Llandudoch",
+        text: "Whole day",
+        category: "live",
+        venue: "St Dogmaels",
+        url: "https://www.facebook.com/groups/213845518639101/",
+        date: "17 May 2025 11:30am - 11pm",
+        dt: new Date("17 May 2025").valueOf(),
+        image: "https://moylgrove.wales/wp-content/uploads/2025/01/eisteddfod-llandudoch-713x1024.jpg"
+    });
     r.push({
         title: "Come and Sing Mozart - Côr Dyfed",
         text: "",
@@ -325,6 +335,7 @@ handlers["aberjazz"] = async () => {
     let rows = eventList.match(/<tr>(.*?)<\/tr>/sg);
     let cyear = new Date().getFullYear();
     let cdate = 0;
+    let venue = "";
     let dateString = "";
     let skip = false;
     let r = [];
@@ -350,10 +361,14 @@ handlers["aberjazz"] = async () => {
 
                     let columns = row.match(/<td.*?>.*?<\/td>/gs);
                     //r.push({columns: columns.length});
-                    if (columns && columns.length > 1) {
-                        ri.title = columns?.[0]?.replace(/<.*?>/sg, "")?.trim() || "AberJazz";
-                        ri.venue = columns?.[1]?.replace(/<.*?>/sg, "")?.trim() || "";;
-                        ri.url = m(columns?.[0], /href=['"](.*?)['"]/s);
+                    if (columns) {                            
+                        let isDoubleBill = columns.length == 5 ? 1 : 0;
+                        if (columns.length > 1) {
+                            venue = columns?.[1+isDoubleBill]?.replace(/<.*?>/sg, "")?.trim() || "";
+                        }
+                        ri.title = columns?.[0+isDoubleBill]?.replace(/<.*?>/sg, "")?.trim() || "AberJazz";
+                        ri.venue = venue;
+                        ri.url = m(columns?.[0+isDoubleBill], /href=['"](.*?)['"]/s);
                         ri.text = "";
                         ri.dt = cdate;
                         ri.date = dateString;

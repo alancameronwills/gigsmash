@@ -17,6 +17,7 @@
                 console.log(`Retry ${retry + 1} ${promoter}`);
             }
             let length = json.length;
+            json.forEach(s => s.promoter = promoter); // Promoter ID != venue friendly name
 
             shows = shows.concat(json);
             shows.sort((a, b) => a.dt - b.dt);
@@ -59,8 +60,8 @@
                 day: "numeric"
             })}
                     </div>` : "")
-                + `<div class='show ${show.category || ""}'>
-                    <div class='venue'>${show.venue}</div>
+                + `<div class='show ${show.category || ""} ${show.promoter}'>
+                    <div class='venue' onclick='venueFilter("${show.promoter}")'>${show.venue}</div>
                     <div class='image'><a href='${show.url}'><img src='${show.image}'/></a></div>
                     <div class='title'><a href='${show.url}'>${show.title}</a></div>
                     <div class='subtitle'>${show.subtitle || ""}</div>
@@ -88,6 +89,17 @@
                     sourcesDiv.style.display = "none";
                 }
             }, 1000);
+        }
+
+        var currentVenueFilter = "";
+        function venueFilter (v) {
+            if (currentVenueFilter) {
+                // remove
+                currentVenueFilter = "";
+            } else {
+                // set filter
+                currentVenueFilter = v;
+            }
         }
 
         

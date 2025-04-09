@@ -70,6 +70,7 @@
                 </div>`;
         }
         async function go() {
+            restoreCategoryFilters();
             let venues = await fetch(`/api/events`).then(r => r.json());
             await Promise.all(venues.map(v => getAndShow(v)));
 
@@ -102,8 +103,32 @@
             }
         }
 
+        function restoreCategoryFilters() {
+            let savedFiltersJson = localStorage.getItem("categoryFilters");
+            if (savedFiltersJson) {
+                let savedFilters = JSON.parse(savedFiltersJson);
+                if (savedFilters) {
+                    document.querySelectorAll(".filter input").forEach(ip => {
+                        let restoreValue = savedFilters[ip.id.replace(/filter/, "")];
+                        if (restoreValue !== null) {
+                            ip.checked = restoreValue;
+                        }
+                    })
+                }
+            }
+        }
+
+        function saveCategoryFilters() {
+            let savedFilters = {};
+            document.querySelectorAll(".filter input").forEach(ip => {
+                savedFilters[ip.id.replace(/filter/, '')] = ip.checked;
+            });
+            localStorage.setItem("categoryFilters", JSON.stringify(savedFilters));
+        }
+
         
         function filter(category) {
+            saveCategoryFilters();
             let tab = document.querySelector(".table");
             let no = "no-" + category;
             if(tab.classList.contains(no)) {

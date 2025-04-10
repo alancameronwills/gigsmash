@@ -87,7 +87,7 @@
             restoreCategoryFilters();
             let promoters = await fetch(`/api/events`).then(r => r.json());
             restorePromoterFilters(promoters);
-            await Promise.all(promoters.map(v => getAndShow(v)));
+            await Promise.all(Object.keys(promoters).map(v => getAndShow(v, promoters[v])));
 
             setTimeout(() => {
                 let allDone = true;
@@ -136,9 +136,11 @@
             if (savedPromoterSelectionJson) {
                 promoterSelection = JSON.parse(savedPromoterSelectionJson);
             }
-            let menuItems = promoters.map(p => `
+            let promoterKeys = Object.keys(promoters);
+            promoterKeys.sort((a,b)=> a.localeCompare(b));
+            let menuItems = promoterKeys.map(p => `
                 <div><input type="checkbox" class='promoterFilter' ${promoterSelection[p] === false ? '' : 'checked'} name="${p}" id='${p}filter'/>
-                    <label for='${p}filter'>${p}</label></div>`).join('\n');
+                    <label for='${p}filter'>${promoters[p]}</label></div>`).join('\n');
             document.getElementById("promoterMenu").innerHTML = `<div>${menuItems}</div>`;
             document.querySelectorAll("#promoterMenu>div").forEach(ip => {
                 ip.onclick = e => {

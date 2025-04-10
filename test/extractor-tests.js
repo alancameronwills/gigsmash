@@ -24,13 +24,16 @@ function isString (value) {
 test('extractor tests', async (t) => {
     await t.test('extractor list', async (t) => {
             let r = await extract("");
-            let list = JSON.parse(r.res.body);
+            let promoters = JSON.parse(r.res.body);
+            let list = Object.keys(promoters);
             assert(list.length > 10 && list.length < 200);
             assert(list.every(item => isString(item)));
+            assert(list.every(k => isString(promoters[k])));
         });
     await t.test('all extractors', async(t) => {
         let r = await extract("");
-        let list = JSON.parse(r.res.body);
+        let promoters = JSON.parse(r.res.body);
+        let list = Object.keys(promoters);
         await Promise.all(list.map(venue=>
             t.test(venue, async(t) => {
                 let rr = await extract(venue);

@@ -33,9 +33,9 @@ async function ftext(url, sendHeaders = false) {
 
 let handlers = [];
 
-handlers["manual"] = async () => {
+(handlers["assorted"] = async () => {
     let r = [];
-    r.push ({
+    r.push({
         title: "Eisteddfod Llandudoch",
         text: "Whole day",
         category: "live",
@@ -55,7 +55,7 @@ handlers["manual"] = async () => {
         dt: new Date("12 April 2025").valueOf(),
         image: "https://www.dyfedchoir.co.uk/concert_posters/April_poster_en.jpg"
     })
-    r.push ({
+    r.push({
         title: "Puccini - Cantorion Aberteifi",
         text: "Conducted by Alistair Auld",
         image: "https://pembrokeshireinspired.wales/wp-content/uploads/2023/07/IMG_3707-Small-1024x530.jpg",
@@ -136,9 +136,9 @@ handlers["manual"] = async () => {
         dt: new Date("9 August 2025").valueOf()
     })
     return r;
-}
+}).friendly = "At Large";
 
-handlers["folkfest"] = async () => {
+(handlers["folkfest"] = async () => {
     let events = ["23 May 2025", "24 May 2025", "25 May 2025", "26 May 2025"].map(date => {
         return {
             title: "Fishguard Folk Festival",
@@ -162,9 +162,9 @@ handlers["folkfest"] = async () => {
         dt: new Date("2025-05-23 19:30").valueOf()
     });
     return events;
-}
+}).friendly = "Fishguard Folk";
 
-handlers["othervoices"] = async () => {
+(handlers["othervoices"] = async () => {
     let events = ["30 October 2025", "31 October 2025", "1 November 2025"].map(date => {
         return {
             title: "Other Voices",
@@ -178,10 +178,10 @@ handlers["othervoices"] = async () => {
         };
     });
     return events;
-}
+}).friendly = "Other Voices";
 
 
-handlers["cardicastle"] = async () => {
+(handlers["cardicastle"] = async () => {
     let ticketPage = await ftext("https://cardigancastle.com/shop/tickets/");
     let eventsRaw = ticketPage.match(/<div\s+class="item.*?<\/div>/gs);
     let r = [];
@@ -210,10 +210,10 @@ handlers["cardicastle"] = async () => {
         } catch (e) { console.log(e.toString()) }
     });
     return r;
-}
+}).friendly = "Cardigan Castle";
 
 
-handlers["bluestone"] = async () => {
+(handlers["bluestone"] = async () => {
     try {
         let source = await ftext("https://www.bluestonebrewing.co.uk/collections/events/", true);
         let products = source.match(/<product-card.*?<\/product-card>/gs) || [];
@@ -232,10 +232,10 @@ handlers["bluestone"] = async () => {
             }
         });
     } catch (e) { return { e: e.toString() } }
-}
+}).friendly = "Bluestones Brewery";
 
 
-handlers["ffm"] = async () => {
+(handlers["ffm"] = async () => {
     let r = [];
     try {
         let source = await ftext("https://www.fishguardmusicfestival.com/programme2025");
@@ -262,9 +262,9 @@ handlers["ffm"] = async () => {
         }
     } catch (e) { r.push({ e: e.toString() }); }
     return r;
-}
+}).friendly = "Fishguard Festival";
 
-handlers["queens"] = async () => {
+(handlers["queens"] = async () => {
     let r = [];
     try {
         let root = "https://thequeenshall.org.uk";
@@ -286,9 +286,9 @@ handlers["queens"] = async () => {
 
     } catch (e) { return { e: e.toString() }; }
     return r;
-}
+}).friendly = "Queens Theatre";
 
-handlers["cellar"] = async () => {
+(handlers["cellar"] = async () => {
     let r = [];
 
     try {
@@ -327,9 +327,9 @@ handlers["cellar"] = async () => {
     }
 
     return r;
-}
+}).friendly = "Cellar Bar";
 
-handlers["aberjazz"] = async () => {
+(handlers["aberjazz"] = async () => {
     let source = await ftext("https://aberjazz.com/en/html/Tickets.html");
     let eventList = m(source, /class="main".*?<\/table>.*?<table .*?>(.*?)<\/table>/s);
     let rows = eventList.match(/<tr>(.*?)<\/tr>/sg);
@@ -346,7 +346,9 @@ handlers["aberjazz"] = async () => {
             if (skip) { skip = false; }
             else {
                 //r.push({row:row});
-                if (row.match(/class="table-head/)) {
+                if (row.match(/class="table-sub/)) {
+                    // Table sub-heading
+                } else if (row.match(/class="table-head/)) {
 
                     let rowContent = m(row, /<td.*?>(.*?)<\/td>/s);
                     dateString = m(rowContent, />([0-9a-zA-Z .]+)</);
@@ -361,14 +363,14 @@ handlers["aberjazz"] = async () => {
 
                     let columns = row.match(/<td.*?>.*?<\/td>/gs);
                     //r.push({columns: columns.length});
-                    if (columns) {                            
+                    if (columns) {
                         let isDoubleBill = columns.length == 5 ? 1 : 0;
                         if (columns.length > 1) {
-                            venue = columns?.[1+isDoubleBill]?.replace(/<.*?>/sg, "")?.trim() || "";
+                            venue = columns?.[1 + isDoubleBill]?.replace(/<.*?>/sg, "")?.trim() || "";
                         }
-                        ri.title = columns?.[0+isDoubleBill]?.replace(/<.*?>/sg, "")?.trim() || "AberJazz";
+                        ri.title = columns?.[0 + isDoubleBill]?.replace(/<.*?>/sg, "")?.trim() || "AberJazz";
                         ri.venue = venue;
-                        ri.url = m(columns?.[0+isDoubleBill], /href=['"](.*?)['"]/s);
+                        ri.url = m(columns?.[0 + isDoubleBill], /href=['"](.*?)['"]/s);
                         ri.text = "";
                         ri.dt = cdate;
                         ri.date = dateString;
@@ -382,9 +384,9 @@ handlers["aberjazz"] = async () => {
         });
     } catch (e) { r.push({ e: e }); }
     return r;
-}
+}).friendly = "AberJazz";
 
-handlers["smallworld"] = async () => {
+(handlers["smallworld"] = async () => {
     let source = await ftext("https://www.smallworld.org.uk/events");
     let showlist = m(source, /<div class=[^>]*eventlist--upcoming.*?>(.*?)<\/article>\s*<\/div>/s);
     let shows = showlist.split(/<article/);
@@ -406,9 +408,9 @@ handlers["smallworld"] = async () => {
         }
     })
     return r;
-}
+}).friendly = "Small World";
 
-handlers["gwaun"] = async (x) => {
+(handlers["gwaun"] = async (x) => {
     let fromSavoy = [], fromGwaun = [];
     {
         let r = [];
@@ -506,9 +508,9 @@ handlers["gwaun"] = async (x) => {
         } catch (e) { console.log(e.toString()) }
     }
     return x ? fromGwaun : fromSavoy;
-}
+}).friendly = "Theatr Gwaun";
 
-handlers["mwldan"] = async () => {
+(handlers["mwldan"] = async () => {
     let source = await ftext("https://mwldan.co.uk/whatson/all");
     let tail = source.split(/whats-on-all[^>]*/)?.[1] || "";
     let shows = tail.split(/<div[^>]*node-show.*?>/);
@@ -553,9 +555,9 @@ handlers["mwldan"] = async () => {
         }
     })
     return r;
-}
+}).friendly = "Mwldan";
 
-handlers["moylgrove"] = async () => {
+(handlers["moylgrove"] = async () => {
     let source = await ftext("https://moylgrove.wales/events");
     let ul = m(source, /<ul[^>]*eventList.*?<\/ul>/s, 0);
     let eventLi = ul.split('</li>');
@@ -583,7 +585,7 @@ handlers["moylgrove"] = async () => {
         } catch (e) { console.log(e) }
     });
     return r;
-}
+}).friendly = "Moylegrove";
 
 let ticketsolve = async (tsid) => {
     let response = await ftext(`https://${tsid}.ticketsolve.com/shows.xml`);
@@ -627,13 +629,13 @@ let ticketsolve = async (tsid) => {
     return r;
 };
 
-handlers["span"] = async () => {
+(handlers["span"] = async () => {
     return await ticketsolve("span-arts");
-}
+}).friendly = "Span Arts";
 
-handlers["stdavids"] = async () => {
+(handlers["stdavids"] = async () => {
     return await ticketsolve("stdavidscathedral");
-}
+}).friendly = "St Davids Cathedral";
 /*
 let ticketsource = async (source) => {
     console.log("1 [" + source + "]");
@@ -671,7 +673,7 @@ let ticketsource = async (source) => {
 handlers["cordyfed"] = await ticketsource("cor-dyfed-choir");
 */
 
-handlers["rhosygilwen"] = async () => {
+(handlers["rhosygilwen"] = async () => {
     let response = await fetch(`https://rhosygilwen.co.uk/wp-admin/admin-ajax.php?action=mec_grid_load_more&atts[sk-options][grid][limit]=100`).then(r => r.json());
     let chunks = response.html?.match(/<article.*?<\/article>|<script.*?<\/script>/gs) || [];
 
@@ -694,27 +696,30 @@ handlers["rhosygilwen"] = async () => {
         }
     });
     return r;
-}
+}).friendly = "Rhosygilwen";
 
 module.exports = async function (context, req) {
-
-    const venue = req.query?.venue || "";
-    const x = req.query?.x;
-    //context.log("Events index venue=" + venue);
-    let r = [];
-    if (venue) {
-        let handler = handlers[venue];
-        if (handler) {
-            r = await handler(x);
+    try {
+        const venue = req.query?.venue || "";
+        const x = req.query?.x;
+        //context.log("Events index venue=" + venue);
+        let r = [];
+        if (venue) {
+            let handler = handlers[venue];
+            if (handler) {
+                r = await handler(x);
+            }
+        } else {
+            let kk = Object.keys(handlers);
+            r = {};
+            kk.forEach(k => r[k] = handlers[k].friendly || k);
         }
-    } else {
-        r = Object.keys(handlers);
-    }
-    context.res = {
-        body: JSON.stringify(r),
-        headers: { "Content-Type": "application/json" },
-        status: 200
-    }
+        context.res = {
+            body: JSON.stringify(r),
+            headers: { "Content-Type": "application/json" },
+            status: 200
+        }
+    } catch (e) { console.log(e.toString()); }
 }
 
 //console.log(module);

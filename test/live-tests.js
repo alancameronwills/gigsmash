@@ -14,12 +14,14 @@ function isString (value) {
 
 test("live", async t => {
     await t.test("get venues", async t => {
-        let list = await getEvents("");
+        let promoters = await getEvents("");
+        let list = Object.keys(promoters);
         assert(list.length > 10 && list.length < 200, "Venue list length: " + list.length);
         assert(list.every(item => isString(item)));
     });
     await t.test("venues", async t => {
-        let list = await getEvents("");
+        let promoters = await getEvents("");
+        let list = Object.keys(promoters);
         assert(list.length > 0);
         await Promise.all(list.map(venue =>
             t.test(venue, async (t) => {

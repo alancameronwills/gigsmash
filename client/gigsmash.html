@@ -9,6 +9,13 @@
     <script>
         var shows = [];
         async function getAndShow(promoter) {
+            let filterMenuItem = menuItemForPromoter(promoter);
+            if (!isPromoterSelected(promoter)) {
+                if (filterMenuItem) {
+                    filterMenuItem.style.color = "#3d3d3d";
+                }
+                return;
+            }
             document.getElementById("sources").innerHTML += `<button class='promoter' id='${promoter}'>${promoter}</button>`;
             let json = "";
             for (let retry = 0; retry < 3; retry++) {
@@ -16,27 +23,33 @@
                 if (json.length > 0) break;
                 console.log(`Retry ${retry + 1} ${promoter}`);
             }
-            let length = json.length;
-            json.forEach(s => s.promoter = promoter); // Promoter ID != venue friendly name
+            try {
+                let length = json.length;
+                json.forEach(s => s.promoter = promoter); // Promoter ID != venue friendly name
 
-            shows = shows.concat(json);
-            shows.sort((a, b) => a.dt - b.dt);
-            let groupDate = 0;
-            shows.forEach(show => {
-                let dt = new Date(show.dt);
-                let dtDay = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
-                show.dtDayValue = dtDay.valueOf();
-                show.newDate = show.dtDayValue != groupDate;
-                groupDate = show.dtDayValue;
-            })
-            showAll(shows);
+                shows = shows.concat(json);
+                shows.sort((a, b) => a.dt - b.dt);
+                let groupDate = 0;
+                shows.forEach(show => {
+                    let dt = new Date(show.dt);
+                    let dtDay = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+                    show.dtDayValue = dtDay.valueOf();
+                    show.newDate = show.dtDayValue != groupDate;
+                    groupDate = show.dtDayValue;
+                })
+                showAll(shows);
 
-            let button = document.getElementById(promoter);
-            if (length > 0) {
-                button.style.backgroundColor = '#b2f1f9';
-                button.style.borderColor = "dodgerblue";
-                button.done = true;
+                if (length > 0) {
+                    let button = document.getElementById(promoter);
+                    button.style.backgroundColor = '#b2f1f9';
+                    button.style.borderColor = "dodgerblue";
+                    button.done = true;
+                    if (filterMenuItem) {
+                        filterMenuItem.style.color = "black";
+                    }
+                }
             }
+            catch (e) { console.log(e.toString()) }
         }
 
         function showAll(shows) {
@@ -70,9 +83,11 @@
                 </div>`;
         }
         async function go() {
+            shows = [];
             restoreCategoryFilters();
-            let venues = await fetch(`/api/events`).then(r => r.json());
-            await Promise.all(venues.map(v => getAndShow(v)));
+            let promoters = await fetch(`/api/events`).then(r => r.json());
+            restorePromoterFilters(promoters);
+            await Promise.all(promoters.map(v => getAndShow(v)));
 
             setTimeout(() => {
                 let allDone = true;
@@ -92,8 +107,62 @@
             }, 1000);
         }
 
+
+        /* 
+        **** Promoter Filters ****
+        */
+        var previousPromoterSelection = {};
+        function toggleMenu() {
+            let menu = document.getElementById("promoterMenu");
+            let showing = menu.classList.toggle("visible");
+            if (showing) {
+                previousPromoterSelection = JSON.parse(localStorage.getItem("promoterFilters") || "");
+            } else {
+                let newPromoterSelection = JSON.parse(localStorage.getItem("promoterFilters") || "");
+                let kk = Object.keys(previousPromoterSelection).concat(Object.keys(newPromoterSelection));
+                if (kk.some(k => (previousPromoterSelection[k] || false) != (newPromoterSelection[k] || false))) {
+                    location.reload();
+                }
+            }
+        }
+
+        function isPromoterSelected(p) {
+            return !!(document.querySelector(`input[name='${p}']`)?.checked);
+        }
+
+        function restorePromoterFilters(promoters) {
+            let savedPromoterSelectionJson = localStorage.getItem("promoterFilters");
+            let promoterSelection = {};
+            if (savedPromoterSelectionJson) {
+                promoterSelection = JSON.parse(savedPromoterSelectionJson);
+            }
+            let menuItems = promoters.map(p => `
+                <div><input type="checkbox" class='promoterFilter' ${promoterSelection[p] === false ? '' : 'checked'} name="${p}" id='${p}filter'/>
+                    <label for='${p}filter'>${p}</label></div>`).join('\n');
+            document.getElementById("promoterMenu").innerHTML = `<div>${menuItems}</div>`;
+            document.querySelectorAll("#promoterMenu>div").forEach(ip => {
+                ip.onclick = e => {
+                    //togglePromoter(ip.name);
+                    e.stopPropagation();
+                    savePromoterFilters();
+                };
+            });
+        }
+
+        function menuItemForPromoter(p) {
+            return document.querySelector(`#promoterMenu>div>div:has(input[name="${p}"])`);
+        }
+
+        function savePromoterFilters() {
+            let filterSelections = {};
+            document.querySelectorAll(".promoterFilter").forEach(ip => {
+                filterSelections[ip.name] = ip.checked;
+            });
+            localStorage.setItem("promoterFilters", JSON.stringify(filterSelections));
+        }
+
         var currentVenueFilter = "";
-        function venueFilter (v) {
+        function venueFilter(v) {
             if (currentVenueFilter) {
                 // remove
                 currentVenueFilter = "";
@@ -102,6 +171,11 @@
                 currentVenueFilter = v;
             }
         }
+
+
+        /* 
+        **** Category Filters ****
+        */
 
         function restoreCategoryFilters() {
             let savedFiltersJson = localStorage.getItem("categoryFilters");
@@ -126,12 +200,12 @@
             localStorage.setItem("categoryFilters", JSON.stringify(savedFilters));
         }
 
-        
+
         function filter(category) {
             saveCategoryFilters();
             let tab = document.querySelector(".table");
             let no = "no-" + category;
-            if(tab.classList.contains(no)) {
+            if (tab.classList.contains(no)) {
                 tab.classList.remove(no);
             } else {
                 tab.classList.add(no);
@@ -174,6 +248,7 @@
         }
 
         .show {
+            user-select: none;
             column-gap: 20px;
             display: flex;
             justify-content: start;
@@ -192,6 +267,7 @@
         }
 
         .venue {
+            cursor: pointer;
             grid-column: 2;
             grid-row: 1;
         }
@@ -248,25 +324,58 @@
             display: flex;
             column-gap: 10px;
             padding: 0 6px 1px 2px;
-            background-color:whitesmoke;
-            position:fixed;
-            top:0;
-            right:0;
+            background-color: whitesmoke;
+            position: fixed;
+            top: 0;
+            right: 0;
             transform-origin: bottom right;
-            transform:rotate(-90deg) translateY(-10px);
+            transform: rotate(-90deg) translateY(-10px);
             border-radius: 4px;
         }
+
         .table.no-film>.show.film {
             display: none;
         }
+
         .table.no-quiz>.show.quiz {
             display: none;
         }
+
         .table.no-live>.show.live {
             display: none;
         }
+
         .table.no-broadcast>.show.broadcast {
             display: none;
+        }
+
+        #promoterMenu {
+            position: fixed;
+            display: flex;
+            justify-content: center;
+            top: 10px;
+            left: 0;
+            width: 0;
+            padding-top: 3vh;
+            transition: all 1s ease-in-out;
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        #promoterMenu>div {
+            margin-left: -100vw;
+            border-radius: 4px;
+            padding: 3vw;
+            background-color: lightgray;
+            transition: all 1s ease-in-out;
+            color: yellow;
+        }
+
+        #promoterMenu.visible {
+            width: 100vw;
+        }
+
+        #promoterMenu.visible>div {
+            margin-left: 0px;
         }
     </style>
 </head>
@@ -274,12 +383,12 @@
 <body onload="go()">
     <div id="sources"></div>
     <h1>What's On</h1>
-    <div id="table">
+    <div id="table" onclick="toggleMenu()">
 
     </div>
     <div id="filters">
         <div class="filter">
-            <input type="checkbox" id="filmfilter"  onchange="filter('film', this)" />
+            <input type="checkbox" id="filmfilter" onchange="filter('film', this)" />
             <label for="filmsfilter">films</label>
         </div>
         <div class="filter">
@@ -294,6 +403,9 @@
             <input type="checkbox" id="livefilter" checked onchange="filter('live', this)" />
             <label for="quizfilter">live</label>
         </div>
+    </div>
+    <div id="promoterMenu" onclick="toggleMenu()">
+
     </div>
 </body>
 

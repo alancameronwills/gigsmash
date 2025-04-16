@@ -88,7 +88,11 @@
             let promoters = await fetch(`/api/events`).then(r => r.json());
             restorePromoterFilters(promoters);
             await Promise.all(Object.keys(promoters).map(v => getAndShow(v, promoters[v])));
-
+            Array.from(document.getElementsByClassName("show")).forEach(show => {
+                show.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                });
+            })
             setTimeout(() => {
                 let allDone = true;
                 Array.from(document.getElementsByClassName("promoter")).forEach(
@@ -104,7 +108,10 @@
                     let sourcesDiv = document.getElementById("sources");
                     sourcesDiv.style.display = "none";
                 }
+                flag(document.getElementsByTagName("img").length);
+                //checkImageSizes();
             }, 1000);
+        
         }
 
 
@@ -213,6 +220,42 @@
                 tab.classList.add(no);
             }
         }
+
+        function checkImageSizes() {
+            Array.from(document.images).
+                filter(img => !img.complete).
+                forEach(img => {
+                    img.addEventListener("load", () => {
+                        let t = Math.floor(Date.now()/1000) % 1000;
+                        console.log(`OK ${t} ${img.src}`);
+                    });
+                    img.addEventListener("error", () => {
+                        let t = Math.floor(Date.now()/1000) % 1000;
+                        console.log(`XXX ${t} ${img.src}`);
+                    });
+                })
+
+            Promise.all(Array.from(document.images).
+                filter(img => !img.complete).
+                map(img => new Promise(resolve => { 
+                    img.addEventListener("load", resolve);
+                    img.addEventListener("error", resolve); 
+                }))).then(() => {
+                    console.log('images finished loading');
+            });
+        }
+        function flag(text) {
+            const f = document.getElementById("flag");
+            f.innerText= text;
+            f.style.display="block";
+            setTimeout(clearFlag, 10000);        
+        }
+        function clearFlag() {
+            const f = document.getElementById("flag");
+            f.innerText = "";
+            f.style.display="none";
+        }
+        
     </script>
     <style>
         body {
@@ -379,6 +422,14 @@
         #promoterMenu.visible>div {
             margin-left: 0px;
         }
+        #flag {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            background-color: black;
+            color: white;
+        }
     </style>
 </head>
 
@@ -409,6 +460,7 @@
     <div id="promoterMenu" onclick="toggleMenu()">
 
     </div>
+    <div id="flag" onclick="clearFlag()"></div>
 </body>
 
 </html>

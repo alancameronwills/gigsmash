@@ -82,6 +82,7 @@ class Cache {
     async getCache (url, get = true, name, size = this.#picSize) {
         const storeName = name || this.#hashUrl(url);
         console.log("storeName " + storeName);
+        let wasCached=false;
         if (!this.#storer.has(storeName)) {
             console.log("not got");
             const blob = await this.#fetchfile(url, true).then(r => r.blob());
@@ -98,12 +99,13 @@ class Cache {
             }
         } else {
             console.log("got it");
+            wasCached = true;
         }
         if (get) {
-            return { pic: await this.#storer.get(storeName), name: storeName };
+            return { pic: await this.#storer.get(storeName), name: storeName , wasCached:wasCached};
         }
         else {
-            return {name: storeName}
+            return {name: storeName , wasCached:wasCached}
         }
     }
 }

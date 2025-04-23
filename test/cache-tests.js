@@ -21,13 +21,19 @@ test('cache', async (t) => {
 
         await Promise.all(samples.map(src =>
             t.test(src, async (t) => {
-                let {name, e} = await cache.getCache(src, false);
+                let {name, e, wasCached} = await cache.getCache(src, false);
                 assert (name, `Empty hashed name ${src}`);
                 assert (!e, `Not converted ` + e);
                 assert (name != src, `Unconverted ${src}`);
                 assert (name.match(/^[0-9]+(\.[^.\/?#]*)?/), `Bad hashname [${name}] ${src}`);
                 let stat = await fsp.stat(testFolder + name);
                 assert (stat.size > 500, `Small or no cache file [${name}] ${src}`);
+                assert (!wasCached, "Says it got it from the cache??");
+            })));
+        await Promise.all(samples.map(src =>
+            t.test(src, async (t) => {
+                let {name, e, wasCached} = await cache.getCache(src, false);
+                assert (wasCached, `Didn't get it from the cache ${name}`);
             })))
     });
 })

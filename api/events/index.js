@@ -46,26 +46,6 @@ let handlers = [];
         image: "https://moylgrove.wales/wp-content/uploads/2025/01/eisteddfod-llandudoch-713x1024.jpg"
     });
     r.push({
-        title: "Come and Sing Mozart - Côr Dyfed",
-        text: "",
-        category: "live",
-        venue: "St Mary's Church Haverfordwest",
-        url: "https://www.dyfedchoir.co.uk/event-details.php",
-        date: "12 April 2025 10:15am - 7:30pm",
-        dt: new Date("12 April 2025").valueOf(),
-        image: "https://www.dyfedchoir.co.uk/concert_posters/April_poster_en.jpg"
-    })
-    r.push({
-        title: "Puccini - Cantorion Aberteifi",
-        text: "Conducted by Alistair Auld",
-        image: "https://pembrokeshireinspired.wales/wp-content/uploads/2023/07/IMG_3707-Small-1024x530.jpg",
-        category: "live",
-        url: "https://www.facebook.com/profile.php?id=61570905390613",
-        venue: "St Mary's Church Cardigan",
-        date: "12 April 2025 19:30",
-        dt: new Date("12 April 2025 19:30").valueOf()
-    });
-    r.push({
         title: "Measure for Measure",
         text: "Summer outdoor performance",
         venue: "St Dogmael's Abbey",
@@ -224,7 +204,7 @@ let handlers = [];
                 image: m(product, /<img[^>]*src="(.*?)"/s),
                 title: title,
                 url: "https://www.bluestonebrewing.co.uk" + m(product, /href="(.*?)"/s),
-                venue: "Bluestone Brewery",
+                venue: "Bluestone Brewing",
                 category: title.toLowerCase().indexOf("quiz") < 0 ? "live" : "quiz",
                 text: "",
                 date: dateString,
@@ -232,7 +212,7 @@ let handlers = [];
             }
         });
     } catch (e) { return { e: e.toString() } }
-}).friendly = "Bluestones Brewery";
+}).friendly = "Bluestone Brewing";
 
 
 (handlers["ffm"] = async () => {

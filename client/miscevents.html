@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="/gigsfav.ico">
+    <title>Shows in North Pembrokeshire</title>
+    <script>
+        function df(d) {return `${d.getYear()}-${d.getMonth()}-${d.getDate()}`}
+        function q(s) { return document.querySelector(s);}
+        function qa(s) { return document.querySelectorAll(s);}
+        function g(id) { return document.getElementById(id); }
+        function h(id) { let i = g(id); i.html = function (ht) { this.innerHTML = ht }; i.text = function (tx) { this.innerText = tx }; return i; }
+        function f(item, fieldName) {return item.querySelector("."+fieldName)}
+        function field(item,cls,type="text") {
+            switch (type) {
+                case 'text': return `<div class="field ${cls}" data-id="${cls}">${item||""}</div>`;
+                break;
+                case 'date':
+                    return `<div><input type='${type}' value='${item}' class='field ${cls}' data-id='${cls}' readonly /></div>`;
+                break;
+            }
+        }
+        class ItemView {
+            /** Item
+             * @param item DOM Element class="item"
+             */
+            constructor(item) {
+                item.view = this;
+                this.item = item;
+            }
+            f(fieldName) {return this.element.querySelector("."+fieldName);}
+            v(fieldName) {return this.f(fieldName).value}
+            t(fieldName) {return this.f(fieldName).innerText.trim();}
+            checkDate() {
+                return new Date(this.v("dt")).valueOf()>Date.now();
+            }
+            valid() {
+                let ok = this.checkDate() && this.t("title") && this.t("url");
+                this.element.style.outline = ok ? "none" : "2px solid red";
+            }
+        }
+//        function field(item, cls) { return `<div class="field ${cls}" data-id="${cls}">${item||""}</div>` }
+        function itemShow(item,i){
+            let dateString = new Date(item.dt || 0).toISOString().replace(/T.*/, "");
+            return `<div class="item" id="item${i}">
+                        ${field(item.title, "title")}
+                        ${field(item.date, "date")}
+                        ${field(dateString, "dt", "date")}
+                        ${field(item.venue, "venue")}
+                        ${field(item.category, "category")}
+                        <a href="item.url" target='new'>${field(item.url, "url")}</a>
+                        ${field(item.image, "image")}
+                            <div class="clicktoedit" onclick='editItem("item${i}")'></div>
+            ${item.image ? `<img src="${item.image}" width='300px'/>
+            ${item.imagesource?field(item.imagesource, "imagesource") : "<button onclick='compress(i)'>compress</button>"}
+                        ` : ''}</div>`;
+        }
+        async function go() {
+            try {
+                let result = await fetch("api/miscevents");
+                if (result.status == 200) {
+                    let items = await result.json();
+                    items.sort((a, b) => a.dt - b.dt);
+                    let boxes= items.map((item, i) => itemShow(item,i));
+                    h("stuff").html(boxes.join(' '));
+                    qa(".item").forEach(item=>(new ItemView(item)).valid());
+                } else throw await result.text();
+            } catch (e) {
+                h("message").text(e.toString());
+            }
+        }
+        function addItem() {
+            const newIx = qa(".item").length;
+            let extra = itemShow({dt:new Date().valueOf()}, newIx);
+            let stuff = g("stuff");
+            stuff.innerHTML = extra + stuff.innerHTML;
+            new ItemView(g("item"+newIx)).valid();
+        }
+        function checkDate(id) {
+            const item = g(id);
+            const dt = f(item, "dt");
+            let outdated = new Date(dt.value).valueOf()<Date.now();
+            outdated ||= (!f(item, "title") || !f(item, "venue") || !f(item,"url"));
+            item.style.outline = outdated? "2pt solid red" : "none";
+        }
+        function doneEditAll() {
+            editItem(q(".editing")?.id, false);
+        }
+        function editItem(id, edit) {
+            if (!id) return;
+            if (edit===false || !edit && g(id).classList.contains("editing")) {
+                qa(`#${id} .field`)
+                    .forEach(f => {f.contentEditable = false;f.readOnly=true;} );
+                g(id).classList.remove("editing");
+                new ItemView(g(id)).valid();
+            } else {
+                doneEditAll();    
+                qa(`#${id} .field`)
+                    .forEach(f => {f.contentEditable = true; f.readOnly=false; });
+                g(id).classList.add("editing");
+            }
+        }
+    </script>
+    <style>
+        .stuff {
+            background-color: whitesmoke;
+        }
+
+        input.field {
+            width:100%;
+            user-select:none;
+            border: 0;
+            background-color: transparent;
+        }
+
+        .item {
+            margin: 10px;
+            width: 600px;
+            border: 1px solid blue;
+            background-color: azure;
+            font-family: Arial, Helvetica, sans-serif;
+            position: relative;
+        }
+
+        .item>div {
+            margin: 5px;
+        }
+
+        .field {
+            min-height: 14px;
+        }
+
+        .editing .field {
+            background-color: white;
+        }
+        .editing .field::before {
+            content:attr(data-id) "   ";
+            background-color:azure ;
+        }
+
+        .button,
+        .clicktoedit {
+            user-select: none;
+            margin: 0px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background-color: black;
+            color: white;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        :not(.editing) .clicktoedit::before {
+            content: "edit";
+        }
+
+        .editing .clicktoedit::before {
+            content: "done"
+        }
+
+        
+    </style>
+</head>
+
+<body onload="go()">
+    <div id="message"></div>
+    <div id="stuff"></div>
+    <div class="button" onclick="addItem()">+</div>
+</body>
+
+</html>

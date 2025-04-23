@@ -124,7 +124,7 @@
                             innerHTML =  `<img src="${this.item.image}" width='300px'/>
                             ${this.item.imagesource
                                 ? ItemElement.mkField(this.item.imagesource, "imagesource")
-                                : "<button onclick='this.itemElement.compress()'>compress</button>"}`;
+                                : "<button onclick='this.itemElement.compress()'>get local</button>"}`;
                     }
                     // Check date etc
                     this.DOMelement.style.outline = this.item.valid() ? "none" : "2px solid red";

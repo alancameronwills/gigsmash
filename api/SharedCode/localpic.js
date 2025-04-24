@@ -6,15 +6,17 @@ class FileStorer {
     #folder;
 
     constructor(cache) {
-        this.#folder = cache;
+        this.#folder = cache[cache.length - 1] == '/' ? cache : cache + '/';
     }
 
     async get(name) {
         return await fsp.readFile(this.#folder + name)
     }
     async put(name, type, buffer) {
-        await fsp.mkdir(this.#folder, {recursive:true});
-        return await fsp.writeFile(this.#folder + name, buffer, { flush: true });
+        await fsp.mkdir(this.#folder, { recursive: true });
+        let opts = { flush: true };
+        if (typeof buffer === 'string') opts.encoding = 'utf-8';
+        return await fsp.writeFile(this.#folder + name, buffer, opts);
     }
 
     has(name) {
@@ -31,7 +33,7 @@ class Cache {
      * @param {{get(name), put(name, type, arrayBuffer)}} storer Store the compressed picture
      * @param {*} picSize 
      */
-    constructor(storer, picSize=300) {
+    constructor(storer, picSize = 300) {
         this.#storer = storer;
         this.#picSize = picSize;
     }
@@ -70,7 +72,7 @@ class Cache {
         }
         return "" + bb[0] + suffix;
     }
-    
+
     /**
      * getAndCache - stores a local compressed copy of a picture
      * @param {string} url Source pic
@@ -79,39 +81,39 @@ class Cache {
      * @param {number} size [opt] required width default 300px
      * @returns {pic ArrayBuffer, name}
      */
-    async getCache (url, get = true, name, size = this.#picSize) {
+    async getCache(url, get = true, name, size = this.#picSize) {
         const storeName = name || this.#hashUrl(url);
-        console.log("storeName " + storeName);
-        let wasCached=false;
+        //console.log("storeName " + storeName);
+        let wasCached = false;
         if (!this.#storer.has(storeName)) {
-            console.log("not got");
-            const blob = await this.#fetchfile(url, true).then(r => r.blob());
-            const fileType = blob.type;
-            const arrayBuffer = await blob.arrayBuffer();
+            //console.log("not got");
             try {
+                const blob = await this.#fetchfile(url, true).then(r => r.blob());
+                const fileType = blob.type;
+                const arrayBuffer = await blob.arrayBuffer();
                 const resized = await sharp(arrayBuffer).resize({ width: size }).toBuffer();
                 await this.#storer.put(storeName, fileType, resized);
             } catch (e) {
-                console.log("Couldn't convert file " + e);
+                console.log(`Couldn't convert ${url} e`);
                 if (get)
                     return { pic: new Uint8Array(arrayBuffer), name: url, error: e }
-                else return { name: url , error : e}
+                else return { name: url, error: e }
             }
         } else {
-            console.log("got it");
+            //console.log("got it");
             wasCached = true;
         }
         if (get) {
-            return { pic: await this.#storer.get(storeName), name: storeName , wasCached:wasCached};
+            return { pic: await this.#storer.get(storeName), name: storeName, wasCached: wasCached };
         }
         else {
-            return {name: storeName , wasCached:wasCached}
+            return { name: storeName, wasCached: wasCached }
         }
     }
 }
 
 
 module.exports = {
-    Cache: (storer, picSize=300) => new Cache(storer, picSize),
-    FileStorer: (cacheLoc="client/pix/")=> new FileStorer(cacheLoc)
+    Cache: (storer, picSize = 300) => new Cache(storer, picSize),
+    FileStorer: (cacheLoc = "client/pix/") => new FileStorer(cacheLoc)
 }

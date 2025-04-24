@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="/gigsfav.ico">
+    <title>Collection runner</title>
+    <script>
+        var timer;
+        async function f(g) {
+            const msg = document.getElementById("msg");
+            msg.style.backgroundColor = "pink";
+            msg.innerText = (await fetch(`/api/collect${g ? "?go=1" : ""}`).then(j => j.text())).replace(/\\n/g, "\n").replace(/\\\\/g, "\\");
+            msg.style.backgroundColor = "white";
+            return msg.innerText.indexOf("\"status\":\"Done\"") > 0;
+        }
+        async function go() {
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+                document.getElementById("button").innerText = "Go";
+            } else {
+                await f(true);
+                timer = setInterval(async () => {
+                    if (await f()) go();
+                }, 1000);
+                document.getElementById("button").innerText = "Stop";
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <button onclick="go()" id="button">Go</button>
+    <pre>
+        <div id="msg" style="height:30px;width:100%;"></div>
+    </pre>
+</body>
+
+</html>

@@ -200,8 +200,10 @@ let handlers = [];
         return products.map(product => {
             let title = m(product, /<product-card-title>(.*?)</s);
             let dateString = datex(m(product, /<p>(.*?)<\/p>/s));
+            let image = m(product, /<img[^>]*src="(.*?)"/s);
+            if (image.substring(0,1)=='/') image = "https:"+image;
             return {
-                image: m(product, /<img[^>]*src="(.*?)"/s),
+                image: image,
                 title: title,
                 url: "https://www.bluestonebrewing.co.uk" + m(product, /href="(.*?)"/s),
                 venue: "Bluestone Brewing",
@@ -679,11 +681,11 @@ handlers["cordyfed"] = await ticketsource("cor-dyfed-choir");
 }).friendly = "Rhosygilwen";
 
 module.exports = async function (context, req) {
+    let r = [];
     try {
         const venue = req.query?.venue || "";
         const x = req.query?.x;
         //context.log("Events index venue=" + venue);
-        let r = [];
         if (venue) {
             let handler = handlers[venue];
             if (handler) {
@@ -699,7 +701,8 @@ module.exports = async function (context, req) {
             headers: { "Content-Type": "application/json" },
             status: 200
         }
-    } catch (e) { console.log(e.toString()); }
+    } catch (e) { console.log(JSON.stringify(e)); }
+    return r;
 }
 
 //console.log(module);

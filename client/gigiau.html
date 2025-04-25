@@ -91,13 +91,14 @@
                 let menu = document.getElementById("promoterMenu");
                 let showing = menu.classList.toggle("visible");
                 if (!showing) {
-                    //let kk = Object.keys(PromoterFilters.#previousSelection).concat(Object.keys(newPromoterSelection));
-                    //if (kk.some(k => (PromoterFilters.#previousSelection[k] || false) != (newPromoterSelection[k] || false))) {
-                        //showAllFiltered();
+                    const trueKeys = o => Object.keys(o).filter(k=>o[k]);
+                    const newSelection = trueKeys(PromoterFilters.selections());
+                    if (newSelection.length != trueKeys(PromoterFilters.#previousSelection)
+                        || !newSelection.every(k => PromoterFilters.#previousSelection[k])){
                         PromoterFilters.save();
-                    //}
+                    }
                 } else {
-                    PromoterFilters.#previousSelection = filterSelections;
+                    PromoterFilters.#previousSelection = PromoterFilters.selections();
                 }
             }
 
@@ -110,7 +111,7 @@
                 let promoterKeys = Object.keys(events.promoters);
                 promoterKeys.sort((a, b) => a.localeCompare(b));
                 let menuItems = promoterKeys.map(p => `
-                <div><input type="checkbox" class='promoterFilter' ${Filters.filters.promoterExclude[p] === false ? 'checked' : ''} name="${p}" id='${p}filter'/>
+                <div><input type="checkbox" class='promoterFilter' ${Filters.filters.promoterExclude?.[p] !== true ? 'checked' : ''} name="${p}" id='${p}filter'/>
                     <label for='${p}filter'>${events.promoters[p]}</label></div>`).join('\n');
                 document.getElementById("promoterMenu").innerHTML = `<div>${menuItems}</div>`;
                 document.querySelectorAll("#promoterMenu>div").forEach(ip => {
@@ -127,13 +128,13 @@
             }
 
             static save() {
-                Filters.filters.promoterExclude = PromoterFilters.selections;
+                Filters.filters.promoterExclude = PromoterFilters.selections();
                 Filters.save();
                 Filters.notify();
             }
 
             static includes (p) {
-                return !Filters.filters.promoterExclude[p];
+                return !Filters.filters.promoterExclude?.[p];
             }
         }
 

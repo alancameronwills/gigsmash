@@ -153,7 +153,7 @@ a:link {
     padding: 3vw;
     background-color: lightgray;
     transition: all 1s ease-in-out;
-    color: yellow;
+    color: darkblue;
 }
 
 #promoterMenu.visible {

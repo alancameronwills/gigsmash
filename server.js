@@ -96,8 +96,9 @@ async function runFile(fPath, req, response) {
 					let reply = "";
 					let replyType = contentTypes[req.extension] ?? "text/plain";
 					let status = 200;
+					let file = `${root}/client${req.path}`;
 					try {
-						reply = await fs.readFile(`${root}/client${req.path}`);
+						reply = await fs.readFile(file);
 					} catch (err) {
 						reply = err.toString();
 						replyType = "text/plain";
@@ -172,7 +173,7 @@ function log(msg, condition = true) {
 			messageRepeatCount = 0;
 		}
 		previousMsg = msg;
-		console.log(`${new Date().toISOString()} ${msg}`);
+		console.log(`${new Date().toISOString()}`, msg);
 	}
 }
 

@@ -262,7 +262,8 @@ let handlers = [];
             ri.dt = new Date(ri.date.replace(",", "")).valueOf() || 0;
             ri.text = "";
             ri.venue = "Queens Hall Narberth";
-            ri.category = (event.match(/<[^>]+badge-event.*?>.*?</gs)?.map(b => m(b, />(.*)</s))?.join(", ") || "").toLowerCase();
+            let category = (event.match(/<[^>]+badge-event.*?>.*?</gs)?.map(b => m(b, />(.*)</s))?.join(", ") || "").toLowerCase();
+            ri.category = category.indexOf("live")>=0 ? "live" : category;
             r.push(ri);
         })
 
@@ -392,7 +393,7 @@ let handlers = [];
     return r;
 }).friendly = "Small World";
 
-(handlers["gwaun"] = async (x) => {
+(handlers["gwaun"] = async (x=true) => {
     let fromSavoy = [], fromGwaun = [];
     {
         let r = [];

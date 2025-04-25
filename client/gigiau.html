@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="/gigsfav.ico">
+    <link rel="stylesheet" type="text/css" href="css/gigiau.cs" />
+    <title>Shows in North Pembrokeshire</title>
+    <script>
+        var events = [];
+
+
+        async function go() {
+            events = await fetch("/json/events.json").then(r = r.json());
+            CategoryFilters.restore();
+            PromoterFilters.restore(events.promoters);
+            showAllFiltered();
+        }
+
+        function showAllFiltered() {
+            
+        }
+
+
+
+        class PromoterFilters {
+            static #previousSelection = {};
+
+            static toggleMenu() {
+                let menu = document.getElementById("promoterMenu");
+                let showing = menu.classList.toggle("visible");
+                if (showing) {
+                    previousPromoterSelection = JSON.parse(localStorage.getItem("promoterFilters") || "");
+                } else {
+                    let newPromoterSelection = JSON.parse(localStorage.getItem("promoterFilters") || "");
+                    let kk = Object.keys(PromoterFilters.#previousSelection).concat(Object.keys(newPromoterSelection));
+                    if (kk.some(k => (PromoterFilters.#previousSelection[k] || false) != (newPromoterSelection[k] || false))) {
+                        //location.reload();
+                        XXXXX
+                    }
+                }
+            }
+
+            static isPromoterSelected(p) {
+                return !!(document.querySelector(`input[name='${p}']`)?.checked);
+            }
+
+            static restore(promoters) {
+                let savedPromoterSelectionJson = localStorage.getItem("promoterFilters");
+                let promoterSelection = {};
+                if (savedPromoterSelectionJson) {
+                    promoterSelection = JSON.parse(savedPromoterSelectionJson);
+                }
+                let promoterKeys = Object.keys(promoters);
+                promoterKeys.sort((a, b) => a.localeCompare(b));
+                let menuItems = promoterKeys.map(p => `
+                <div><input type="checkbox" class='promoterFilter' ${promoterSelection[p] === false ? '' : 'checked'} name="${p}" id='${p}filter'/>
+                    <label for='${p}filter'>${promoters[p]}</label></div>`).join('\n');
+                document.getElementById("promoterMenu").innerHTML = `<div>${menuItems}</div>`;
+                document.querySelectorAll("#promoterMenu>div").forEach(ip => {
+                    ip.onclick = e => {
+                        //PromoterFilters.toggle(ip.name);
+                        e.stopPropagation();
+                        PromoterFilters.save();
+                    };
+                });
+            }
+
+            static menuItemForPromoter(p) {
+                return document.querySelector(`#promoterMenu>div>div:has(input[name="${p}"])`);
+            }
+
+            static savePromoterFilters() {
+                let filterSelections = {};
+                document.querySelectorAll(".promoterFilter").forEach(ip => {
+                    filterSelections[ip.name] = ip.checked;
+                });
+                localStorage.setItem("promoterFilters", JSON.stringify(filterSelections));
+            }
+
+
+        }
+
+        class CategoryFilters {
+            static save() {
+                let savedFilters = {};
+                document.querySelectorAll(".filter input").forEach(ip => {
+                    savedFilters[ip.id.replace(/filter/, '')] = ip.checked;
+                });
+                localStorage.setItem("categoryFilters", JSON.stringify(savedFilters));
+
+            }
+            static restore() {
+                let savedFiltersJson = localStorage.getItem("categoryFilters");
+                if (savedFiltersJson) {
+                    let savedFilters = JSON.parse(savedFiltersJson);
+                    if (savedFilters) {
+                        document.querySelectorAll(".filter input").forEach(ip => {
+                            let restoreValue = savedFilters[ip.id.replace(/filter/, "")];
+                            if (restoreValue !== null) {
+                                ip.checked = restoreValue;
+                            }
+                        })
+                    }
+                }
+            }
+        }
+
+
+        class Flag {
+            static #f() { return document.getElementById("flag") }
+            static flag(text) {
+                const f = Flag.#f();
+                f.innerText = text;
+                f.style.display = "block";
+                setTimeout(this.clear, 10000);
+            }
+            static clear() {
+                const f = Flag.#f();
+                f.innerText = "";
+                f.style.display = "none";
+            }
+        }
+    </script>
+</head>
+
+<body onload="go()">
+    <div id="sources"></div>
+    <h1>What's On</h1>
+    <div id="table" onclick="toggleMenu()">
+
+    </div>
+    <div id="filters">
+        <div class="filter">
+            <input type="checkbox" id="filmfilter" onchange="filter('film', this)" />
+            <label for="filmsfilter">films</label>
+        </div>
+        <div class="filter">
+            <input type="checkbox" id="quizfilter" checked onchange="filter('quiz', this)" />
+            <label for="quizfilter">quizzes</label>
+        </div>
+        <div class="filter">
+            <input type="checkbox" id="broadcastfilter" checked onchange="filter('broadcast', this)" />
+            <label for="broadcastfilter">broadcast</label>
+        </div>
+        <div class="filter">
+            <input type="checkbox" id="livefilter" checked onchange="filter('live', this)" />
+            <label for="quizfilter">live</label>
+        </div>
+    </div>
+    <div id="promoterMenu" onclick="toggleMenu()">
+
+    </div>
+    <div id="flag" onclick="clearFlag()"></div>
+</body>
+
+</html>

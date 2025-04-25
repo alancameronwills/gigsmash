@@ -12,27 +12,6 @@ const cache = Cache(FileStorer("client/pix"));
  */
 async function collect(context) {
     // Get the lists from different promoters:
-    let {handlerNames, eventsLists, toDo, faults} = await getSources(context);
-
-    // Concatenate and sort them:
-    let shows = [];
-    handlerNames.forEach(n => shows = shows.concat(eventsLists[n]));
-    shows.sort((a, b) => a.dt - b.dt);
-
-    
-    const storer = FileStorer("client/json");
-    //storer.put("events-rawUrls.json", null, JSON.stringify(shows, null, "  "));
-
-    // Cache the images and replace their URLs with our caches:
-    await replaceImageUrls(shows);
-
-    // Save the list:
-    storer.put("events.json", null, JSON.stringify(shows, null, "  "));
-
-}
-
-
-async function getSources(context) {
     let handlers = await events(context, { query: {} });
     let handlerNames = Object.keys(handlers);
     let toDo = {};
@@ -51,7 +30,30 @@ async function getSources(context) {
             faults.push(`Getting ${n} ${e.toString()}`)
         }
     }));
-    return {handlerNames:handlerNames, eventsLists:eventsLists, toDo: toDo, faults: faults}
+    
+    // Concatenate and sort them:
+    let shows = [];
+    handlerNames.forEach(n => shows = shows.concat(eventsLists[n]));
+
+    shows.sort((a, b) => a.dt - b.dt);
+
+    let categories = {};
+    shows.forEach(s=> {
+        categories[s.category] = 1+(categories[s.category]||0);
+    })
+
+    
+    const storer = FileStorer("client/json");
+    //storer.put("events-rawUrls.json", null, JSON.stringify(shows, null, "  "));
+
+    // Cache the images and replace their URLs with our caches:
+    await replaceImageUrls(shows);
+
+    let package = {promoters:handlers, categories, shows, toDo, faults};
+
+    // Save the list:
+    storer.put("events.json", null, JSON.stringify(package, null, "  "));
+
 }
 
 async function replaceImageUrls (shows) {

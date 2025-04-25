@@ -1,0 +1,173 @@
+
+body {
+    font-family: Arial, Geneva, Helvetica, sans-serif;
+}
+
+a:link {
+    color: darkblue;
+}
+
+.dateHeading {
+    width: 100%;
+    background-color: darkblue;
+    color: white;
+    font-weight: bold;
+    padding: 6px;
+}
+
+.image img {
+    width: 200px;
+}
+
+.table {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 10px;
+    background-color: gray;
+    row-gap: 6px;
+    justify-content: flex-start;
+    padding: 0 6px;
+}
+
+.dateHeading {
+    margin: 0 -6px -2px -6px;
+}
+
+.show {
+    user-select: none;
+    column-gap: 20px;
+    display: flex;
+    justify-content: start;
+    padding: 10px 5px;
+    width: 200px;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    background-color: white;
+    border-radius: 4px;
+}
+
+.date {
+    grid-column: 2;
+    grid-row: 4;
+    font-size: small;
+}
+
+.venue {
+    cursor: pointer;
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.title {
+    font-weight: bold;
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.subtitle {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.image {
+    grid-row-start: 1;
+    grid-row-end: 5;
+    grid-column: 1;
+}
+
+.description {
+    grid-column: 3;
+    grid-row-start: 1;
+    grid-row-end: 5;
+    max-height: 100px;
+    overflow: hidden;
+    font-size: small;
+    display: none;
+}
+
+#sources {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background-color: azure;
+    padding: 3px;
+    transition: all 2s;
+}
+
+@media (max-width:600px) {
+    .table {
+        justify-content: space-evenly;
+    }
+}
+
+@media (max-width:1200px) {
+    #sources {
+        display: none;
+    }
+}
+
+#filters {
+    display: flex;
+    column-gap: 10px;
+    padding: 0 6px 1px 2px;
+    background-color: whitesmoke;
+    position: fixed;
+    top: 0;
+    right: 0;
+    transform-origin: bottom right;
+    transform: rotate(-90deg) translateY(-10px);
+    border-radius: 4px;
+}
+
+.table.no-film>.show.film {
+    display: none;
+}
+
+.table.no-quiz>.show.quiz {
+    display: none;
+}
+
+.table.no-live>.show.live {
+    display: none;
+}
+
+.table.no-broadcast>.show.broadcast {
+    display: none;
+}
+
+#promoterMenu {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    top: 10px;
+    left: 0;
+    width: 0;
+    padding-top: 3vh;
+    transition: all 1s ease-in-out;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+#promoterMenu>div {
+    margin-left: -100vw;
+    border-radius: 4px;
+    padding: 3vw;
+    background-color: lightgray;
+    transition: all 1s ease-in-out;
+    color: yellow;
+}
+
+#promoterMenu.visible {
+    width: 100vw;
+}
+
+#promoterMenu.visible>div {
+    margin-left: 0px;
+}
+#flag {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: black;
+    color: white;
+}

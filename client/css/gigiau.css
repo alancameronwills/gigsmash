@@ -171,3 +171,11 @@ a:link {
     background-color: black;
     color: white;
 }
+
+.head {
+    background-color:#e4e4e4;
+    display:flex;
+}
+.head img {
+    max-width:100%;
+}

@@ -4,10 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/x-icon" href="/gigsfav.ico">
+    <link rel="icon" type="image/x-icon" href="/gigiau.ico">
     <link rel="stylesheet" type="text/css" href="/css/gigiau.css" />
     <title>Shows in North Pembrokeshire</title>
     <script>
+        // TODO:
+        // - FilterGroup
+        // - Filter by show/hide; datestrips separate
+
         var events = [];
 
         async function go() {
@@ -15,29 +19,40 @@
             CategoryFilters.restore();
             PromoterFilters.restore();
             Filters.notify(showAllFiltered);
+            setTimeout(()=>location.reload(), 1000*60*60*6);
         }
 
         function showAllFiltered() {
             let table = document.getElementById('table');
-            // TRY IF THIS IS FASTER
-            table.innerHTML = "";
-            showsFiltered(filters).forEach(show => {
-                table.insertAdjacentHTML('beforeend',showOne(show));
-            });
-            /*
-            table.innerHTML = ${showsFiltered().map(show=>showOne(show)).join('\n')};
-            */
+            table.innerHTML = showsFiltered().map((show,ix)=>showOne(show,ix)).join('\n');
         }
 
         function showsFiltered() {
-            return events.shows.filter(show => CategoryFilters.includes(show.category)
-                    && PromoterFilters.includes(show.promoter)
-                    && show.dt > Date.now()- 24*3600000
-                );
+            let filteredList =  events.shows.filter(show => isShowVisible(show));
+            let currentDay = 0;
+            
+            let groupDate = 0;
+            filteredList.forEach(show => {
+                    let dt = new Date(show.dt);
+                    let dtDay = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+                    show.dtDayValue = dtDay.valueOf();
+                    show.newDate = show.dtDayValue != groupDate;
+                    groupDate = show.dtDayValue;
+                });
+            return filteredList;
         }
 
-        function showOne(show) {
-            if (show.dt < Date.now() - 24 * 3600 * 1000) return "";
+        var lastMidnight = (()=>{
+            let now = new Date();
+            return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        })();
+        function isShowVisible(show) {
+            return CategoryFilters.includes(show.category)
+                    && PromoterFilters.includes(show.promoter)
+                    && show.dt > lastMidnight;
+        }
+
+        function showOne(show,ix) {
             return (show.newDate ? `<div class="dateHeading">
                         ${new Date(show.dtDayValue).toLocaleDateString(undefined, {
                 weekday: "long",
@@ -182,10 +197,8 @@
 
 <body onload="go()">
     <div id="sources"></div>
-    <h1>What's On</h1>
-    <div id="table" onclick="PromoterFilters.toggleMenu()" class="table">
-
-    </div>
+    <div class="head"><img src="gigiau.png"/></div>
+    <div id="table" onclick="PromoterFilters.toggleMenu()" class="table"></div>
     <div id="filters">
         <div class="filter">
             <input type="checkbox" id="filmfilter" onchange="CategoryFilters.save()" />

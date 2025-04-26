@@ -54,6 +54,7 @@ test('collect', async (t) => {
                 asrt(s.dt, "No dt " + s.url);
                 asrt(s.category, "No category: " + s.url);
                 asrt((s.image?.length||0)>10, "No image: "+s.url);
+                asrt(s.image.match(/^\/pix\/[0-9]+\.[a-z]+$/), "Bad image name " + s.image);
             });
             assert(ff.length==0, "Event content faults: "+ff.join("\n"));
 

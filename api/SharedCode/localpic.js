@@ -19,8 +19,15 @@ class FileStorer {
         return await fsp.writeFile(this.#folder + name, buffer, opts);
     }
 
+    /**
+     * Whether a file exists
+     * @param {*} name possibly without a .suffix
+     * @returns name of the file that was found (including a missing suffix) or false
+     */
     has(name) {
-        return fs.existsSync(this.#folder + name);
+        if (fs.existsSync(this.#folder + name)) return name;
+        if (name.indexOf('.')>0) return false; 
+        return fs.readdirSync(this.#folder).find(f=>f.substring(0,name.length)==name) || false;
     }
 }
 
@@ -82,16 +89,23 @@ class Cache {
      * @returns {pic ArrayBuffer, name}
      */
     async getCache(url, get = true, name, size = this.#picSize) {
-        const storeName = name || this.#hashUrl(url);
-        //console.log("storeName " + storeName);
+        let hashName = name || this.#hashUrl(url);
+        let storeName = this.#storer.has(hashName); // may have suffix appended
         let wasCached = false;
-        if (!this.#storer.has(storeName)) {
+        if (!storeName) {
             //console.log("not got");
+            storeName = hashName;
             try {
                 const blob = await this.#fetchfile(url, true).then(r => r.blob());
                 const fileType = blob.type;
                 const arrayBuffer = await blob.arrayBuffer();
                 const resized = await sharp(arrayBuffer).resize({ width: size }).toBuffer();
+                if (storeName.indexOf('.')<0) {
+                    if (fileType.indexOf("jp")>0) storeName += ".jpg";
+                    else if (fileType.indexOf("png")>0) storeName += ".png";
+                    else if (fileType.indexOf("gif")>0) storeName += ".gif";
+                    else console.log("File type:" + fileType);
+                }
                 await this.#storer.put(storeName, fileType, resized);
             } catch (e) {
                 console.log(`Couldn't convert ${url} e`);

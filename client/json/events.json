@@ -18,12 +18,38 @@
     "rhosygilwen": "Rhosygilwen"
   },
   "categories": {
-    "live": 221,
-    "film": 41,
-    "broadcast": 12,
-    "quiz": 2
+    "live": 227,
+    "quiz": 2,
+    "film": 42,
+    "broadcast": 13
   },
   "shows": [
+    {
+      "url": "https://thecellarcardigan.bandcamp.com/merch/bee-theatre-1pm-wednesday-13th-august-2025-adult-tickets",
+      "image": "/pix/1012286482869125696.jpg",
+      "title": "Bee Theatre - 1pm, Wednesday 13th August 2025",
+      "date": "adult tickets 2025",
+      "dt": 1735689600000,
+      "venue": "Cellar Cardigan",
+      "text": "",
+      "price": "£10",
+      "category": "live",
+      "promoter": "cellar",
+      "imagesource": "https://f4.bcbits.com/img/0039460363_37.jpg"
+    },
+    {
+      "url": "https://thecellarcardigan.bandcamp.com/merch/bee-theatre-4pm-wednesday-13th-august-2025-adult-tickets",
+      "image": "/pix/1012286482852414016.jpg",
+      "title": "Bee Theatre - 4pm, Wednesday 13th August 2025",
+      "date": "adult tickets 2025",
+      "dt": 1735689600000,
+      "venue": "Cellar Cardigan",
+      "text": "",
+      "price": "£10",
+      "category": "live",
+      "promoter": "cellar",
+      "imagesource": "https://f4.bcbits.com/img/0039460370_37.jpg"
+    },
     {
       "image": "/pix/7068167678507513447.jpg",
       "title": "Owen Spafford and Louis Campbell",
@@ -37,240 +63,6 @@
       "imagesource": "https://bluestonebrewing.co.uk/cdn/shop/files/Owen-Spafford-Louis-Campbell-768x515.jpg?crop=center&amp;height=300&amp;v=1744101973&amp;width=300"
     },
     {
-      "image": "/pix/1299870413322020682.jpg",
-      "date": "26  Apr - 8 Jun",
-      "dt": 1745622000000,
-      "text": "",
-      "venue": "Mwldan",
-      "url": "https://mwldan.co.uk/whatson/cinema-2d-sinema-2d/disneys-snow-white-pg",
-      "title": "DISNEY&#039;S SNOW WHITE (PG)",
-      "category": "film",
-      "promoter": "mwldan",
-      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/undjku3jri6tb1q79lzzefxjr9es.jpg?itok=QWUh8490"
-    },
-    {
-      "image": "/pix/6418296962961864961.jpg",
-      "date": "26  Apr - 29 May",
-      "dt": 1745622000000,
-      "text": "",
-      "venue": "Mwldan",
-      "url": "https://mwldan.co.uk/whatson/cinema-2d-sinema-2d/penguin-lessons-12a",
-      "title": "THE PENGUIN LESSONS (12A)",
-      "category": "film",
-      "promoter": "mwldan",
-      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/uhwz27pm7i4yzy7bbux5jt6srpzu.jpg?itok=lnivwFfJ"
-    },
-    {
-      "image": "/pix/1733913623652675402.jpg",
-      "date": "26  Apr",
-      "dt": 1745622000000,
-      "text": "",
-      "venue": "Mwldan",
-      "url": "https://mwldan.co.uk/whatson/live-tm-tm-byw/cardi-bach-u-0",
-      "title": "Cardi Bach (U)",
-      "category": "live",
-      "promoter": "mwldan",
-      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/3tm2aycu6m8rd52r9af1ata084wf.jpg?itok=ol3qAASk"
-    },
-    {
-      "image": "/pix/2252381735834952710.jpg",
-      "date": "26  Apr - 8 Jun",
-      "dt": 1745622000000,
-      "text": "",
-      "venue": "Mwldan",
-      "url": "https://mwldan.co.uk/whatson/cinema-2d-sinema-2d/minecraft-movie-pg",
-      "title": "A MINECRAFT MOVIE (PG)",
-      "category": "film",
-      "promoter": "mwldan",
-      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/m1drbgcwve5zlt5zls9ebyavxijz.jpg?itok=b4LGbt3W"
-    },
-    {
-      "image": "/pix/6511955794165841690.jpg",
-      "date": "26  Apr - 5 May",
-      "dt": 1745622000000,
-      "text": "",
-      "venue": "Mwldan",
-      "url": "https://mwldan.co.uk/whatson/cinema-2d-sinema-2d/rave-avon-12a",
-      "title": "RAVE ON FOR THE AVON (12A)",
-      "category": "film",
-      "promoter": "mwldan",
-      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/5onvwn0de3xita1ppkntcxss415v.jpg?itok=dvcLqXGQ"
-    },
-    {
-      "image": "/pix/1536079673556954450.jpg",
-      "date": "26  Apr - 15 May",
-      "dt": 1745622000000,
-      "text": "",
-      "venue": "Mwldan",
-      "url": "https://mwldan.co.uk/whatson/cinema-2d-sinema-2d/mrburton-12a",
-      "title": "MR.BURTON (12A)",
-      "category": "film",
-      "promoter": "mwldan",
-      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/u9rj7cgs3kiuhi52hbvwbsonht9m.jpg?itok=SQLLwvvo"
-    },
-    {
-      "image": "/pix/6709055078630502228.jpg",
-      "date": "26  Apr - 17 May",
-      "dt": 1745622000000,
-      "text": "",
-      "venue": "Mwldan",
-      "url": "https://mwldan.co.uk/whatson/cinema-2d-sinema-2d/bridget-jones-mad-about-boy-15",
-      "title": "BRIDGET JONES: MAD ABOUT THE BOY (15)",
-      "category": "film",
-      "promoter": "mwldan",
-      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/ztkqfs30sldv064ojqw6qvrvgoqk.jpg?itok=7y37Ka9V"
-    },
-    {
-      "image": "/pix/6275546496868243044.jpg",
-      "url": "https://www.smallworld.org.uk/events/ibb-lords-and-ladies-saturday",
-      "title": "IBB presents Lords and Ladies</a>",
-      "venue": "SmallWorld",
-      "text": "",
-      "date": "2025-04-26 18:30",
-      "dt": 1745688600000,
-      "category": "live",
-      "promoter": "smallworld",
-      "imagesource": "https://images.squarespace-cdn.com/content/v1/6261524e67bc05154fede4e0/1741797770155-7EG690S7VBDDMUJIZZOV/unnamed.jpg"
-    },
-    {
-      "category": "film",
-      "venue": "Theatr Gwaun",
-      "image": "/pix/5643298900914473496.jpg",
-      "title": "STAR WARS: EP. III REVENGE OF THE SITH",
-      "url": "https://theatrgwaun.savoysystems.co.uk/TheatrGwaun.dll/TSelectItems.waSelectItemsPrompt.TcsWebMenuItem_551.TcsWebTab_552.TcsPerformance_1093237.TcsSection_737",
-      "text": "ActionAdventure",
-      "date": "April 26, 2025  7:30 pm",
-      "dt": 1745692200000,
-      "used": true,
-      "promoter": "gwaun",
-      "imagesource": "https://theatrgwaun.com/wp-content/uploads/2025/04/TG-web-700px-April25-Sith-400x400.jpg"
-    },
-    {
-      "image": "/pix/5045518243880855566.jpg",
-      "date": "27  Apr - 3 May",
-      "dt": 1745708400000,
-      "text": "",
-      "venue": "Mwldan",
-      "url": "https://mwldan.co.uk/whatson/cinema-2d-sinema-2d/flow-u",
-      "title": "FLOW (U)",
-      "category": "film",
-      "promoter": "mwldan",
-      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/7rkigbx9us16gydymu8w56r3lzeb.jpg?itok=tkvImvB4"
-    },
-    {
-      "image": "/pix/5260220098526783060.jpg",
-      "date": "27  Apr - 6 May",
-      "dt": 1745708400000,
-      "text": "",
-      "venue": "Mwldan",
-      "url": "https://mwldan.co.uk/whatson/live-broadcast-events-achlysuron-darlledu-byw/billy-elliot-musical-live-20th-anniversary",
-      "title": "BILLY ELLIOT THE MUSICAL LIVE (20TH ANNIVERSARY CELEBRATION) (15)",
-      "category": "broadcast",
-      "promoter": "mwldan",
-      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/y7aasq3d3p0rro173ueor6cztv4e.jpg?itok=LMNI6DNC"
-    },
-    {
-      "image": "/pix/6079612120193262878.jpg",
-      "date": "27  Apr",
-      "dt": 1745708400000,
-      "text": "",
-      "venue": "Mwldan",
-      "url": "https://mwldan.co.uk/whatson/tmfs-cfftm/seed-sacred-fig-15",
-      "title": "THE SEED OF THE SACRED FIG (15)",
-      "category": "film",
-      "promoter": "mwldan",
-      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/rm1s2vublz97370s3hkuc69rcs2d.jpg?itok=FObTJQ0n"
-    },
-    {
-      "date": "2025-04-27",
-      "dt": 1745712000000,
-      "venue": "Rhosygilwen",
-      "price": "0",
-      "image": "/pix/7600122519453071660.jpg",
-      "title": "Plant Fair",
-      "category": "live",
-      "url": "https://rhosygilwen.co.uk/events/plant-fair/",
-      "text": "Our annual plant fair is always popular with locally grown plants from some of the best nurseries in West Wales. This is a very popular event so please bear with us and our traffic management arrangements for the day. The Cafe is open for light lunches, delicious cakes and coffee. ",
-      "promoter": "rhosygilwen",
-      "imagesource": "https://rhosygilwen.co.uk/wp-content/uploads/2025/01/Plant-Fair.jpg"
-    },
-    {
-      "date": "2025-04-27",
-      "dt": 1745712000000,
-      "venue": "Rhosygilwen",
-      "price": "0",
-      "image": "/pix/7783396883889142079.jpg",
-      "title": "Andy Irvine &#038; Quilty",
-      "category": "live",
-      "url": "https://rhosygilwen.co.uk/events/andy-irvine-quilty/",
-      "text": "TogetherAndy Irvine &amp; Quilty offer a unique musical journey taking in the cultures of their two native countries, Ireland and Sweden.  Andy Irvine is one of the great Irish singers, his voice one of a handful of truly great ones that gets to the very soul of Ireland. He has been hailed as &quot;a tradition in himself.&quot; Musician, singer and songwriter, Andy has maintained his highly individual performing skills throughout his over 55-year career. From Sweeney's Men in the mid 60s, to the enormous success of Planxty in the 70s, his duo with Paul Brady in the later 70s and then from Patrick Street to Mozaik, LAPD and Usher’s Island, Andy has been a world music pioneer and an icon for traditional music and musicians.  Ever the man for new pastures, Andy has played concerts all over Europe and has toured many times in Australia, New Zealand, the United States and Canada. He was also undertaken extensive tours of Costa Rica, Panama, Nicaragua, Japan, Iceland, Faroe Islands, Argentina and Chile.  Although an integral part of the finest Irish bands of our time, Andy Irvine continues along the path he set for himself so long ago - a vibrant career as a solo artist in the old style, a teller of tales and maker of music  The Swedish band Quilty is a renowned interpreter of traditional Irish music and considered being the foremost band of the Irish folkmusic scene in Scandinavia.  In 2020 Quilty was nominated Band of the Year at the national Folk &amp; World Music Gala event.  Since 2020 Quilty has been touring with the program Out on the Ocean - sea shanties, emigration songs, love ballads and songs about epic adventures at sea in a salty and tar scented concert programme combining Irish and Scottish songs with the Atlantic Ocean as a backdrop, as well as the traditional music from their own country - Sweden.",
-      "promoter": "rhosygilwen",
-      "imagesource": "https://rhosygilwen.co.uk/wp-content/uploads/2024/12/Quilty-monochrome-High-Res-Landscape_e57fc85d-2-scaled.jpg"
-    },
-    {
-      "image": "/pix/6275546496868243044.jpg",
-      "url": "https://www.smallworld.org.uk/events/ibb-lords-and-ladies-sunday",
-      "title": "IBB presents Lords and Ladies</a>",
-      "venue": "SmallWorld",
-      "text": "",
-      "date": "2025-04-27 14:00",
-      "dt": 1745758800000,
-      "category": "live",
-      "promoter": "smallworld",
-      "imagesource": "https://images.squarespace-cdn.com/content/v1/6261524e67bc05154fede4e0/1741797770155-7EG690S7VBDDMUJIZZOV/unnamed.jpg"
-    },
-    {
-      "category": "film",
-      "venue": "Theatr Gwaun",
-      "image": "/pix/2964811145579754261.jpg",
-      "title": "FLOW",
-      "url": "https://theatrgwaun.savoysystems.co.uk/TheatrGwaun.dll/TSelectItems.waSelectItemsPrompt.TcsWebMenuItem_551.TcsWebTab_552.TcsPerformance_1082360.TcsSection_737",
-      "text": "Animation",
-      "date": "April 27, 2025  2:00 pm",
-      "dt": 1745758800000,
-      "used": true,
-      "promoter": "gwaun",
-      "imagesource": "https://theatrgwaun.com/wp-content/uploads/2025/03/TG-web-700px-April25-6-400x400.jpg"
-    },
-    {
-      "category": "film",
-      "venue": "Theatr Gwaun",
-      "image": "/pix/1806321920515399207.jpg",
-      "title": "BLACK BAG",
-      "url": "https://theatrgwaun.savoysystems.co.uk/TheatrGwaun.dll/TSelectItems.waSelectItemsPrompt.TcsWebMenuItem_551.TcsWebTab_552.TcsPerformance_1084590.TcsSection_737",
-      "text": "Drama",
-      "date": "April 27, 2025  7:30 pm",
-      "dt": 1745778600000,
-      "used": true,
-      "promoter": "gwaun",
-      "imagesource": "https://theatrgwaun.com/wp-content/uploads/2025/03/TG-web-700px-April25-4.jpg"
-    },
-    {
-      "category": "live",
-      "venue": "Theatr Gwaun",
-      "image": "/pix/1806322165512411709.jpg",
-      "title": "OH MY GOODNESS!",
-      "url": "https://theatrgwaun.savoysystems.co.uk/TheatrGwaun.dll/TSelectItems.waSelectItemsPrompt.TcsWebMenuItem_551.TcsWebTab_552.TcsPerformance_1083333.TcsSection_737",
-      "text": "Comedy",
-      "date": "April 28, 2025  11:00 am",
-      "dt": 1745834400000,
-      "used": true,
-      "promoter": "gwaun",
-      "imagesource": "https://theatrgwaun.com/wp-content/uploads/2025/03/TG-web-700px-April25-.jpg"
-    },
-    {
-      "category": "film",
-      "venue": "Theatr Gwaun",
-      "image": "/pix/1806321920515399201.jpg",
-      "title": "THE SURFER",
-      "url": "https://escapes.cinematik.app/screenings/the-surfer-theatr-gwaun-community-trust-theatr-gwaun-2025-04-28/order_items/new",
-      "text": "Drama",
-      "date": "April 28, 2025  7:30 pm",
-      "dt": 1745865000000,
-      "promoter": "gwaun",
-      "imagesource": "https://theatrgwaun.com/wp-content/uploads/2025/03/TG-web-700px-April25-2.jpg"
-    },
-    {
       "image": "/pix/224657984283113581.jpg",
       "title": "Quiz Night",
       "url": "https://www.bluestonebrewing.co.uk/collections/events/products/quiz-night-1",
@@ -281,6 +73,42 @@
       "dt": 1745881200000,
       "promoter": "bluestone",
       "imagesource": "https://bluestonebrewing.co.uk/cdn/shop/files/BluestoneQuizNight.jpg?crop=center&amp;height=300&amp;v=1736951130&amp;width=300"
+    },
+    {
+      "image": "/pix/1536079673556954450.jpg",
+      "date": "30  Apr - 15 May",
+      "dt": 1745967600000,
+      "text": "",
+      "venue": "Mwldan",
+      "url": "https://mwldan.co.uk/whatson/cinema-2d-sinema-2d/mrburton-12a",
+      "title": "MR.BURTON (12A)",
+      "category": "film",
+      "promoter": "mwldan",
+      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/u9rj7cgs3kiuhi52hbvwbsonht9m.jpg?itok=SQLLwvvo"
+    },
+    {
+      "image": "/pix/6709055078630502228.jpg",
+      "date": "30  Apr - 17 May",
+      "dt": 1745967600000,
+      "text": "",
+      "venue": "Mwldan",
+      "url": "https://mwldan.co.uk/whatson/cinema-2d-sinema-2d/bridget-jones-mad-about-boy-15",
+      "title": "BRIDGET JONES: MAD ABOUT THE BOY (15)",
+      "category": "film",
+      "promoter": "mwldan",
+      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/ztkqfs30sldv064ojqw6qvrvgoqk.jpg?itok=7y37Ka9V"
+    },
+    {
+      "image": "/pix/6418296962961864961.jpg",
+      "date": "30  Apr - 29 May",
+      "dt": 1745967600000,
+      "text": "",
+      "venue": "Mwldan",
+      "url": "https://mwldan.co.uk/whatson/cinema-2d-sinema-2d/penguin-lessons-12a",
+      "title": "THE PENGUIN LESSONS (12A)",
+      "category": "film",
+      "promoter": "mwldan",
+      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/uhwz27pm7i4yzy7bbux5jt6srpzu.jpg?itok=lnivwFfJ"
     },
     {
       "category": "film",
@@ -408,6 +236,42 @@
       "imagesource": "https://theatrgwaun.com/wp-content/uploads/2025/03/TG-web-700px-April25-8.jpg"
     },
     {
+      "image": "/pix/5045518243880855566.jpg",
+      "date": "3  May",
+      "dt": 1746226800000,
+      "text": "",
+      "venue": "Mwldan",
+      "url": "https://mwldan.co.uk/whatson/cinema-2d-sinema-2d/flow-u",
+      "title": "FLOW (U)",
+      "category": "film",
+      "promoter": "mwldan",
+      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/7rkigbx9us16gydymu8w56r3lzeb.jpg?itok=tkvImvB4"
+    },
+    {
+      "image": "/pix/1299870413322020682.jpg",
+      "date": "3  May - 8 Jun",
+      "dt": 1746226800000,
+      "text": "",
+      "venue": "Mwldan",
+      "url": "https://mwldan.co.uk/whatson/cinema-2d-sinema-2d/disneys-snow-white-pg",
+      "title": "DISNEY&#039;S SNOW WHITE (PG)",
+      "category": "film",
+      "promoter": "mwldan",
+      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/undjku3jri6tb1q79lzzefxjr9es.jpg?itok=QWUh8490"
+    },
+    {
+      "image": "/pix/2252381735834952710.jpg",
+      "date": "3  May - 8 Jun",
+      "dt": 1746226800000,
+      "text": "",
+      "venue": "Mwldan",
+      "url": "https://mwldan.co.uk/whatson/cinema-2d-sinema-2d/minecraft-movie-pg",
+      "title": "A MINECRAFT MOVIE (PG)",
+      "category": "film",
+      "promoter": "mwldan",
+      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/m1drbgcwve5zlt5zls9ebyavxijz.jpg?itok=b4LGbt3W"
+    },
+    {
       "category": "film",
       "venue": "Theatr Gwaun",
       "image": "/pix/1806321920515399211.jpg",
@@ -472,6 +336,18 @@
       "imagesource": "https://theatrgwaun.com/wp-content/uploads/2025/03/TG-web-700px-April25-8.jpg"
     },
     {
+      "image": "/pix/6511955794165841690.jpg",
+      "date": "5  May",
+      "dt": 1746399600000,
+      "text": "",
+      "venue": "Mwldan",
+      "url": "https://mwldan.co.uk/whatson/cinema-2d-sinema-2d/rave-avon-12a",
+      "title": "RAVE ON FOR THE AVON (12A)",
+      "category": "film",
+      "promoter": "mwldan",
+      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/5onvwn0de3xita1ppkntcxss415v.jpg?itok=dvcLqXGQ"
+    },
+    {
       "category": "film",
       "venue": "Theatr Gwaun",
       "image": "/pix/1806321920515399206.jpg",
@@ -495,6 +371,18 @@
       "category": "live",
       "promoter": "span",
       "imagesource": "https://d235gwso45fsgz.cloudfront.net/as-assets/variants/r57h3phildqb6swvamtb67qhmanm/a6206d8b8848d1f5f779dd436f25589e3a792fee204effd13dccee565e881abd"
+    },
+    {
+      "image": "/pix/5260220098526783060.jpg",
+      "date": "6  May",
+      "dt": 1746486000000,
+      "text": "",
+      "venue": "Mwldan",
+      "url": "https://mwldan.co.uk/whatson/live-broadcast-events-achlysuron-darlledu-byw/billy-elliot-musical-live-20th-anniversary",
+      "title": "BILLY ELLIOT THE MUSICAL LIVE (20TH ANNIVERSARY CELEBRATION) (15)",
+      "category": "broadcast",
+      "promoter": "mwldan",
+      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/y7aasq3d3p0rro173ueor6cztv4e.jpg?itok=LMNI6DNC"
     },
     {
       "category": "film",
@@ -649,6 +537,19 @@
       "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/f8cdf1wcfb9z87zj3mpny5jb5563.jpg?itok=XWwjrLdx"
     },
     {
+      "category": "film",
+      "venue": "Theatr Gwaun",
+      "image": "/pix/3972868788090840641.jpg",
+      "title": "FOUR MOTHERS",
+      "url": "https://theatrgwaun.savoysystems.co.uk/TheatrGwaun.dll/TSelectItems.waSelectItemsPrompt.TcsWebMenuItem_551.TcsWebTab_552.TcsPerformance_1095659.TcsSection_737",
+      "text": "Drama",
+      "date": "May 12, 2025  11:00 am",
+      "dt": 1747044000000,
+      "used": true,
+      "promoter": "gwaun",
+      "imagesource": "https://theatrgwaun.com/wp-content/uploads/2025/04/TG-web-700px-May25-6-400x400.jpg"
+    },
+    {
       "category": "live",
       "venue": "Theatr Gwaun",
       "image": "/pix/5499750988053173803.jpg",
@@ -764,6 +665,19 @@
       "imagesource": "https://d235gwso45fsgz.cloudfront.net/as-assets/variants/7aqii02f3f3kv5dzyxiuyfru2pjl/a6206d8b8848d1f5f779dd436f25589e3a792fee204effd13dccee565e881abd"
     },
     {
+      "category": "film",
+      "venue": "Theatr Gwaun",
+      "image": "/pix/3972868788090840641.jpg",
+      "title": "FOUR MOTHERS",
+      "url": "https://theatrgwaun.savoysystems.co.uk/TheatrGwaun.dll/TSelectItems.waSelectItemsPrompt.TcsWebMenuItem_551.TcsWebTab_552.TcsPerformance_1095661.TcsSection_737",
+      "text": "Drama",
+      "date": "May 16, 2025  7:30 pm",
+      "dt": 1747420200000,
+      "used": true,
+      "promoter": "gwaun",
+      "imagesource": "https://theatrgwaun.com/wp-content/uploads/2025/04/TG-web-700px-May25-6-400x400.jpg"
+    },
+    {
       "title": "Eisteddfod Llandudoch",
       "text": "Whole day",
       "category": "live",
@@ -803,6 +717,19 @@
       "imagesource": "https://moylgrove.wales/wp-content/uploads/2025/03/image-7-300x244.png"
     },
     {
+      "category": "film",
+      "venue": "Theatr Gwaun",
+      "image": "/pix/3972868788090840641.jpg",
+      "title": "FOUR MOTHERS",
+      "url": "https://theatrgwaun.savoysystems.co.uk/TheatrGwaun.dll/TSelectItems.waSelectItemsPrompt.TcsWebMenuItem_551.TcsWebTab_552.TcsPerformance_1095663.TcsSection_737",
+      "text": "Drama",
+      "date": "May 17, 2025  7:30 pm",
+      "dt": 1747506600000,
+      "used": true,
+      "promoter": "gwaun",
+      "imagesource": "https://theatrgwaun.com/wp-content/uploads/2025/04/TG-web-700px-May25-6-400x400.jpg"
+    },
+    {
       "image": "/pix/3636998093962561848.jpg",
       "date": "18  May - 22 Jun",
       "dt": 1747522800000,
@@ -840,6 +767,32 @@
       "imagesource": "https://rhosygilwen.co.uk/wp-content/uploads/2025/01/image-1-e1736763323765.jpeg"
     },
     {
+      "category": "film",
+      "venue": "Theatr Gwaun",
+      "image": "/pix/3973994687997683265.jpg",
+      "title": "THE RETURN",
+      "url": "https://theatrgwaun.savoysystems.co.uk/TheatrGwaun.dll/TSelectItems.waSelectItemsPrompt.TcsWebMenuItem_551.TcsWebTab_552.TcsPerformance_1095695.TcsSection_737",
+      "text": "Drama",
+      "date": "May 18, 2025  7:30 pm",
+      "dt": 1747593000000,
+      "used": true,
+      "promoter": "gwaun",
+      "imagesource": "https://theatrgwaun.com/wp-content/uploads/2025/04/TG-web-700px-May25-2-400x400.jpg"
+    },
+    {
+      "category": "film",
+      "venue": "Theatr Gwaun",
+      "image": "/pix/3973994687997683265.jpg",
+      "title": "THE RETURN",
+      "url": "https://theatrgwaun.savoysystems.co.uk/TheatrGwaun.dll/TSelectItems.waSelectItemsPrompt.TcsWebMenuItem_551.TcsWebTab_552.TcsPerformance_1095697.TcsSection_737",
+      "text": "Drama",
+      "date": "May 19, 2025  11:00 am",
+      "dt": 1747648800000,
+      "used": true,
+      "promoter": "gwaun",
+      "imagesource": "https://theatrgwaun.com/wp-content/uploads/2025/04/TG-web-700px-May25-2-400x400.jpg"
+    },
+    {
       "venue": "Span Arts (Can Sing)",
       "date": "2025-05-19 19:00",
       "dt": 1747677600000,
@@ -864,7 +817,7 @@
       "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/w7a9nfabpevrcemfxsigjpplptjc.jpg?itok=sn9kZRhR"
     },
     {
-      "image": "/pix/1881673757438733893.jpg",
+      "image": "/pix/5933314465874132057.jpg",
       "date": "21  May - 22 Jun",
       "dt": 1747782000000,
       "text": "",
@@ -873,7 +826,7 @@
       "title": "MISSION:IMPOSSIBLE THE FINAL RECKONING (12A TBC)",
       "category": "film",
       "promoter": "mwldan",
-      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/emikx0eif4wrnra969rygw6hpd6f.jpg?itok=HBDe7Jpn"
+      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/7kp0x2ssqc6w54a375l1nyhdfkp2.jpg?itok=h_NZb1sX"
     },
     {
       "url": "https://moylgrove.wales/fizznchips-6/?locale=en-GB",
@@ -987,6 +940,19 @@
       "imagesource": "https://static.wixstatic.com/media/2943ab_19dea7936d2a4e9394ba9af872356873~mv2.jpeg/v1/crop/x_0,y_0,w_858,h_857/fill/w_402,h_402,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/rioghnach2.jpeg"
     },
     {
+      "category": "film",
+      "venue": "Theatr Gwaun",
+      "image": "/pix/2971574585061833564.jpg",
+      "title": "THE ACCOUNTANT 2",
+      "url": "https://theatrgwaun.savoysystems.co.uk/TheatrGwaun.dll/TSelectItems.waSelectItemsPrompt.TcsWebMenuItem_551.TcsWebTab_552.TcsPerformance_1095935.TcsSection_737",
+      "text": "Action",
+      "date": "May 23, 2025  7:30 pm",
+      "dt": 1748025000000,
+      "used": true,
+      "promoter": "gwaun",
+      "imagesource": "https://theatrgwaun.com/wp-content/uploads/2025/04/TG-web-700px-May25-new-3-400x400.jpg"
+    },
+    {
       "title": "Fishguard Folk Festival",
       "text": "Mainly free acts, walks, workshops, sessions",
       "image": "/pix/7580512769870413876.png",
@@ -1046,6 +1012,18 @@
       "category": "live",
       "promoter": "stdavids",
       "imagesource": "https://dm7lxewn39lms.cloudfront.net/as-assets/variants/m9kccc6evx60krrykk88pna9t08q/a6206d8b8848d1f5f779dd436f25589e3a792fee204effd13dccee565e881abd"
+    },
+    {
+      "venue": "St Davids Cathedral Festival",
+      "date": "2025-05-24 16:00",
+      "dt": 1748098800000,
+      "image": "/pix/3831002402194669104.jpg",
+      "title": "Talk: Quentin Letts, 'Nunc!'",
+      "url": "https://stdavidscathedral.ticketsolve.com/shows/1173663981/events/428721746",
+      "text": "   Ty&apos;r Pererin Education Centre, Quickwell Hill, St Davids     Author and sketch writer Quentin Letts presents a talk on his new book, &apos;Nunc!&apos;:  \n\n   Jerusalem is ruled by rosemary-scented King Herod. By the bougainvillea in Deuteronomy Square, Reuben&rsquo;s tea stall keeps customers sweet with lemon koloochehs. Onesimus the green-grocer piles his polished pears and pineapples in ziggurats, blind harpist Tabitha captivates bachelor Pharisees, Roman sentries doze; and the widower Simeon, beset by gout and befriended by a dog called Shlomo, watches the passing promenade. By day he dodges bossy superintendent Kedar. By starlit night he contemplates lost loves and the visits of a bad-tempered angel.   \n   Quentin Letts&rsquo;s delightful tales bring 1st century Jerusalem to quirky life and show how the prophet Simeon, whose Nunc Dimittis became one of the great canticles of Christendom, can help an ailing 21st century Englishman come to terms with his fate.   \n     \n  The talk includes performances of different settings of the Nunc dimittis by our Choral Scholars.  \n\n   Copies of Nunc! are available to purchase following the talk from St Davids Bookshop in the hall.   ",
+      "category": "live",
+      "promoter": "stdavids",
+      "imagesource": "https://dm7lxewn39lms.cloudfront.net/as-assets/variants/4d50xoy68h34e9bl0mtritd9qf00/a6206d8b8848d1f5f779dd436f25589e3a792fee204effd13dccee565e881abd"
     },
     {
       "venue": "St Davids Cathedral Festival",
@@ -1159,6 +1137,19 @@
       "imagesource": "https://dm7lxewn39lms.cloudfront.net/as-assets/variants/8zki1fg91mfbxg3tw588bir6g5j7/a6206d8b8848d1f5f779dd436f25589e3a792fee204effd13dccee565e881abd"
     },
     {
+      "category": "film",
+      "venue": "Theatr Gwaun",
+      "image": "/pix/1806321920515399211.jpg",
+      "title": "A MINECRAFT MOVIE",
+      "url": "https://theatrgwaun.savoysystems.co.uk/TheatrGwaun.dll/TSelectItems.waSelectItemsPrompt.TcsWebMenuItem_551.TcsWebTab_552.TcsPerformance_1095939.TcsSection_737",
+      "text": "AdventureWelcome Wednesdays",
+      "date": "May 26, 2025  6:00 pm",
+      "dt": 1748278800000,
+      "used": true,
+      "promoter": "gwaun",
+      "imagesource": "https://theatrgwaun.com/wp-content/uploads/2025/03/TG-web-700px-April25-8.jpg"
+    },
+    {
       "venue": "St Davids Cathedral Festival",
       "date": "2025-05-26 19:00",
       "dt": 1748282400000,
@@ -1198,13 +1189,25 @@
       "venue": "St Davids Cathedral Festival",
       "date": "2025-05-27 11:00",
       "dt": 1748340000000,
-      "image": "/pix/4190074085276068924.png",
-      "title": "Young Musician of Dyfed",
+      "image": "/pix/7002081915123821158.jpg",
+      "title": "Jonah Barker - Young Musician of Dyfed",
       "url": "https://stdavidscathedral.ticketsolve.com/shows/1173662464/events/428716978",
-      "text": "  The winner of the annual Young Musician of Dyfed competition will perform in this morning recital. Full details to be released following the competition final in April.    Bydd enillydd cystadleuaeth flynyddol Cerddor Ifanc Dyfed yn perfformio yn y datganiad boreol hwn. Bydd y manylion llawn yn cael eu rhyddhau yn dilyn rownd derfynol y gystadleuaeth ym mis Ebrill.   ",
+      "text": "  Jonah Barker, Young Musician of Dyfed 2025 performs a delightful collection of classical and jazz works for the piano.     Clair De Lune  - Claude Debussy   \n    Arabesque No.1  - Claude Debussy   \n     Three Preludes  - George Gershwin    \n     The Man I Love  - George&nbsp;Gerswhin       Someone To Watch Over Me  - George&nbsp;Gershwin       I Got Rhythm  - George&nbsp;Gershwin       Rhapsody On A Theme Of Paganini; Op.43, Variation 18  - Sergei Rachmaninoff       Moon River  - Henry Mancini       Smoke Gets In Your Eyes  - Jerome Kern       Misty  - Erroll Garner       Danny Boy  - Trad. Irish Folksong, arr. Nikki Iles       I Wish I Knew  - Billy Taylor       Blues For Martha  - Oscar Peterson       Wave  - Antonio Carlos Jobim, arr. Jacob Koller      ",
       "category": "live",
       "promoter": "stdavids",
-      "imagesource": "https://dm7lxewn39lms.cloudfront.net/as-assets/variants/9b5e7uq6shyy8t62lvmr6u4hgik7/a6206d8b8848d1f5f779dd436f25589e3a792fee204effd13dccee565e881abd"
+      "imagesource": "https://dm7lxewn39lms.cloudfront.net/as-assets/variants/u33n6peiwf2528vgwamvtzj9ngqx/a6206d8b8848d1f5f779dd436f25589e3a792fee204effd13dccee565e881abd"
+    },
+    {
+      "venue": "St Davids Cathedral Festival",
+      "date": "2025-05-27 16:30",
+      "dt": 1748359800000,
+      "image": "/pix/2769556684352811616.jpg",
+      "title": "Pre-Concert Talk: Setting Words to Music",
+      "url": "https://stdavidscathedral.ticketsolve.com/shows/1173663978/events/428721725",
+      "text": "   Twr y Felin Hotel, St Davids     Join performers James Gilchrist &amp; Jocelyn Freeman and composer Rhian Samuel in conversation with Suzanne Owen at Twr y Felin Hotel. In this pre-concert talk, they explore the different ways in which different composers have set the words of Dylan Thomas, how they impact the performer&apos;s interpretation of the text, and how these compare to Schumann&apos;s setting of Dichterliebe (&apos;A Poet&apos;s Love&apos;). Entry includes a complimentary soft drink and welshcake on arrival.  ",
+      "category": "live",
+      "promoter": "stdavids",
+      "imagesource": "https://dm7lxewn39lms.cloudfront.net/as-assets/variants/x1difb5knraxb67uyfq02s8nrne7/a6206d8b8848d1f5f779dd436f25589e3a792fee204effd13dccee565e881abd"
     },
     {
       "venue": "St Davids Cathedral Festival",
@@ -1217,6 +1220,19 @@
       "category": "live",
       "promoter": "stdavids",
       "imagesource": "https://dm7lxewn39lms.cloudfront.net/as-assets/variants/76r4f3fr0sooodcy0elrl03t8h63/a6206d8b8848d1f5f779dd436f25589e3a792fee204effd13dccee565e881abd"
+    },
+    {
+      "category": "film",
+      "venue": "Theatr Gwaun",
+      "image": "/pix/2971574585061833564.jpg",
+      "title": "THE ACCOUNTANT 2",
+      "url": "https://theatrgwaun.savoysystems.co.uk/TheatrGwaun.dll/TSelectItems.waSelectItemsPrompt.TcsWebMenuItem_551.TcsWebTab_552.TcsPerformance_1095937.TcsSection_737",
+      "text": "Action",
+      "date": "May 27, 2025  7:30 pm",
+      "dt": 1748370600000,
+      "used": true,
+      "promoter": "gwaun",
+      "imagesource": "https://theatrgwaun.com/wp-content/uploads/2025/04/TG-web-700px-May25-new-3-400x400.jpg"
     },
     {
       "venue": "St Davids Cathedral Festival",
@@ -1289,18 +1305,6 @@
       "category": "live",
       "promoter": "queens",
       "imagesource": "https://static.thequeenshall.org.uk/events/the-seeger-sessions-revival_500px_0i.jpg"
-    },
-    {
-      "image": "/pix/4979085665314942045.jpg",
-      "date": "31  May - 12 Jun",
-      "dt": 1748646000000,
-      "text": "",
-      "venue": "Mwldan",
-      "url": "https://mwldan.co.uk/whatson/cinema-2d-sinema-2d/big-bold-beautiful-journey-12a-tbc",
-      "title": "A BIG BOLD BEAUTIFUL JOURNEY (12A TBC)",
-      "category": "film",
-      "promoter": "mwldan",
-      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/3y8s0qq0qowuk3xx4s8ibsdhqxy1.jpg?itok=MZSc-zm-"
     },
     {
       "date": "2025-05-31",
@@ -1400,6 +1404,31 @@
       "imagesource": "https://static.thequeenshall.org.uk/events/queens-hall-comedy-club-june-2025_500px_0i.jpg"
     },
     {
+      "category": "live",
+      "venue": "Theatr Gwaun",
+      "image": "/pix/3972305838137419329.jpg",
+      "title": "A STREETCAR NAMED DESIRE",
+      "url": "https://theatrgwaun.savoysystems.co.uk/TheatrGwaun.dll/TSelectItems.waSelectItemsPrompt.TcsWebMenuItem_551.TcsWebTab_552.TcsPerformance_1095657.TcsSection_737",
+      "text": "National Theatre",
+      "date": "June 5, 2025  7:00 pm",
+      "dt": 1749146400000,
+      "promoter": "gwaun",
+      "imagesource": "https://theatrgwaun.com/wp-content/uploads/2025/04/TG-web-700px-May25-4-400x400.jpg"
+    },
+    {
+      "category": "broadcast",
+      "venue": "Theatr Gwaun",
+      "image": "/pix/3972305838137419329.jpg",
+      "title": "A STREETCAR NAMED DESIRE",
+      "url": "https://theatrgwaun.savoysystems.co.uk/TheatrGwaun.dll/TSelectItems.waSelectItemsPrompt.TcsWebMenuItem_551.TcsWebTab_552.TcsPerformance_1095657.TcsSection_737",
+      "text": "National Theatre",
+      "date": "June 5, 2025  7:00 pm",
+      "dt": 1749146400000,
+      "used": true,
+      "promoter": "gwaun",
+      "imagesource": "https://theatrgwaun.com/wp-content/uploads/2025/04/TG-web-700px-May25-4-400x400.jpg"
+    },
+    {
       "image": "/pix/7869499390607107700.jpg",
       "title": "Comedy Night",
       "url": "https://www.bluestonebrewing.co.uk/collections/events/products/comedy-night",
@@ -1410,18 +1439,6 @@
       "dt": 1749164400000,
       "promoter": "bluestone",
       "imagesource": "https://bluestonebrewing.co.uk/cdn/shop/files/IMG_5198.jpg?crop=center&amp;height=300&amp;v=1743001700&amp;width=300"
-    },
-    {
-      "image": "/pix/6633827561628775198.jpg",
-      "date": "6  Jun - 19 Jun",
-      "dt": 1749164400000,
-      "text": "",
-      "venue": "Mwldan",
-      "url": "https://mwldan.co.uk/whatson/cinema-2d-sinema-2d/ballerina-15-tbc",
-      "title": "BALLERINA (15 TBC)",
-      "category": "film",
-      "promoter": "mwldan",
-      "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/nhcvzxjyjux2q8nmn7wtaxpwru1c.jpg?itok=EMY6B0u1"
     },
     {
       "title": "7/6/25  The Castle is closed today due to a Private Event",
@@ -1869,7 +1886,7 @@
     },
     {
       "url": "https://thecellarcardigan.bandcamp.com/merch/the-bookshop-band-friday-18th-july-2025",
-      "image": "/pix/1084061502318446400.jpg",
+      "image": "/pix/1012286482785372482.jpg",
       "title": "The Bookshop Band",
       "date": "Friday 18th July 2025",
       "dt": 1752793200000,
@@ -1878,7 +1895,7 @@
       "price": "£15",
       "category": "live",
       "promoter": "cellar",
-      "imagesource": "https://f4.bcbits.com/img/0038370605_37.jpg"
+      "imagesource": "https://f4.bcbits.com/img/0039462844_37.jpg"
     },
     {
       "date": "2025-07-18",
@@ -2249,6 +2266,19 @@
       "imagesource": "https://f4.bcbits.com/img/0038574412_37.jpg"
     },
     {
+      "url": "https://thecellarcardigan.bandcamp.com/merch/bee-theatre-1pm-wednesday-13th-august-2025-childrens-tickets",
+      "image": "/pix/1012286482802147904.jpg",
+      "title": "Bee Theatre - 1pm, Wednesday 13th August 2025",
+      "date": "1 August 2025",
+      "dt": 1754002800000,
+      "venue": "Cellar Cardigan",
+      "text": "",
+      "price": "£5",
+      "category": "live",
+      "promoter": "cellar",
+      "imagesource": "https://f4.bcbits.com/img/0039460347_37.jpg"
+    },
+    {
       "title": "Measure for Measure",
       "text": "Summer outdoor performance",
       "venue": "St Dogmael's Abbey",
@@ -2283,6 +2313,19 @@
       "category": "live",
       "promoter": "span",
       "imagesource": "https://d235gwso45fsgz.cloudfront.net/as-assets/variants/ddv0c11q9lqmh4s3ksuldcjxlvjg/a6206d8b8848d1f5f779dd436f25589e3a792fee204effd13dccee565e881abd"
+    },
+    {
+      "url": "https://thecellarcardigan.bandcamp.com/merch/bee-theatre-4pm-wednesday-13th-august-2025-childrens-tickets",
+      "image": "/pix/1012286482701419072.jpg",
+      "title": "Bee Theatre - 4pm, Wednesday 13th August 2025",
+      "date": "4 August 2025",
+      "dt": 1754262000000,
+      "venue": "Cellar Cardigan",
+      "text": "",
+      "price": "£5",
+      "category": "live",
+      "promoter": "cellar",
+      "imagesource": "https://f4.bcbits.com/img/0039460379_37.jpg"
     },
     {
       "image": "/pix/5213510405159267592.jpg",
@@ -2950,6 +2993,18 @@
       "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/v3c6pmyf3hl0wu11prszdy478kkt.jpg?itok=ZspIxyE_"
     },
     {
+      "url": "https://thequeenshall.org.uk/events/queens-hall-comedy-club-september-2025",
+      "image": "/pix/7516319057706120256.jpg",
+      "title": "Queens Hall Comedy Club - September 2025",
+      "date": "Thursday, 04 Sep 2025",
+      "dt": 1756940400000,
+      "text": "",
+      "venue": "Queens Hall Narberth",
+      "category": "live",
+      "promoter": "queens",
+      "imagesource": "https://static.thequeenshall.org.uk/events/queens-hall-comedy-club-september-2025_500px_0i.jpg"
+    },
+    {
       "image": "/pix/364798459415193420.jpg",
       "date": "4  Sep - 27 Sep =",
       "dt": 1756940400000,
@@ -3011,7 +3066,7 @@
     },
     {
       "url": "https://thecellarcardigan.bandcamp.com/merch/fraser-morgan-support-t-b-a-saturday-20th-september",
-      "image": "/pix/652278888094500931.jpg",
+      "image": "/pix/1012286482802215234.jpg",
       "title": "Fraser Morgan + support t.b.a.,",
       "date": "Saturday 20th September 2025",
       "dt": 1758322800000,
@@ -3020,7 +3075,7 @@
       "price": "£10",
       "category": "live",
       "promoter": "cellar",
-      "imagesource": "https://f4.bcbits.com/img/0038513926_37.jpg"
+      "imagesource": "https://f4.bcbits.com/img/0039462857_37.jpg"
     },
     {
       "url": "https://moylgrove.wales/ceilidh/?locale=en-GB",
@@ -3047,6 +3102,18 @@
       "category": "live",
       "promoter": "mwldan",
       "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/lhlxiq37o6g36t436bninurwmol7.jpg?itok=ZDwnx8mv"
+    },
+    {
+      "url": "https://thequeenshall.org.uk/events/queens-hall-comedy-club-october-2025",
+      "image": "/pix/3754093745264461910.jpg",
+      "title": "Queens Hall Comedy Club - October 2025",
+      "date": "Thursday, 02 Oct 2025",
+      "dt": 1759359600000,
+      "text": "",
+      "venue": "Queens Hall Narberth",
+      "category": "live",
+      "promoter": "queens",
+      "imagesource": "https://static.thequeenshall.org.uk/events/queens-hall-comedy-club-october-2025_500px_0i.jpg"
     },
     {
       "url": "https://thequeenshall.org.uk/events/phil-campbell-and-the-bastard-sons-wales-2025-tour",
@@ -3207,6 +3274,18 @@
       "imagesource": "https://cdn.prod.website-files.com/6086b948a54f081798acf981/6086bcfc0897470cb2ea3bfb_OV-logo.png"
     },
     {
+      "url": "https://thequeenshall.org.uk/events/queens-hall-comedy-club-november-2025",
+      "image": "/pix/611116389310422652.jpg",
+      "title": "Queens Hall Comedy Club - November 2025",
+      "date": "Thursday, 06 Nov 2025",
+      "dt": 1762387200000,
+      "text": "",
+      "venue": "Queens Hall Narberth",
+      "category": "live",
+      "promoter": "queens",
+      "imagesource": "https://static.thequeenshall.org.uk/events/queens-hall-comedy-club-november-2025_500px_0i.jpg"
+    },
+    {
       "image": "/pix/294985785441728334.jpg",
       "date": "7  Nov =",
       "dt": 1762473600000,
@@ -3292,6 +3371,18 @@
       "imagesource": "https://mwldan.co.uk/sites/default/files/styles/large/public/show_images/fqxldo59vcgl3eyb3ha45yv62hp9.jpg?itok=qgDeeg2i"
     },
     {
+      "url": "https://thequeenshall.org.uk/events/queens-hall-comedy-club-december-2025",
+      "image": "/pix/611093256784338556.jpg",
+      "title": "Queens Hall Comedy Club - December 2025",
+      "date": "Thursday, 04 Dec 2025",
+      "dt": 1764806400000,
+      "text": "",
+      "venue": "Queens Hall Narberth",
+      "category": "live",
+      "promoter": "queens",
+      "imagesource": "https://static.thequeenshall.org.uk/events/queens-hall-comedy-club-december-2025_500px_0i.jpg"
+    },
+    {
       "url": "https://thequeenshall.org.uk/events/faulty-towers-the-dining-experience-2025",
       "image": "/pix/2896437098921267558.jpg",
       "title": "Faulty Towers: The Dining Experience 2025",
@@ -3341,6 +3432,19 @@
       "dt": 1765047600000,
       "promoter": "moylgrove",
       "imagesource": "https://moylgrove.wales/wp-content/uploads/2022/07/P1140096-s-225x300.jpg"
+    },
+    {
+      "url": "https://thecellarcardigan.bandcamp.com/merch/james-oliver-band-feat-norman-watt-roy-saturday-13th-december-2025",
+      "image": "/pix/868171294760109637.jpg",
+      "title": "James Oliver Band feat. Norman Watt Roy,",
+      "date": "Saturday 13th December 2025",
+      "dt": 1765584000000,
+      "venue": "Cellar Cardigan",
+      "text": "",
+      "price": "£10",
+      "category": "live",
+      "promoter": "cellar",
+      "imagesource": "https://f4.bcbits.com/img/0039445701_37.jpg"
     },
     {
       "url": "https://thequeenshall.org.uk/events/coda-a-tribute-to-led-zeppelin-2026-tour",

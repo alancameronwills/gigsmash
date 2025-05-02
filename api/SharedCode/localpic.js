@@ -1,6 +1,17 @@
-const sharp = require("sharp");
-const fs = require('fs');
-const fsp = require('fs/promises');
+const {Jimp} = require("jimp");
+const fs = require( 'fs');
+const fsp = require( 'fs/promises');
+/*
+import { createJimp } from "@jimp/core";
+import { defaultFormats, defaultPlugins } from "jimp";
+import webp from "@jimp/wasm-webp";
+import avif from "@jimp/wasm-avif";
+
+// A custom jimp that supports webp
+const Jimp = createJimp({
+  formats: [...defaultFormats, webp, avif],
+  plugins: defaultPlugins,
+});*/
 
 class FileStorer {
     #folder;
@@ -96,10 +107,12 @@ class Cache {
             //console.log("not got");
             storeName = hashName;
             try {
+                //console.log(util.inspect(Jimp));
                 const blob = await this.#fetchfile(url, true).then(r => r.blob());
                 const fileType = blob.type;
                 const arrayBuffer = await blob.arrayBuffer();
-                const resized = await sharp(arrayBuffer).resize({ width: size }).toBuffer();
+                const rsj = (await Jimp.fromBuffer(arrayBuffer)).resize({ w: size });
+                const resized = await(rsj.getBuffer(fileType));
                 if (storeName.indexOf('.')<0) {
                     if (fileType.indexOf("jp")>0) storeName += ".jpg";
                     else if (fileType.indexOf("png")>0) storeName += ".png";
@@ -108,7 +121,7 @@ class Cache {
                 }
                 await this.#storer.put(storeName, fileType, resized);
             } catch (e) {
-                console.log(`Couldn't convert ${url} e`);
+                console.log(`Couldn't convert ${url} ${e}`);
                 if (get)
                     return { pic: new Uint8Array(arrayBuffer), name: url, error: e }
                 else return { name: url, error: e }

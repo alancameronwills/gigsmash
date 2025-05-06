@@ -16,6 +16,7 @@
         var data = "https://pantywylan.blob.core.windows.net/gigsmash/client";
 
         async function go() {
+            if (location.host == "localhost") data = "";
             events = await fetch(data+"/json/events.json").then(r => r.json());
             CategoryFilters.restore();
             PromoterFilters.restore();

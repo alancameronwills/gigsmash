@@ -67,7 +67,7 @@ async function runFile(fPath, req, response) {
 
 
 (async () => {
-	let root = (await fs.realpath('.')).replace("/server", "");
+	let root = (await fs.realpath('.')).replace("/server", "").replace(/\\/g,"/").replace("C:", "file:///C:");
 	// binds root
 	async function serve(request, response) {
 		try {
@@ -75,7 +75,7 @@ async function runFile(fPath, req, response) {
 			verbose(req);
 			if (req.path.startsWith("/api/")) {
 				// run the file
-				let fPath = `${root}${req.path}`;
+				let fPath = `${root}${req.path.replace("/api", "")}`;
 				if (fPath.indexOf("..") < 0 && fsSync.existsSync(fPath)) {
 					if (fsSync.lstatSync(fPath).isDirectory()) {
 						fPath += "/index.js";

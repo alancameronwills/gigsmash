@@ -7,35 +7,52 @@
     <link rel="icon" type="image/x-icon" href="/gigiau.ico">
     <title>Collection runner</title>
     <script>
-        var timer;
-        async function f(g) {
+        async function f(p="") {
+            const params = (p ? '?'+p : '');
             const msg = document.getElementById("msg");
-            msg.style.backgroundColor = "pink";
-            msg.innerText = (await fetch(`/api/collect${g ? "?go=1" : ""}`).then(j => j.text())).replace(/\\n/g, "\n").replace(/\\\\/g, "\\");
-            msg.style.backgroundColor = "white";
-            return msg.innerText.indexOf("\"status\":\"Done\"") > 0;
-        }
-        async function go() {
-            if (timer) {
-                clearInterval(timer);
-                timer = null;
-                document.getElementById("button").innerText = "Go";
-            } else {
-                await f(true);
-                timer = setInterval(async () => {
-                    if (await f()) go();
-                }, 1000);
-                document.getElementById("button").innerText = "Stop";
+            const status = document.getElementById("status");
+            status.style.backgroundColor = "pink";
+            let m = (await fetch(`/api/collect${params}`).then(j => j.text())).replace(/\\n/g, "\n").replace(/\\\\/g, "\\");
+            if (m.indexOf("status")>=0) status.innerText = m;
+            else {
+                msg.innerText += m;
             }
+            status.style.backgroundColor = "white";
+            return m.indexOf("\"status\":\"Done") > 0;
+        }
+        async function go(buttonId, cmd) {
+            let button = document.getElementById(buttonId);
+            if (button.timer) {
+                clearInterval(button.timer);
+                button.timer = null;
+                button.innerText = button.originalText || "Go";
+            } else {
+                document.getElementById("msg").innerText = "";
+                await f(cmd);
+                button.timer = setInterval(async () => {
+                    if (await f()) go(buttonId);
+                }, 1000);
+                button.originalText = button.innerText;
+                button.innerText = "Stop";
+            }
+        }
+        function get () {
+            let url = document.getElementById("urlInput").value.trim();
+            go ("getButton", "url="+url);
         }
     </script>
 </head>
 
 <body>
-    <button onclick="go()" id="button">Go</button>
+    <button onclick="go('goButton', 'go=1')" id="goButton">Go</button>
+    <button onclick="go('purgeButton', 'purge=1')" id="purgeButton">Purge</button>
     <pre>
-        <div id="msg" style="height:30px;width:100%;"></div>
+        <div id="msg" style="min-height:30px;width:100%;"></div>
+        <div id="status" style="height:30px;width:100%;"></div>
     </pre>
+    <input size="40" type="text" id="urlInput" value="https://moylgrove.wales/wp-content/uploads/2021/10/hall-6-1.png"/><button onclick="get()" id="getButton">Get one</button> 
+    <br/><br/>
+    <button onclick="go('testButton', 'test=1')" id="testButton">Tests</button>
 </body>
 
 </html>

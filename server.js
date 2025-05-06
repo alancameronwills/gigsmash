@@ -5,30 +5,41 @@ const fs = require('fs/promises');
 const fsSync = require('fs');
 const process = require('process');
 
-const logverbose = false;
-
+const contentTypes = {
+	".css": "text/css",
+	".htm": "text/html", ".html": "text/html",
+	".ico" : "image/x-icon",
+	".gif": "image/gif",
+	".jpg": "image/jpeg", ".jpeg": "image/jpeg",
+	".js": "text/js",
+	".json": "application/json",
+	".mp3": "audio/mpeg", ".mp4": "video/mp4", ".mpeg": "video/mpeg",
+	".png": "image/png",
+	".pdf": "application/pdf",
+	".txt": "text/plain"
+};
 
 var server = null;
 
 
 const handlers = {
-	ping: (request, response) => {
-		response.body = "pong " + new Date().toISOString();
+	ping: (req, response) => {
+		response.body = `pong ${new Date().toISOString()} ${req.seq}`;
 	},
 	stopserver: (request, response) => {
-		setTimeout (() => server.close(), 1000);
+		setTimeout(() => server.close(), 1000);
 		response.body = "Stopped " + new Date().toISOString();
 	}
 };
 
 async function runFile(fPath, req, response) {
-	let context = { res:response , log:console.log};
+	let context = { res: response, log: console.log };
 	try {
 		let code = (await import(fPath)).default;
-		context.res.body = `Code5 ${util.inspect( code)} ${fPath}`;
-		await code (context, req);
+		context.res.body = `Code5 ${util.inspect(code)} ${fPath}`;
+		await code(context, req);
 	} catch (e) {
-	    context.res.body = `runFile ${fPath} error ${e.toString()}`;
+		context.res.body = `runFile ${fPath} error ${e.stack}`;
 	}
 	response.body = context.res.body;
 	response.status = context.res.status;
@@ -46,8 +57,8 @@ function parseReq(request, defaultPage = "/index.html") {
 		headers[request.rawHeaders[i]] = request.rawHeaders[i + 1];
 	}
 	let host = headers.Host;
-	let path = url.replace(/[\?#].*/, "");
-	let path2 = path.replace(/^\/[^\/]*/,"");
+	let path = url.replace(/[\?#].*/, "").replace(/\/$/, "");
+	let path2 = path.replace(/^\/[^\/]*/, "");
 	if (path == "/") path = defaultPage;
 	let extension = path.match(/\.[^.]*$/)?.[0] ?? "";
 	let queryString = url.match(/\?(.*)/)?.[1] ?? "";  // url.replace(/.*\?/,"");
@@ -61,46 +72,75 @@ function parseReq(request, defaultPage = "/index.html") {
 	return { path: path, path2, extension: extension, queryString: queryString, query: query, host: host, url: url, method: method, headers: headers };
 }
 (async () => {
-var root = (await fs.realpath('.')).replace("/server", "");
-var count = 0;
+	const root = (await fs.realpath('.')).replace("/server", "");
+	let count = 0;
 
-server = http.createServer(async function(request, res) {
-    var message = "", version = "";
-    var response = {status:200,headers:{'Content-Type': 'text/plain'},body:"Nothing"};
-    try {
-		let req = parseReq(request);
-		let cmd = req.path2.substring(1);
-		//response.body = `Cmd [${cmd}]`;
-		let h = handlers[cmd];
-		
-		
-		if (h) {
-    		//response.body = `Immediate handler [${cmd}]`;
-			h(request, response);
-		} else {
-		    let fPath = `${root}/api${req.path2}`;
-		    //response.body = `fPath [${fPath}]`;
-			if (fPath.indexOf("..") < 0 && fsSync.existsSync(fPath)) {
-				if (fsSync.lstatSync(fPath).isDirectory()) {
-					fPath += "/index.js";
-			    }
-		        //response.body = `running [${fPath}]`;
-				
-			    await runFile(fPath, req, response);	
-		 
-		    } else {
-                message = `It works! ${count++} \n` ;
-                let q = JSON.stringify(req, null, "  ");
-                version = 'NodeJS ' + process.versions.node + '\n';
-                response.body = [message, q, root, version].join('\n');
-		    }
-			    
+	server = http.createServer(async function (request, res) {
+		var response = { status: 200, headers: { 'Content-Type': 'text/plain' }, body: "Nothing" };
+		try {
+			let req = parseReq(request);
+			req.seq = count++;
+			//console.log(`Req ${count} ${JSON.stringify(req, null, 2)}`);
+			let cmd = req.path.substring(1);
+			//response.body = `Cmd [${cmd}]`;
+			let h = handlers[cmd];
+
+
+			if (h) {
+				h(req, response);
+			} else {
+				let fPath = `${root}/${cmd}`;
+				//response.body = `fPath [${fPath}]`;
+				if (fPath.indexOf("..") < 0 && fsSync.existsSync(fPath)) {
+					if (fsSync.lstatSync(fPath).isDirectory()) {
+						fPath += "/index.js";
+					}
+					//response.body = `running [${fPath}]`;
+
+					await runFile(fPath.replace(/\\/g, "/").replace("C:", "file:///C:"), req, response);
+
+				} else {
+					let fPath = `${root}/client${req.path}`;
+					//fPath = fPath.replace(/\//g, "\\");//.replace("C:", "file:///C:");
+					//console.log(`[${fPath}]`);
+					if (fPath.indexOf("..") < 0 && fsSync.existsSync(fPath) && !fsSync.lstatSync(fPath).isDirectory()) {
+						// return the file content
+						let reply = "";
+						let replyType = contentTypes[req.extension] ?? "text/plain";
+						let status = 200;
+						let file = `${root}/client${req.path}`;
+						try {
+							reply = await fs.readFile(file);
+						} catch (err) {
+							reply = err.toString();
+							replyType = "text/plain";
+							status = 400;
+						} finally {
+							response.headers = { "Content-Type": replyType };
+							response.body = reply;
+							response.status = status;
+						}
+					}
+					else {
+						response.body = JSON.stringify({
+							req,
+							root,
+							fPath,
+							version: 'NodeJS ' + process.versions.node
+						}, null, "  ");
+					}
+				}
+			}
+		} catch (e) {
+			response.body = "Error: " + e;
 		}
-    } catch (e) {
-        response.body = "Error: " + e.toString();
-    }
-    res.writeHead(response.status, response.headers);
-    res.end(response.body);
-});
-server.listen();
+		res.writeHead(response.status, response.headers);
+		res.end(response.body);
+	});
+	const port = process.argv[2] || 80;
+	server.listen(port);
+	console.log(`Server running at http://localhost:${port}`);
+	server.on('close', () => {
+		console.log("Server closing");
+	})
 })();

@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/x-icon" href="/gigiau.ico">
-    <link rel="stylesheet" type="text/css" href="/css/gigiau.css" />
+    <link rel="icon" type="image/x-icon" href="gigiau.ico">
+    <link rel="stylesheet" type="text/css" href="css/gigiau.css" />
     <title>Shows in North Pembrokeshire</title>
     <script>
         // TODO:
@@ -13,18 +13,21 @@
         // - Filter by show/hide; datestrips separate
 
         var events = [];
+        var data = "https://pantywylan.blob.core.windows.net/gigsmash/client";
 
         async function go() {
-            events = await fetch("/json/events.json").then(r => r.json());
+            events = await fetch(data+"/json/events.json").then(r => r.json());
             CategoryFilters.restore();
             PromoterFilters.restore();
             Filters.notify(showAllFiltered);
             setTimeout(()=>location.reload(), 1000*60*60*6);
+            document.getElementById("date").innerText = "" + new Date(events.date).toISOString();
         }
 
         function showAllFiltered() {
+            
             let table = document.getElementById('table');
-            table.innerHTML = showsFiltered().map((show,ix)=>showOne(show,ix)).join('\n');
+            table.innerHTML = (showsFiltered().map((show,ix)=>showOne(show,ix)).join('\n'));
         }
 
         function showsFiltered() {
@@ -53,6 +56,7 @@
         }
 
         function showOne(show,ix) {
+            const cacheImage = data + ((show?.image||"").replace("client/pix/", ""));
             return (show.newDate ? `<div class="dateHeading">
                         ${new Date(show.dtDayValue).toLocaleDateString(undefined, {
                 weekday: "long",
@@ -63,7 +67,7 @@
                     </div>` : "")
                 + `<div class='show ${show.category || ""} ${show.promoter}'>
                     <div class='venue' onclick='venueFilter("${show.promoter}")'>${show.venue}</div>
-                    <div class='image'><a href='${show.url}'><img src='${show.image}'/></a></div>
+                    <div class='image'><a href='${show.url}'><img src='${cacheImage}'/></a></div>
                     <div class='title'><a href='${show.url}'>${show.title}</a></div>
                     <div class='subtitle'>${show.subtitle || ""}</div>
                     <div class='date'>${show.date}</div>
@@ -199,6 +203,7 @@
     <div id="sources"></div>
     <div class="head"><img src="gigiau.png"/></div>
     <div id="table" onclick="PromoterFilters.toggleMenu()" class="table"></div>
+    <div id="date"></div>
     <div id="filters">
         <div class="filter">
             <input type="checkbox" id="filmfilter" onchange="CategoryFilters.save()" />

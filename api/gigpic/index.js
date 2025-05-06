@@ -1,4 +1,4 @@
-const { Cache, FileStorer } = require("../SharedCode/localpic.js");
+const { Cache, FileStorer } = require("../SharedCode/cachepic.js");
 
 /**
  * Get a picture from a given URL

@@ -1,6 +1,5 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const fs = require('fs/promises');
 
 const code = require('..\\api\\events\\index.js');
 

@@ -1,46 +1,17 @@
 const sharp = require("sharp");
-const fs = require('fs');
-const fsp = require('fs/promises');
-
-class FileStorer {
-    #folder;
-
-    constructor(cache) {
-        this.#folder = cache[cache.length - 1] == '/' ? cache : cache + '/';
-    }
-
-    async get(name) {
-        return await fsp.readFile(this.#folder + name)
-    }
-    async put(name, type, buffer) {
-        await fsp.mkdir(this.#folder, { recursive: true });
-        let opts = { flush: true };
-        if (typeof buffer === 'string') opts.encoding = 'utf-8';
-        return await fsp.writeFile(this.#folder + name, buffer, opts);
-    }
-
-    /**
-     * Whether a file exists
-     * @param {*} name possibly without a .suffix
-     * @returns name of the file that was found (including a missing suffix) or false
-     */
-    has(name) {
-        if (fs.existsSync(this.#folder + name)) return name;
-        if (name.indexOf('.')>0) return false; 
-        return fs.readdirSync(this.#folder).find(f=>f.substring(0,name.length)==name) || false;
-    }
-}
 
 class Cache {
 
     #storer;
     #picSize;
+    #context;
 
     /**
      * @param {{get(name), put(name, type, arrayBuffer)}} storer Store the compressed picture
      * @param {*} picSize 
      */
-    constructor(storer, picSize = 300) {
+    constructor(storer, picSize = 300, context) {
+        this.#context = context || console;
         this.#storer = storer;
         this.#picSize = picSize;
     }
@@ -80,6 +51,11 @@ class Cache {
         return "" + bb[0] + suffix;
     }
 
+/*
+ async getCache(url, get = true, name, size = 300) {
+        return {name: url};
+ }
+ */
     /**
      * getAndCache - stores a local compressed copy of a picture
      * @param {string} url Source pic
@@ -87,34 +63,35 @@ class Cache {
      * @param {string} name [opt]
      * @param {number} size [opt] required width default 300px
      * @returns {pic ArrayBuffer, name}
-     */
-    async getCache(url, get = true, name, size = this.#picSize) {
+  */   
+    async getCache(url, get = true, name, size = 300) {
         let hashName = name || this.#hashUrl(url);
-        let storeName = this.#storer.has(hashName); // may have suffix appended
+        //this.#context.log(hashName);
+        let storeName = (await this.#storer.has(hashName))?.name ||""; // may have suffix appended
         let wasCached = false;
         if (!storeName) {
-            //console.log("not got");
+            //this.#context.log("not got " + hashName);
             storeName = hashName;
+            const blob = await this.#fetchfile(url, true).then(r => r.blob());
+            const fileType = blob.type;
+            const arrayBuffer = await blob.arrayBuffer();
             try {
-                const blob = await this.#fetchfile(url, true).then(r => r.blob());
-                const fileType = blob.type;
-                const arrayBuffer = await blob.arrayBuffer();
-                const resized = await sharp(arrayBuffer).resize({ width: size }).toBuffer();
+                const resized = await sharp(arrayBuffer).resize({ width: size || this.#picSize }).toBuffer();
                 if (storeName.indexOf('.')<0) {
                     if (fileType.indexOf("jp")>0) storeName += ".jpg";
                     else if (fileType.indexOf("png")>0) storeName += ".png";
                     else if (fileType.indexOf("gif")>0) storeName += ".gif";
-                    else console.log("File type:" + fileType);
+                    else this.#context.log("File type:" + fileType);
                 }
                 await this.#storer.put(storeName, fileType, resized);
             } catch (e) {
-                console.log(`Couldn't convert ${url} e`);
+                this.#context.log(`Couldn't convert ${url} ${e.stack}`);
                 if (get)
                     return { pic: new Uint8Array(arrayBuffer), name: url, error: e }
                 else return { name: url, error: e }
             }
         } else {
-            //console.log("got it");
+            //this.#context.log("got it " + hashName);
             wasCached = true;
         }
         if (get) {
@@ -124,10 +101,13 @@ class Cache {
             return { name: storeName, wasCached: wasCached }
         }
     }
+
+    async purge() {
+        return await this.#storer.purge();
+    }
 }
 
 
 module.exports = {
-    Cache: (storer, picSize = 300) => new Cache(storer, picSize),
-    FileStorer: (cacheLoc = "client/pix/") => new FileStorer(cacheLoc)
+    Cache: (storer, picSize = 300, context) => new Cache(storer, picSize, context)
 }

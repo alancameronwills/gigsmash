@@ -86,20 +86,22 @@ class BlobStorer {
     }
     async get (name) {
         const blobClient = this.#blobContainerClient.getBlockBlobClient(this.#folder + name);
-        const buffer = new ArrayBuffer();
-        await blobClient.downloadToBuffer(buffer);
+        const buffer = await blobClient.downloadToBuffer();
         return String.fromCharCode.apply(null, new Uint16Array(buffer));
     }
     async put (name, fileType, buffer) {
-        if (typeof buffer != "string") throw Error(util.inspect(buffer));
+        let upBuffer = buffer;
+        if (typeof buffer == "string") {
+            upBuffer = Buffer.from(buffer, 'utf8');
+        }
         const blobClient = this.#blobContainerClient.getBlockBlobClient(this.#folder + name);
-        return await blobClient.uploadData(buffer, {blobHTTPHeaders:{blobContentType:fileType}});
+        return await blobClient.uploadData(upBuffer, {blobHTTPHeaders:{blobContentType:fileType}});
     }
     async has (name, getstats = false) {
         // The name provided may be missing the file extension suffix
         if (!getstats && name.indexOf('.')>0) {
             const blobClient = this.#blobContainerClient.getBlockBlobClient(this.#folder + name);
-            return (await blobClient.exists()) && name;
+            return (await blobClient.exists()) && {name};
         } else {
             // TODO: Keep an index
             for await (const item of this.#blobContainerClient.listBlobsFlat()) {

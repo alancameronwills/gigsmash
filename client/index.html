@@ -15,49 +15,77 @@
         var events = [];
         var data = "https://pantywylan.blob.core.windows.net/gigsmash/client";
 
-        async function go() {
-            if (location.host == "localhost") data = "";
-            events = await fetch(data+"/json/events.json").then(r => r.json());
-            CategoryFilters.restore();
-            PromoterFilters.restore();
-            Filters.notify(showAllFiltered);
-            setTimeout(()=>location.reload(), 1000*60*60*6);
-            document.getElementById("date").innerText = "" + new Date(events.date).toISOString();
-        }
-
-        function showAllFiltered() {
-            
-            let table = document.getElementById('table');
-            table.innerHTML = (showsFiltered().map((show,ix)=>showOne(show,ix)).join('\n'));
-        }
-
-        function showsFiltered() {
-            let filteredList =  events.shows.filter(show => isShowVisible(show));
-            let currentDay = 0;
-            
-            let groupDate = 0;
-            filteredList.forEach(show => {
-                    let dt = new Date(show.dt);
-                    let dtDay = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
-                    show.dtDayValue = dtDay.valueOf();
-                    show.newDate = show.dtDayValue != groupDate;
-                    groupDate = show.dtDayValue;
-                });
-            return filteredList;
-        }
-
-        var lastMidnight = (()=>{
+        
+        var lastMidnight = (() => {
             let now = new Date();
             return new Date(now.getFullYear(), now.getMonth(), now.getDate());
         })();
-        function isShowVisible(show) {
-            return CategoryFilters.includes(show.category)
-                    && PromoterFilters.includes(show.promoter)
-                    && show.dt > lastMidnight;
+
+        async function go() {
+            if (location.host == "localhost") data = "";
+            events = await fetch(data + "/json/events.json?v="+Date.now()).then(r => r.json());
+            markFirstShowOfEachDate();
+            CategoryFilters.restore();
+            PromoterFilters.restore();
+            Filters.notify(showAllFiltered);
+            setTimeout(() => location.reload(), 1000 * 60 * 60 * 6);
+            document.getElementById("date").innerText = "" + new Date(events.date).toISOString();
         }
 
-        function showOne(show,ix) {
-            const cacheImage = data + ((show?.image||"").replace("client/pix/", ""));
+        function markFirstShowOfEachDate() {
+            let groupDate = 0;
+            events.shows.forEach(show => {
+                let dt = new Date(show.dt);
+                let dtDay = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+                show.dtDayValue = dtDay.valueOf();
+                show.newDate = show.dtDayValue != groupDate;
+                groupDate = show.dtDayValue;
+            });
+        }
+
+        function showAllFiltered() {
+            let table = document.getElementById('table');
+            if (!table.innerText.trim()) {
+                table.innerHTML = (events.shows.map((show, ix) => ((show.dt||0)>=lastMidnight)?showOne(show, ix):"").join('\n'));
+            } else {
+                let previousDateHeading = null;
+                let showingShowsSincePreviousDateHeading = 0;
+                Array.from(table.children).forEach(item => {
+                    if (item.classList.contains("show")) {
+                        const show = events.shows[1 * item.id.substring('show-'.length)];
+                        if (show) {
+                            if (isShowVisible(show)) {
+                                item.classList.remove("hide");
+                                showingShowsSincePreviousDateHeading++;
+                            } else {
+                                item.classList.add("hide");
+                            }
+                        }
+                    } else if (item.classList.contains("dateHeading")) {
+                        if (previousDateHeading) {
+                            if (showingShowsSincePreviousDateHeading > 0) {
+                                previousDateHeading.classList.remove("hide");
+                            } else {
+                                previousDateHeading.classList.add("hide");
+                            }
+                        }
+                        previousDateHeading = item;
+                        showingShowsSincePreviousDateHeading = 0;
+                    }
+                })
+            }
+        }
+
+
+        function isShowVisible(show) {
+            return CategoryFilters.includes(show.category)
+                && PromoterFilters.includes(show.promoter)
+                && show.dt >= lastMidnight;
+        }
+
+        function showOne(show, ix) {
+            const cacheImage = data + ((show?.image || "").replace("client/pix/", ""));
+            const ifHidden = isShowVisible(show) ? "" : "hide";
             return (show.newDate ? `<div class="dateHeading">
                         ${new Date(show.dtDayValue).toLocaleDateString(undefined, {
                 weekday: "long",
@@ -66,7 +94,7 @@
                 day: "numeric"
             })}
                     </div>` : "")
-                + `<div class='show ${show.category || ""} ${show.promoter}'>
+                + `<div class='show ${ifHidden} ${show.category || ""} ${show.promoter}' id='show-${ix}'>
                     <div class='venue' onclick='venueFilter("${show.promoter}")'>${show.venue}</div>
                     <div class='image'><a href='${show.url}'><img src='${cacheImage}'/></a></div>
                     <div class='title'><a href='${show.url}'>${show.title}</a></div>
@@ -76,7 +104,7 @@
                 </div>`;
         }
 
-        
+
         class Filters {
             static #observers = [];
             static filters;
@@ -99,7 +127,7 @@
 
         class PromoterFilters extends Filters {
             static #previousSelection = {};
-            static selections () {
+            static selections() {
                 let filterSelections = {};
                 document.querySelectorAll(".promoterFilter").forEach(ip => {
                     filterSelections[ip.name] = !ip.checked;
@@ -111,10 +139,10 @@
                 let menu = document.getElementById("promoterMenu");
                 let showing = menu.classList.toggle("visible");
                 if (!showing) {
-                    const trueKeys = o => Object.keys(o).filter(k=>o[k]);
+                    const trueKeys = o => Object.keys(o).filter(k => o[k]);
                     const newSelection = trueKeys(PromoterFilters.selections());
                     if (newSelection.length != trueKeys(PromoterFilters.#previousSelection)
-                        || !newSelection.every(k => PromoterFilters.#previousSelection[k])){
+                        || !newSelection.every(k => PromoterFilters.#previousSelection[k])) {
                         PromoterFilters.save();
                     }
                 } else {
@@ -153,7 +181,7 @@
                 Filters.notify();
             }
 
-            static includes (p) {
+            static includes(p) {
                 return !Filters.filters.promoterExclude?.[p];
             }
         }
@@ -178,7 +206,7 @@
                     }
                 })
             }
-            static includes (c) {
+            static includes(c) {
                 return !Filters.filters.categoryExclude[c];
             }
         }
@@ -202,13 +230,13 @@
 
 <body onload="go()">
     <div id="sources"></div>
-    <div class="head"><img src="gigiau.png"/></div>
-    <div id="table" onclick="PromoterFilters.toggleMenu()" class="table"></div>
+    <div class="head"><img src="gigiau.png" /></div>
+    <div id="table" class="table"></div>
     <div id="date"></div>
     <div id="filters">
         <div class="filter">
             <input type="checkbox" id="filmfilter" onchange="CategoryFilters.save()" />
-            <label for="filmsfilter">films</label>
+            <label for="filmfilter">films</label>
         </div>
         <div class="filter">
             <input type="checkbox" id="quizfilter" checked onchange="CategoryFilters.save()" />
@@ -220,11 +248,19 @@
         </div>
         <div class="filter">
             <input type="checkbox" id="livefilter" checked onchange="CategoryFilters.save()" />
-            <label for="quizfilter">live</label>
+            <label for="livefilter">live</label>
         </div>
     </div>
     <div id="promoterMenu" onclick="PromoterFilters.toggleMenu()">
 
+    </div>
+    <div id="menu" onclick="PromoterFilters.toggleMenu()">
+        <svg viewBox='0 0 10 8' width='20'>
+            <path d='M1 1h8M1 4h 8M1 7h8' 
+                  stroke='#000' 
+                  stroke-width='2' 
+                  stroke-linecap='round'/>
+          </svg>
     </div>
     <div id="flag" onclick="clearFlag()"></div>
 </body>

@@ -22,15 +22,27 @@ a:link {
 .table {
     display: flex;
     flex-wrap: wrap;
-    column-gap: 10px;
+    column-gap: 0px;
     background-color: gray;
-    row-gap: 6px;
+    row-gap: 0px;
     justify-content: flex-start;
     padding: 0 6px;
 }
 
 .dateHeading {
-    margin: 0 -6px -2px -6px;
+    margin: 0 -6px 2px -6px;
+    transition: all 1s;
+    overflow: hidden;
+}
+.dateHeading.hide {
+    height: 0;
+    padding: 0;
+}
+.show.hide {
+    width: 0;
+    height: 0;
+    padding:0;
+    margin: 0;
 }
 
 .show {
@@ -39,11 +51,14 @@ a:link {
     display: flex;
     justify-content: start;
     padding: 10px 5px;
+    margin: 4px 6px;
     width: 200px;
     flex-wrap: wrap;
     align-content: flex-start;
     background-color: white;
     border-radius: 4px;
+    transition: all 1s;
+    overflow: hidden;
 }
 
 .date {
@@ -106,13 +121,20 @@ a:link {
     }
 }
 
+#menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin:10px 10px 0 0;
+}
+
 #filters {
     display: flex;
     column-gap: 10px;
     padding: 0 6px 1px 2px;
     background-color: whitesmoke;
     position: fixed;
-    top: 0;
+    top: 10px;
     right: 0;
     transform-origin: bottom right;
     transform: rotate(-90deg) translateY(-10px);
@@ -145,6 +167,18 @@ a:link {
     padding-top: 3vh;
     transition: all 1s ease-in-out;
     background-color: rgba(255, 255, 255, 0.5);
+}
+#promoterMenu::after {
+    content: "<";
+    background-color: blue;
+    position: absolute;
+    font-size: large;
+    bottom: 10%;
+    right: 25%;
+    border-radius:4px;
+    color: white;
+    padding: 0 4px;
+    border: 1px solid blue;
 }
 
 #promoterMenu>div {

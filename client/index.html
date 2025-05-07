@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="gigiau.ico">
     <link rel="stylesheet" type="text/css" href="css/gigiau.css" />
+    <meta property="og:image" content="/gigiau.png">
+
     <title>Shows in North Pembrokeshire</title>
     <script>
         // TODO:
@@ -15,7 +17,7 @@
         var events = [];
         var data = "https://pantywylan.blob.core.windows.net/gigsmash/client";
 
-        
+
         var lastMidnight = (() => {
             let now = new Date();
             return new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -23,7 +25,7 @@
 
         async function go() {
             if (location.host == "localhost") data = "";
-            events = await fetch(data + "/json/events.json?v="+Date.now()).then(r => r.json());
+            events = await fetch(data + "/json/events.json?v=" + Date.now()).then(r => r.json());
             markFirstShowOfEachDate();
             CategoryFilters.restore();
             PromoterFilters.restore();
@@ -46,34 +48,36 @@
         function showAllFiltered() {
             let table = document.getElementById('table');
             if (!table.innerText.trim()) {
-                table.innerHTML = (events.shows.map((show, ix) => ((show.dt||0)>=lastMidnight)?showOne(show, ix):"").join('\n'));
-            } else {
-                let previousDateHeading = null;
-                let showingShowsSincePreviousDateHeading = 0;
-                Array.from(table.children).forEach(item => {
-                    if (item.classList.contains("show")) {
-                        const show = events.shows[1 * item.id.substring('show-'.length)];
-                        if (show) {
-                            if (isShowVisible(show)) {
-                                item.classList.remove("hide");
-                                showingShowsSincePreviousDateHeading++;
-                            } else {
-                                item.classList.add("hide");
-                            }
-                        }
-                    } else if (item.classList.contains("dateHeading")) {
-                        if (previousDateHeading) {
-                            if (showingShowsSincePreviousDateHeading > 0) {
-                                previousDateHeading.classList.remove("hide");
-                            } else {
-                                previousDateHeading.classList.add("hide");
-                            }
-                        }
-                        previousDateHeading = item;
-                        showingShowsSincePreviousDateHeading = 0;
-                    }
-                })
+                table.innerHTML = (events.shows.map((show, ix) => ((show.dt || 0) >= lastMidnight) ? showOne(show, ix) : "").join('\n'));
             }
+            let previousDateHeading = null;
+            let showingShowsSincePreviousDateHeading = 0;
+            const showIf = (item, condition) => {
+                if (item) {
+                    if (condition) item.classList.remove("hide");
+                    else item.classList.add("hide");
+                }
+                return condition;
+            }
+            const updatePreviousHeading = () => {
+                showIf(previousDateHeading, showingShowsSincePreviousDateHeading > 0);
+            }
+            Array.from(table.children).forEach(item => {
+                if (item.classList.contains("show")) {
+                    const show = events.shows[1 * item.id.substring('show-'.length)];
+                    if (show) {
+                        if (showIf(item, isShowVisible(show))) {
+                            showingShowsSincePreviousDateHeading++;
+                        }
+                    }
+                } else if (item.classList.contains("dateHeading")) {
+                    updatePreviousHeading();
+                    previousDateHeading = item;
+                    showingShowsSincePreviousDateHeading = 0;
+                }
+            })
+            updatePreviousHeading();
+
         }
 
 
@@ -161,14 +165,19 @@
                 let menuItems = promoterKeys.map(p => `
                 <div><input type="checkbox" class='promoterFilter' ${Filters.filters.promoterExclude?.[p] !== true ? 'checked' : ''} name="${p}" id='${p}filter'/>
                     <label for='${p}filter'>${events.promoters[p]}</label></div>`).join('\n');
-                document.getElementById("promoterMenu").innerHTML = `<div>${menuItems}</div>`;
+                document.getElementById("promoterMenu").innerHTML = 
+                    `<div><div><input type="checkbox" onclick="PromoterFilters.swogglePromoters()" id="promoterSwoggle"/>
+                        <label for="promoterAll">~~~</label></div>${menuItems}</div>`;
                 document.querySelectorAll("#promoterMenu>div").forEach(ip => {
                     ip.onclick = e => {
-                        //PromoterFilters.toggle(ip.name);
                         e.stopPropagation();
-                        //PromoterFilters.save();
                     };
                 });
+            }
+            static swogglePromoters() {
+                Array.from(document.querySelectorAll(".promoterFilter")).forEach(item => {
+                    item.checked = !item.checked; 
+                })
             }
 
             static menuItemForPromoter(p) {
@@ -256,13 +265,11 @@
     </div>
     <div id="menu" onclick="PromoterFilters.toggleMenu()">
         <svg viewBox='0 0 10 8' width='20'>
-            <path d='M1 1h8M1 4h 8M1 7h8' 
-                  stroke='#000' 
-                  stroke-width='2' 
-                  stroke-linecap='round'/>
-          </svg>
+            <path d='M1 1h8M1 4h 8M1 7h8' stroke='#000' stroke-width='2' stroke-linecap='round' />
+        </svg>
     </div>
     <div id="flag" onclick="clearFlag()"></div>
+    <div id="banner">Beta test version 0.8.0507 Bugs, ideas: <a href="mailto:coders@gigiau.uk">coders@gigiau.uk</a></div>
 </body>
 
 </html>

@@ -139,6 +139,7 @@ a:link {
     transform-origin: bottom right;
     transform: rotate(-90deg) translateY(-10px);
     border-radius: 4px;
+    max-width:80vh;
 }
 
 .table.no-film>.show.film {
@@ -167,14 +168,15 @@ a:link {
     padding-top: 3vh;
     transition: all 1s ease-in-out;
     background-color: rgba(255, 255, 255, 0.5);
+    max-height: 90vh;
 }
 #promoterMenu::after {
     content: "<";
     background-color: blue;
     position: absolute;
     font-size: large;
-    bottom: 10%;
-    right: 25%;
+    bottom: 10px;
+    right: 50px;
     border-radius:4px;
     color: white;
     padding: 0 4px;
@@ -188,6 +190,7 @@ a:link {
     background-color: lightgray;
     transition: all 1s ease-in-out;
     color: darkblue;
+    overflow-y: scroll;
 }
 
 #promoterMenu.visible {

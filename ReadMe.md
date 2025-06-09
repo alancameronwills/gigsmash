@@ -1,4 +1,4 @@
-# GigsMash
+# Gigiau backend
 
 Collects the event listings from multiple theatres, venues and promoters and presents them in one convenient list.
 

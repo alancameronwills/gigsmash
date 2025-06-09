@@ -140,31 +140,16 @@ a:link {
 }
 
 #filters {
-    display: flex;
     column-gap: 10px;
     padding: 0 6px 1px 2px;
     background-color: whitesmoke;
-    position: fixed;
     top: 10px;
     right: 0;
-    transform-origin: bottom right;
-    transform: rotate(-90deg) translateY(-10px);
     border-radius: 4px;
     max-width:80vh;
 }
 
 
-@media (max-height:400px) {
-    #filters {
-        top: auto;
-        bottom: 0;
-        left: 10px;
-        right: auto;
-        transform:none;
-        border: 1px solid gray;
-        max-width: 80vw;
-    }
-}
 
 .table.no-film>.show.film {
     display: none;
@@ -185,13 +170,15 @@ a:link {
 #promoterSwoggle {
     margin: 0 0 10px -10px;
     opacity: 0.6;
+    z-index: 2;
 }
 
-#promoterMenu {
+#bigMenu {
     position: fixed;
     display: flex;
     justify-content: center;
-    top: 10px;
+    gap: 5vw;
+    top: 5vh;
     left: 0;
     width: 0;
     padding: 3vh 0;
@@ -199,7 +186,7 @@ a:link {
     background-color: rgba(255, 255, 255, 0.5);
     max-height: 80vh;
 }
-#promoterMenu::after {
+#bigmenu::after {
     content: "<";
     background-color: blue;
     position: absolute;
@@ -212,7 +199,7 @@ a:link {
     border: 1px solid blue;
 }
 
-#promoterMenu>div {
+#bigMenu>div {
     margin-left: -100vw;
     border-radius: 4px;
     padding: 3vw;
@@ -222,11 +209,11 @@ a:link {
     overflow-y: auto;
 }
 
-#promoterMenu.visible {
+#bigMenu.visible {
     width: 100vw;
 }
 
-#promoterMenu.visible>div {
+#bigMenu.visible>div {
     margin-left: 0px;
 }
 #flag {

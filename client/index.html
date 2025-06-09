@@ -140,7 +140,7 @@
             }
 
             static toggleMenu() {
-                let menu = document.getElementById("promoterMenu");
+                let menu = document.getElementById("bigMenu");
                 let showing = menu.classList.toggle("visible");
                 if (!showing) {
                     const trueKeys = o => Object.keys(o).filter(k => o[k]);
@@ -165,9 +165,9 @@
                 let menuItems = promoterKeys.map(p => `
                 <div><input type="checkbox" class='promoterFilter' ${Filters.filters.promoterExclude?.[p] !== true ? 'checked' : ''} name="${p}" id='${p}filter'/>
                     <label for='${p}filter'>${events.promoters[p]}</label></div>`).join('\n');
-                document.getElementById("promoterMenu").innerHTML = 
-                    `<div><div><input type="checkbox" onclick="PromoterFilters.swogglePromoters()" id="promoterSwoggle"/>
-                        <label for="promoterAll">~~~</label></div>${menuItems}</div>`;
+                document.getElementById("promoterMenu").innerHTML =
+                    `<div><input type="checkbox" onclick="PromoterFilters.swogglePromoters()" id="promoterSwoggle"/>
+                        <label for="promoterAll">~~~</label></div>${menuItems}`;
                 document.querySelectorAll("#promoterMenu>div").forEach(ip => {
                     ip.onclick = e => {
                         e.stopPropagation();
@@ -176,12 +176,12 @@
             }
             static swogglePromoters() {
                 Array.from(document.querySelectorAll(".promoterFilter")).forEach(item => {
-                    item.checked = !item.checked; 
+                    item.checked = !item.checked;
                 })
             }
 
             static menuItemForPromoter(p) {
-                return document.querySelector(`#promoterMenu>div>div:has(input[name="${p}"])`);
+                return document.querySelector(`#filterMenu>div>div:has(input[name="${p}"])`);
             }
 
             static save() {
@@ -242,25 +242,28 @@
     <div class="head"><img src="gigiau.png" /></div>
     <div id="table" class="table"></div>
     <div id="date"></div>
-    <div id="filters">
-        <div class="filter">
-            <input type="checkbox" id="filmfilter" onchange="CategoryFilters.save()" />
-            <label for="filmfilter">films</label>
+    <div id="bigMenu" onclick="PromoterFilters.toggleMenu()">
+        <div id="promoterMenu">
+
         </div>
-        <div class="filter">
-            <input type="checkbox" id="quizfilter" checked onchange="CategoryFilters.save()" />
-            <label for="quizfilter">quizzes</label>
+        <div id="filters">
+            <div class="filter">
+                <input type="checkbox" id="filmfilter" onchange="CategoryFilters.save()" />
+                <label for="filmfilter">films</label>
+            </div>
+            <div class="filter">
+                <input type="checkbox" id="quizfilter" checked onchange="CategoryFilters.save()" />
+                <label for="quizfilter">quizzes</label>
+            </div>
+            <div class="filter">
+                <input type="checkbox" id="broadcastfilter" checked onchange="CategoryFilters.save()" />
+                <label for="broadcastfilter">broadcast</label>
+            </div>
+            <div class="filter">
+                <input type="checkbox" id="livefilter" checked onchange="CategoryFilters.save()" />
+                <label for="livefilter">live</label>
+            </div>
         </div>
-        <div class="filter">
-            <input type="checkbox" id="broadcastfilter" checked onchange="CategoryFilters.save()" />
-            <label for="broadcastfilter">broadcast</label>
-        </div>
-        <div class="filter">
-            <input type="checkbox" id="livefilter" checked onchange="CategoryFilters.save()" />
-            <label for="livefilter">live</label>
-        </div>
-    </div>
-    <div id="promoterMenu" onclick="PromoterFilters.toggleMenu()">
 
     </div>
     <div id="menu" onclick="PromoterFilters.toggleMenu()">
@@ -269,7 +272,8 @@
         </svg>
     </div>
     <div id="flag" onclick="clearFlag()"></div>
-    <div id="banner">Beta test version 0.8.0507 Bugs, ideas: <a href="mailto:coders@gigiau.uk">coders@gigiau.uk</a></div>
+    <div id="banner">Beta test version 0.8.0507 Bugs, ideas: <a href="mailto:coders@gigiau.uk">coders@gigiau.uk</a>
+    </div>
 </body>
 
 </html>

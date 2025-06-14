@@ -148,18 +148,20 @@ a:link {
     transform: rotate(-90deg) translateY(-10px);
     border-radius: 4px;
     max-width:80vh;
+    width:80vh;
 }
 
 
-@media (max-height:400px) {
+@media (max-height:500px) {
     #filters {
         top: auto;
-        bottom: 0;
+        bottom: 20px;
         left: 10px;
         right: auto;
         transform:none;
         border: 1px solid gray;
         max-width: 80vw;
+        width: 80vw;
     }
 }
 
@@ -276,4 +278,8 @@ body:not(.showMenus) #monthMenu {
 }
 #menu:hover {
     stroke: royalblue;
+}
+.languageButton {
+    padding: 0 20px;
+    border-right: 2px solid gray;
 }

@@ -38,12 +38,14 @@
             if (location.host == "localhost") data = "";
             events = await fetch(data + "/json/events.json?v=" + Date.now()).then(r => r.json());
             markFirstShowOfEachDate();
+            setCategoryFilters();
             CategoryFilters.restore();
             PromoterFilters.restore();
+            restoreIaith();
             Filters.notify(showAllFiltered);
             setTimeout(() => location.reload(), 1000 * 60 * 60 * 6);
             document.getElementById("date").innerText = "" + new Date(events.date).toISOString();
-            monthMenu();
+            setMonthMenu();
         }
 
         function markFirstShowOfEachDate() {
@@ -304,7 +306,7 @@
                 el.classList.remove("visible");
             });
         }
-        function monthMenu() {
+        function setMonthMenu() {
             let monthButtons = [];
             const thisMonth = new Date().getMonth();
             for (let i = 11; i >= 0; i--) {
@@ -321,6 +323,32 @@
                     scrollToMonth(1 * e.currentTarget.dataset['month']);
                 }));
         }
+        function toggleIaith() {
+            document.body.classList.toggle("cy");
+            localStorage.setItem("iaith", ""+document.body.classList.contains("cy"));
+        }
+        function restoreIaith() {
+            if("true" == (localStorage.getItem("iaith") || "")) {
+                document.body.classList.add("cy");
+            }
+        }
+        function setCategoryFilters() {
+            const filterSet = {
+                film:sl("films","ffilmiau"),
+                quiz:sl("quizzes","cwisiau"),
+                broadcast:sl("broadcast","darllediad"),
+                live:sl("live","byw")
+            };
+            let filterHtml = [`<div class="languageButton" onclick="toggleIaith()">${sl("Cymraeg","English")}</div>`];
+            Object.keys(filterSet).forEach(k => {
+                filterHtml.push(`
+                <div class="filter">
+                    <input type="checkbox" id="${k}filter" onchange="CategoryFilters.save()" />
+                    <label for="${k}filter">${filterSet[k]}</label>
+                </div>`);
+            });
+            document.querySelector("#filters").innerHTML = filterHtml.join("\n");
+        }
 
     </script>
 </head>
@@ -332,22 +360,6 @@
     <div id="date"></div>
     <div id="space">&nbsp;</div>
     <div id="filters">
-        <div class="filter">
-            <input type="checkbox" id="filmfilter" onchange="CategoryFilters.save()" />
-            <label for="filmfilter">films</label>
-        </div>
-        <div class="filter">
-            <input type="checkbox" id="quizfilter" checked onchange="CategoryFilters.save()" />
-            <label for="quizfilter">quizzes</label>
-        </div>
-        <div class="filter">
-            <input type="checkbox" id="broadcastfilter" checked onchange="CategoryFilters.save()" />
-            <label for="broadcastfilter">broadcast</label>
-        </div>
-        <div class="filter">
-            <input type="checkbox" id="livefilter" checked onchange="CategoryFilters.save()" />
-            <label for="livefilter">live</label>
-        </div>
     </div>
     <div id="promoterMenu" class="slideout" onclick="PromoterFilters.toggleMenu()">
 
@@ -387,8 +399,8 @@
         </style>
         <div id="bottomMenu" onclick="PromoterFilters.toggleMenu()">
             <!--<button id="installButton" onclick="installer()">Install</button>-->
-            <button onclick="share()">Share</button>
-            <button onclick="about()">About</button>
+            <button onclick="share()"><span class="en">Share</span><span class="cy">Rhannu</span></button>
+            <button onclick="about()"><span class="en">About</span><span class="cy">Am hyn</span></button>
         </div>
         <div id="monthMenu">
 

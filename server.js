@@ -80,15 +80,15 @@ function parseReq(request, defaultPage = "/index.html") {
 		try {
 			let req = parseReq(request);
 			req.seq = count++;
+			if (!req.path) {req.path = "/index.html";req.extension = ".html";}
 			//console.log(`Req ${count} ${JSON.stringify(req, null, 2)}`);
 			let cmd = req.path.substring(1);
 			//response.body = `Cmd [${cmd}]`;
 			let h = handlers[cmd];
-
-
 			if (h) {
 				h(req, response);
 			} else {
+				if (!cmd) cmd="index.html";
 				let fPath = `${root}/${cmd}`;
 				//response.body = `fPath [${fPath}]`;
 				if (fPath.indexOf("..") < 0 && fsSync.existsSync(fPath)) {
@@ -102,7 +102,7 @@ function parseReq(request, defaultPage = "/index.html") {
 				} else {
 					let fPath = `${root}/client${req.path}`;
 					//fPath = fPath.replace(/\//g, "\\");//.replace("C:", "file:///C:");
-					//console.log(`[${fPath}]`);
+					console.log(`[${fPath}]`);
 					if (fPath.indexOf("..") < 0 && fsSync.existsSync(fPath) && !fsSync.lstatSync(fPath).isDirectory()) {
 						// return the file content
 						let reply = "";

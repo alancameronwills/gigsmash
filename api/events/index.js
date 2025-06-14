@@ -34,16 +34,16 @@ async function ftext(url, sendHeaders = false) {
 let handlers = [];
 
 (handlers["assorted"] = async () => {
-    let r = [];
+    let r = [];    
     r.push({
-        title: "Eisteddfod Llandudoch",
-        text: "Whole day",
+        title: "Scaramella",
+        text: "Choral. £10",
         category: "live",
-        venue: "St Dogmaels",
-        url: "https://www.facebook.com/groups/213845518639101/",
-        date: "17 May 2025 11:30am - 11pm",
-        dt: new Date("17 May 2025").valueOf(),
-        image: "https://moylgrove.wales/wp-content/uploads/2025/01/eisteddfod-llandudoch-713x1024.jpg"
+        venue: "St Mary's Church Cardigan",
+        url: "https://gigiau.uk/pix/scaramella-2025-06-29.jpg",
+        date: "29 June 2025 7pm",
+        dt: new Date("29 June 2025").valueOf(),
+        image: "https://gigiau.uk/pix/scaramella-2025-06-29.jpg"
     });
     r.push({
         title: "Measure for Measure",
@@ -200,10 +200,8 @@ let handlers = [];
         return products.map(product => {
             let title = m(product, /<product-card-title>(.*?)</s);
             let dateString = datex(m(product, /<p>(.*?)<\/p>/s));
-            let image = m(product, /<img[^>]*src="(.*?)"/s);
-            if (image.substring(0,1)=='/') image = "https:"+image;
             return {
-                image: image,
+                image: m(product, /<img[^>]*src="(.*?)"/s),
                 title: title,
                 url: "https://www.bluestonebrewing.co.uk" + m(product, /href="(.*?)"/s),
                 venue: "Bluestone Brewing",
@@ -262,8 +260,7 @@ let handlers = [];
             ri.dt = new Date(ri.date.replace(",", "")).valueOf() || 0;
             ri.text = "";
             ri.venue = "Queens Hall Narberth";
-            let category = (event.match(/<[^>]+badge-event.*?>.*?</gs)?.map(b => m(b, />(.*)</s))?.join(", ") || "").toLowerCase();
-            ri.category = category.indexOf("live")>=0 ? "live" : category;
+            ri.category = (event.match(/<[^>]+badge-event.*?>.*?</gs)?.map(b => m(b, />(.*)</s))?.join(", ") || "").toLowerCase();
             r.push(ri);
         })
 
@@ -393,7 +390,7 @@ let handlers = [];
     return r;
 }).friendly = "Small World";
 
-(handlers["gwaun"] = async (x=true) => {
+(handlers["gwaun"] = async (x) => {
     let fromSavoy = [], fromGwaun = [];
     {
         let r = [];
@@ -407,15 +404,38 @@ let handlers = [];
             let image = m(show, /<img\s+src=['"](.*?)['"]/s);
             let dateList = [...show.matchAll(/PeformanceListDate.*?>(.*?)</sg)];
             let dateSet = [];
+            let startDate = "", endDate = "";
             if (dateList && dateList.length > 0) {
                 let previous = "";
                 dateList.forEach(d => {
                     if (d?.[1] && d[1] != previous) {
                         dateSet.push(d[1]);
                         previous = d[1];
+                        if (!startDate) startDate = d[1];
+                        endDate = d[1];
                     }
                 })
             }
+            if (startDate) {
+                let dateRange = startDate;
+                if (endDate != startDate) {
+                    dateRange += " - " + endDate;
+                }
+                let dt = new Date(startDate).valueOf();
+                if (dt) {
+                    r.push({
+                        date: dateRange,
+                        dt: dt,
+                        url: url,
+                        urlset: show.match(/href="(.*?)"/g).map(href => m(href, /"(.*?)"/s)),
+                        title: title,
+                        image: image,
+                        text: "",
+                        venue: "Theatr Gwaun"
+                    });
+                }
+            }
+            /*
             dateSet.forEach(d => {
                 let dt = new Date(d).valueOf();
                 if (dt) {
@@ -431,7 +451,7 @@ let handlers = [];
                     };
                     r.push(ri);
                 }
-            })
+            })*/
         })
         fromSavoy = r;
     }
@@ -493,53 +513,6 @@ let handlers = [];
     return x ? fromGwaun : fromSavoy;
 }).friendly = "Theatr Gwaun";
 
-(handlers["mwldan"] = async () => {
-    let source = await ftext("https://mwldan.co.uk/whatson/all");
-    let tail = source.split(/whats-on-all[^>]*/)?.[1] || "";
-    let shows = tail.split(/<div[^>]*node-show.*?>/);
-    let r = [];
-    // Infer year - they only show day and month
-    let today = new Date();
-    let cyear = today.getFullYear();
-    let cmonth = today.getMonth();
-    shows.forEach(show => {
-        let ri = {};
-        ri.image = m(show, /<img .*?src=['"](.*?)['"]/s);
-
-        let showMatch = show.match(/<div class="content".*?date-range">(.*?)<.*?<h2>.*?href="(.*?)".*?>(.*?)</s);
-        if (showMatch && showMatch.length > 2) {
-            ri.date = showMatch[1].trim();
-
-            // TODO: record end dates of ongoing shows
-
-            let dayAndMonth = m(ri.date, /^\s*[0-9]+\s+[A-Za-z]+/, 0);
-
-            let dt = new Date(dayAndMonth + " " + cyear);
-            if (dt && dt.getMonth() < 2 && cmonth > 9) {
-                ri.date += " +";
-                cyear++;
-                dt = new Date(dayAndMonth + " " + cyear);
-            }
-            if (dt && dt.getMonth() != cmonth && (dt.getMonth() - cmonth) < 3) {
-                ri.date += " =";
-                cmonth = dt.getMonth();
-            }
-            ri.dt = dt.valueOf();
-            ri.text = "";
-            ri.venue = "Mwldan";
-            ri.url = `https://mwldan.co.uk${showMatch[2]}`;
-            ri.title = showMatch[3];
-            let rawCategory = m(show, /event-category">(.*?)<\/li>/s).replace(/<.*?>/sg, "").toLowerCase();
-            ri.category = (rawCategory.indexOf("film") >= 0 ? "film" :
-                rawCategory.indexOf("cinema") >= 0 ? "film" :
-                    rawCategory.indexOf("broadcast") >= 0 ? "broadcast" :
-                        rawCategory);
-            r.push(ri);
-        }
-    })
-    return r;
-}).friendly = "Mwldan";
-
 (handlers["moylgrove"] = async () => {
     let source = await ftext("https://moylgrove.wales/events");
     let ul = m(source, /<ul[^>]*eventList.*?<\/ul>/s, 0);
@@ -570,7 +543,7 @@ let handlers = [];
     return r;
 }).friendly = "Moylegrove";
 
-let ticketsolve = async (tsid) => {
+let ticketsolve = async (tsid,categoryMap) => {
     let response = await ftext(`https://${tsid}.ticketsolve.com/shows.xml`);
     let venues = response.split("</venue>");
 
@@ -587,24 +560,39 @@ let ticketsolve = async (tsid) => {
                     let description = m(s, /<description>(.*?)<\/description>/s);
                     let images = m(s, /<images>(.*)<\/images>/s);
                     let imageUrl = m(images, /(https:[^<]*)/s);
+                    let url = m(s,/<url>(.*)<\/url>/);
+                    let eventCategory = m(s,/<event_category>(.*)<\/event_category>/s);
+                    let category = eventCategory ? Object.keys(categoryMap).find(k=> 
+                        eventCategory.match(categoryMap[k])) : "live";
                     let eventSection = m(s, /<events>(.*?)<\/events>/s);
                     let events = eventSection.split("</event>");
+                    let startDate, endDate = 0;
                     events.forEach(e => {
                         let date = m(e, /<date_.*?>(.*?)</s);
+                        if (!url) url = m(e, /<url>(.*?)<\/url>/s);
                         if (date) {
-                            let url = m(e, /<url>(.*?)<\/url>/s);
-                            r.push({
-                                venue: venueName,
-                                date: date.substring(0, 16).replace("T", " "),
-                                dt: new Date(date).valueOf(),
-                                image: imageUrl,
-                                title: showName,
-                                url: url,
-                                text: m(description, /<!\[CDATA\[(.*?)\]\]/s).replace(/<.*?>/gs, " "),
-                                category: "live"
-                            });
+                            let dt = new Date(date).valueOf();
+                            if (!startDate) startDate = dt;
+                            endDate = dt;
                         }
-                    })
+                    });
+                    const options = {weekday: "short", day:"numeric", month:"short", year:"numeric"};
+                    const timeOptions = {weekday: "short", day:"numeric", month:"short", hour:"2-digit", minute:"2-digit"};
+                    
+                    let dateRange = (startDate == endDate) 
+                        ? new Date(startDate).toLocaleString("en-GB", timeOptions)
+                        :  "" + new Date(startDate).toLocaleString("en-GB", timeOptions)
+                        + " - " + new Date(endDate).toLocaleString("en-GB", options);
+                    r.push({
+                        venue: venueName,
+                        date: dateRange,
+                        dt: startDate,
+                        image: imageUrl,
+                        title: showName,
+                        url: url,
+                        text: m(description, /<!\[CDATA\[(.*?)\]\]/s).replace(/<.*?>/gs, " "),
+                        category: category
+                    });
                 }
             })
         }
@@ -612,12 +600,17 @@ let ticketsolve = async (tsid) => {
     return r;
 };
 
+
+(handlers["mwldan"] = async () => {
+    return await ticketsolve("mwldan", {broadcast:/Broadcast/,live:/Live/,film:/Cinema|TMFS/});
+}).friendly = "Mwldan Cardigan";
+
 (handlers["span"] = async () => {
-    return await ticketsolve("span-arts");
+    return await ticketsolve("span-arts",{live:/./});
 }).friendly = "Span Arts";
 
 (handlers["stdavids"] = async () => {
-    return await ticketsolve("stdavidscathedral");
+    return await ticketsolve("stdavidscathedral",{live:/./});
 }).friendly = "St Davids Cathedral";
 /*
 let ticketsource = async (source) => {

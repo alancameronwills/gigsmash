@@ -57,7 +57,7 @@ class Cache {
  }
  */
     /**
-     * getAndCache - stores a local compressed copy of a picture
+     * get and cache - stores a local compressed copy of a picture
      * @param {string} url Source pic
      * @param {bool} get=true: return the cache content; if false, just store the file in cache
      * @param {string} name [opt]
@@ -65,6 +65,7 @@ class Cache {
      * @returns {pic ArrayBuffer, name}
   */   
     async getCache(url, get = true, name, size = 300) {
+        if (url.indexOf("//")==0) url = "https:"+url; // fix bluestone
         let hashName = name || this.#hashUrl(url);
         //this.#context.log(hashName);
         let storeName = (await this.#storer.has(hashName))?.name ||""; // may have suffix appended
@@ -72,10 +73,10 @@ class Cache {
         if (!storeName) {
             //this.#context.log("not got " + hashName);
             storeName = hashName;
-            const blob = await this.#fetchfile(url, true).then(r => r.blob());
-            const fileType = blob.type;
-            const arrayBuffer = await blob.arrayBuffer();
             try {
+                const blob = await this.#fetchfile(url, true).then(r => r.blob());
+                const fileType = blob.type;
+                const arrayBuffer = await blob.arrayBuffer();
                 const resized = await sharp(arrayBuffer).resize({ width: size || this.#picSize }).toBuffer();
                 if (storeName.indexOf('.')<0) {
                     if (fileType.indexOf("jp")>0) storeName += ".jpg";

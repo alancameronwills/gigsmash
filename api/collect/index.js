@@ -40,8 +40,21 @@ async function collect(context) {
 
     shows.sort((a, b) => a.dt - b.dt);
 
+    let showsUnduplicated = [];
+    let previous = null;
+    shows.forEach(show => {
+        if (!previous
+            || previous.title != show.title
+            || previous.venue.substring(0, 6) != show.venue.substring(0, 6)
+            || previous.image != show.image
+        ) {
+            showsUnduplicated.push(show);
+            previous = show;
+        }
+    })
+
     let categories = {};
-    shows.forEach(s => {
+    showsUnduplicated.forEach(s => {
         categories[s.category] = 1 + (categories[s.category] || 0);
     })
 
@@ -50,9 +63,9 @@ async function collect(context) {
     //storer.put("events-rawUrls.json", null, JSON.stringify(shows, null, "  "));
 
     // Cache the images and replace their URLs with our caches:
-    await replaceImageUrls(shows);
+    await replaceImageUrls(showsUnduplicated);
 
-    let package = { promoters: handlers, categories, shows, toDo, faults, date: Date.now() };
+    let package = { promoters: handlers, categories, shows: showsUnduplicated, toDo, faults, date: Date.now() };
 
     // Save the list:
     storer.put("events.json", null, JSON.stringify(package, null, "  "));
@@ -64,8 +77,10 @@ async function replaceImageUrls(shows) {
     for (let i = 0; i < showsLength; i++) {
         let show = shows[i];
         show.imagesource = show.image;
-        const cacheInfo = await cache.getCache(show.image, false);
-        show.image = '/pix/' + cacheInfo.name;
+        if (show.image) {
+            const cacheInfo = await cache.getCache(show.image, false);
+            show.image = '/pix/' + cacheInfo.name;
+        }
         persistentStatus(`Converting images: ${i} / ${showsLength}`);
     }
 }
@@ -131,17 +146,17 @@ async function testFilestore() {
     const tfr = "testFile";
     const tf = tfr + ".txt";
     await admin.delete(tf);
-    assert (!await admin.has(tf), "1 Failed to delete "+tf);
+    assert(!await admin.has(tf), "1 Failed to delete " + tf);
     await admin.put(tf, "text/plain", "stuff");
     let n = await admin.has(tf);
-    assert (n, "2 Failed to put "+tf);
-    assert (n.name == tf, "3 Wrong name found: "+n.name);
+    assert(n, "2 Failed to put " + tf);
+    assert(n.name == tf, "3 Wrong name found: " + n.name);
     let n2 = await admin.has(tfr);
     assert(n?.name == tf, "4 Failed to find file from root");
     let r = await admin.get(tf);
-    assert (r=="stuff","5 Bad content: " + r);
+    assert(r == "stuff", "5 Bad content: " + r);
     await admin.delete(tf);
-    assert (!await admin.has(tf), "6 Failed to delete "+tf);
+    assert(!await admin.has(tf), "6 Failed to delete " + tf);
     await persistentStatus("Filestore tests OK");
     console.log("Filestore tests OK");
     return true;
@@ -166,14 +181,14 @@ async function testCache() {
     const testCache = Cache(testFilestore);
     await testCache.purge();
     let r = await testCache.getCache(target, false);
-    assert(r.name?.length>10 && r.name?.length < 30, "1 Cached name length " + r.name);
+    assert(r.name?.length > 10 && r.name?.length < 30, "1 Cached name length " + r.name);
     assert(!r.wasCached, "2 wasCached");
-    assert(await testFilestore.has(r.name), "3 No cache file "+ r.name);
+    assert(await testFilestore.has(r.name), "3 No cache file " + r.name);
     let r2 = await testCache.getCache(target, false);
-    assert(r2.name?.length>10 && r.name?.length < 30, "4 Cached name length " + r.name);
+    assert(r2.name?.length > 10 && r.name?.length < 30, "4 Cached name length " + r.name);
     assert(r2.wasCached, "5 wasn't Cached");
     await testCache.purge();
-    assert (!await testFilestore.has(r2.name), "6 Failed to purge");
+    assert(!await testFilestore.has(r2.name), "6 Failed to purge");
     await persistentStatus("Cache tests OK");
     console.log("Cache tests ok");
     return true;

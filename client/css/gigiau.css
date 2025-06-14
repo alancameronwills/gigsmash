@@ -1,6 +1,14 @@
 
 body {
     font-family: Arial, Geneva, Helvetica, sans-serif;
+    margin: 0;
+}
+
+body.cy span.en {
+    display:none;
+}
+body:not(.cy) span.cy {
+    display:none;
 }
 
 a:link {
@@ -234,4 +242,38 @@ a:link {
 }
 .head img {
     max-width:100%;
+}
+
+#monthMenu {
+    position:fixed;
+    left:10px;
+    bottom:10px;
+    background-color:white;
+    transform:rotate(-90deg);
+    transform-origin: top left;
+    display: flex;
+    gap: 1px;
+    transition: all 1s;
+}
+body:not(.showMenus) #monthMenu {
+    margin-left:-60px;
+}
+.monthButton {
+    background-color: darkblue;
+    border: 0;
+    color: white;
+    padding: 4px 8px 6px 8px;
+}
+.monthButton>span {
+    user-select: none;
+}
+.monthButton:hover {
+    background-color:royalblue;
+}
+#menu {
+    stroke: black;
+    border-radius: 4px;
+}
+#menu:hover {
+    stroke: royalblue;
 }

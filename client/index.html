@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-gb">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,14 +12,22 @@
     <meta property="og:description" content="Events and shows - What's On in North Pembrokshire" />
     <title>Gigiau - Shows in North Pembrokeshire</title>
     <script>
-        
-        if (location.protocol=="http:" && location.host != "localhost") {
-                location.replace(location.href.replace("http:", "https:"));
+        const monthsEn = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const monthsCy = ["Ion", "Chwef", "Maw", "Ebr", "Mai", "Meh", "Gorff", "Awst", "Medi", "Hyd", "Tach", "Rhag"];
+        const monthsCyLong = ["Ionawr", "Chwefror", "Mawrth", "Ebrill", "Mai", "Mehefin", "Gorffennaf", "Awst", "Medi", "Hydref", "Tachwed", "Rhagfyr"];
+        const daysCyLong = ["dydd Sul", "dydd Llun", "dydd Mawrth", "dydd Mercher", "dydd Iau", "dydd Gwener", "dydd Sadwrn", "dydd Sul"];
+        const daysEnLong = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+        if (location.protocol == "http:" && location.host != "localhost") {
+            location.replace(location.href.replace("http:", "https:"));
         }
 
         var events = [];
         var data = "https://pantywylan.blob.core.windows.net/gigsmash/client";
 
+        function sl(en, cy) {
+            return `<span class="cy">${cy}</span><span class="en">${en}</span>`;
+        }
 
         var lastMidnight = (() => {
             let now = new Date();
@@ -34,6 +43,7 @@
             Filters.notify(showAllFiltered);
             setTimeout(() => location.reload(), 1000 * 60 * 60 * 6);
             document.getElementById("date").innerText = "" + new Date(events.date).toISOString();
+            monthMenu();
         }
 
         function markFirstShowOfEachDate() {
@@ -89,17 +99,40 @@
                 && show.dt >= lastMidnight;
         }
 
+        function scrollToMonth(m) {
+            const monthHeader = document.querySelector("#month-"+(m-1));
+            if (monthHeader) {
+                monthHeader.scrollIntoView(true);
+                PromoterFilters.toggleMenu(true);
+            }
+        }
+
+        var previousMonth = -1;
+        var monthIdCount = 0;
+
         function showOne(show, ix) {
             const cacheImage = data + ((show?.image || "").replace("client/pix/", ""));
             const ifHidden = isShowVisible(show) ? "" : "hide";
-            return (show.newDate ? `<div class="dateHeading">
-                        ${new Date(show.dtDayValue).toLocaleDateString(undefined, {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric"
-            })}
-                    </div>` : "")
+            let dateHead = "";
+            if (show.newDate) {
+                const d = new Date(show.dtDayValue);
+                const m = d.getMonth();
+                const topOfMonth = m != previousMonth && monthIdCount<12;
+                previousMonth = m;
+                if (topOfMonth) monthIdCount++;
+                const dEn = d.toLocaleDateString(undefined, {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                });
+                const dCy = `${daysCyLong[d.getDay()]} ${d.getDate()} ${monthsCyLong[d.getMonth()]} ${d.getFullYear()}`;
+                dateHead = `<div class="dateHeading" ${topOfMonth?`id="month-${previousMonth}"`:""}>
+                    ${sl(dEn, dCy)}
+                    </div>`;
+            };
+
+            return dateHead
                 + `<div class='show ${ifHidden} ${show.category || ""} ${show.promoter}' id='show-${ix}'>
                     <div class='venue' onclick='venueFilter("${show.promoter}")'>${show.venue}</div>
                     <div class='image'><a href='${show.url}'><img src='${cacheImage}'/></a></div>
@@ -145,9 +178,9 @@
                 let menu = document.getElementById("promoterMenu");
                 if (off && !menu.classList.contains("visible")) return;
                 let showing = menu.classList.toggle("visible");
-                let bottomMenu = document.getElementById("bottomMenu");
-                if (showing) bottomMenu.classList.add("visible");
-                else bottomMenu.classList.remove("visible");
+                let body = document.body;
+                if (showing) body.classList.add("showMenus");
+                else body.classList.remove("showMenus");
                 if (!showing) {
                     const trueKeys = o => Object.keys(o).filter(k => o[k]);
                     const newSelection = trueKeys(PromoterFilters.selections());
@@ -155,8 +188,8 @@
                         || !newSelection.every(k => PromoterFilters.#previousSelection[k])) {
                         PromoterFilters.save();
                     }
-                    history.pushState({"showPromoterMenu":true}, "", 
-                                        "./#promoter");
+                    history.pushState({ "showPromoterMenu": true }, "",
+                        "./#promoter");
                 } else {
                     PromoterFilters.#previousSelection = PromoterFilters.selections();
                 }
@@ -173,7 +206,7 @@
                 let menuItems = promoterKeys.map(p => `
                 <div><input type="checkbox" class='promoterFilter' ${Filters.filters.promoterExclude?.[p] !== true ? 'checked' : ''} name="${p}" id='${p}filter'/>
                     <label for='${p}filter'>${events.promoters[p]}</label></div>`).join('\n');
-                document.getElementById("promoterMenu").innerHTML = 
+                document.getElementById("promoterMenu").innerHTML =
                     `<div><div><input type="checkbox" onclick="PromoterFilters.swogglePromoters()" id="promoterSwoggle"/>
                         <label for="promoterAll">~~~</label></div>${menuItems}</div>`;
                 document.querySelectorAll("#promoterMenu>div").forEach(ip => {
@@ -184,7 +217,7 @@
             }
             static swogglePromoters() {
                 Array.from(document.querySelectorAll(".promoterFilter")).forEach(item => {
-                    item.checked = !item.checked; 
+                    item.checked = !item.checked;
                 })
             }
 
@@ -242,12 +275,12 @@
                 f.style.display = "none";
             }
         }
-         
+
         function share() {
-            showPageOver("#share-page");        
+            showPageOver("#share-page");
         }
-        function about () {
-            showPageOver("#about-page");            
+        function about() {
+            showPageOver("#about-page");
         }
         function installer() {
             showPageOver("#install-android-page");
@@ -255,23 +288,40 @@
 
         function showPageOver(id) {
             document.querySelector(id).classList.add("visible");
-            history.pushState({"showPageOver":id}, "", "./#"+id);
+            history.pushState({ "showPageOver": id }, "", "./#" + id);
         }
-        
+
         onpopstate = e => {
-                if (e.state.showPageOver || e.state.showPromoterMenu){ 
-                    e.preventDefault(); 
-                    hidePageOver();
-                    PromoterFilters.toggleMenu(true);
-                }
-            };
+            if (e.state.showPageOver || e.state.showPromoterMenu) {
+                e.preventDefault();
+                hidePageOver();
+                PromoterFilters.toggleMenu(true);
+            }
+        };
 
         function hidePageOver() {
             Array.from(document.querySelectorAll(".page")).forEach(el => {
                 el.classList.remove("visible");
             });
         }
-        
+        function monthMenu() {
+            let monthButtons = [];
+            const thisMonth = new Date().getMonth();
+            for (let i = 11; i >= 0; i--) {
+                const m = (i + thisMonth) % 12 + 1;
+                monthButtons.push(`
+                    <button class="monthButton" data-month="${m}">                  
+                        ${sl(monthsEn[m - 1], monthsCy[m - 1])}
+                    </button>`);
+            }
+            const monthMenu = document.querySelector("#monthMenu");
+            monthMenu.innerHTML = monthButtons.join("\n");
+            Array.from(monthMenu.children).forEach(button =>
+                button.addEventListener("click", e => {
+                    scrollToMonth(1 * e.currentTarget.dataset['month']);
+                }));
+        }
+
     </script>
 </head>
 
@@ -304,49 +354,75 @@
     </div>
     <div id="menu" onclick="PromoterFilters.toggleMenu()">
         <svg viewBox='0 0 10 8' width='20'>
-            <path d='M1 1h8M1 4h 8M1 7h8' stroke='#000' stroke-width='2' stroke-linecap='round' />
+            <path d='M1 1h8M1 4h 8M1 7h8' stroke-width='2' stroke-linecap='round' />
         </svg>
     </div>
-    
-    <div>
-    <style>
-        #bottomMenu {
-            position:fixed;
-            bottom: 0;
-            width: 100%;
-            margin-bottom: -100%;
-            background-color: white;
-            display: flex;
-            justify-content: space-around;
-            z-index: 300;
-            padding: 6px;
-            transition: all 1s;
-        }
-        #bottomMenu.visible {
-            margin-bottom: 0;
-        }
-        #bottomMenu button {
-            background-color: black;
-            color: white;
-            border: 0;
-            border-radius: 4px;
-        }
 
-    </style>
-    <div id="bottomMenu" onclick="PromoterFilters.toggleMenu()">
-        <!--<button id="installButton" onclick="installer()">Install</button>-->
-        <button onclick="share()">Share</button>
-        <button onclick="about()">About</button>
-    </div>
-    </div>
-    
     <div>
-    <style>.betabanner {position:fixed;bottom:0;width:100%;z-index:200;background-color:black;color:lightgray;display:flex;flex-wrap:wrap;justify-content:space-between;}
-    .betabanner>div {padding: 0 20px;}
-    .betabanner a:link{color:lightblue}</style>
-    <div class="betabanner"><div>Beta v0.81</div><div>Bugs, ideas: <a href="mailto:alan@cameronwills.org">alan@cameronwills.org</a></div></div>
+        <style>
+            #bottomMenu {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                margin-bottom: -100%;
+                background-color: white;
+                display: flex;
+                justify-content: space-around;
+                z-index: 300;
+                padding: 6px;
+                transition: all 1s;
+            }
+
+            body.showMenus #bottomMenu {
+                margin-bottom: 0;
+            }
+
+            #bottomMenu button {
+                background-color: black;
+                color: white;
+                border: 0;
+                border-radius: 4px;
+                font-size: medium;
+            }
+        </style>
+        <div id="bottomMenu" onclick="PromoterFilters.toggleMenu()">
+            <!--<button id="installButton" onclick="installer()">Install</button>-->
+            <button onclick="share()">Share</button>
+            <button onclick="about()">About</button>
+        </div>
+        <div id="monthMenu">
+
+        </div>
     </div>
-    
+
+    <div>
+        <style>
+            .betabanner {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                z-index: 200;
+                background-color: black;
+                color: lightgray;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+
+            .betabanner>div {
+                padding: 0 20px;
+            }
+
+            .betabanner a:link {
+                color: lightblue
+            }
+        </style>
+        <div class="betabanner">
+            <div>Beta v0.81</div>
+            <div>Bugs, ideas: <a href="mailto:alan@cameronwills.org">alan@cameronwills.org</a></div>
+        </div>
+    </div>
+
     <div id="PageOver">
         <style>
             .page {
@@ -354,30 +430,34 @@
                 color: black;
                 transition: all 0.5s;
                 position: fixed;
-                top:0;
-                left:0;
+                top: 0;
+                left: 0;
                 width: 100%;
-                height:100%;
-                z-index:400;
+                height: 100%;
+                z-index: 400;
             }
+
             #install-android-page,
             #share-page {
-                
+
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
                 grid-template-rows: repeat(3, 1fr);
                 grid-column-gap: 4px;
                 grid-row-gap: 2px;
             }
+
             .page:not(.visible) {
                 max-width: 0;
                 max-height: 0;
                 margin-left: -150vw;
             }
+
             .page>div {
                 align-self: center;
-                justify-self:center;
+                justify-self: center;
             }
+
             .mid {
                 grid-column: 2;
                 grid-row: 2;
@@ -385,34 +465,35 @@
         </style>
         <div id="install-android-page" class="page" onclick="hidePageOver()">
             <div style="grid-column:3;grid-row:1;">
-                Keep this page as an app on your phone.<br/>
+                Keep this page as an app on your phone.<br />
                 Use the Install as App menu at top right of your browser.
             </div>
         </div>
         <div id="share-page" class="page" onclick="hidePageOver()">
             <div style="grid-column:2;grid-row:1;">
-                <img src="qr-share.png" onclick="hidePageOver()"/>
+                <img src="qr-share.png" onclick="hidePageOver()" />
             </div>
             <div style="grid-column:2;grid-row:2;">
-            <p>Show the QR code to a friend to get it on their phone.</p>
+                <p>Show the QR code to a friend to get it on their phone.</p>
             </div>
             <div style="grid-column:2;grid-row:3;">
-            <p>Or send them the link:</p>
-            <p><code>https://gigiau.uk</code></p>
+                <p>Or send them the link:</p>
+                <p><code>https://gigiau.uk</code></p>
             </div>
         </div>
         <div id="about-page" class="page" onclick="hidePageOver()">
-             <div class="head"><img src="gigiau.png" /></div>
-             <div style="padding:20px;">
-            <p>
-Gigiau brings into one place lots of the shows and events happening
-in North Pembrokeshire, with the kind co-operation of many venues and 
-promoters.
-            </p>
-            <p>&nbsp;&nbsp;</p>
-            <p >
-            We don't use cookies. We store a small amount of info on your device to remember your preferences. We don't collect information about you. We count the number of times the app is used.
-            </p>
+            <div class="head"><img src="gigiau.png" /></div>
+            <div style="padding:20px;">
+                <p>
+                    Gigiau brings into one place lots of the shows and events happening
+                    in North Pembrokeshire, with the kind co-operation of many venues and
+                    promoters.
+                </p>
+                <p>&nbsp;&nbsp;</p>
+                <p>
+                    We don't use cookies. We store a small amount of info on your device to remember your preferences.
+                    We don't collect information about you. We count the number of times the app is used.
+                </p>
             </div>
         </div>
 

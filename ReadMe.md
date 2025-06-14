@@ -1,4 +1,4 @@
-# Gigiau backend
+# Gigiau
 
 Collects the event listings from multiple theatres, venues and promoters and presents them in one convenient list.
 
@@ -13,7 +13,7 @@ To test locally:
 To install on Azure:
 
 * Create a Functions App and put into it the contents of `/api`
-* Put the contents of `/client` into a Blob store and map non-`/api` reqs to that.
+* Put the contents of `/client` into a Blob store or separate server and map non-`/api` reqs to that.
 
 ## Edit collection algorithm
 `api/events/index.js`

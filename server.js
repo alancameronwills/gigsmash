@@ -102,7 +102,7 @@ function parseReq(request, defaultPage = "/index.html") {
 				} else {
 					let fPath = `${root}/client${req.path}`;
 					//fPath = fPath.replace(/\//g, "\\");//.replace("C:", "file:///C:");
-					console.log(`[${fPath}]`);
+					//console.log(`[${fPath}]`);
 					if (fPath.indexOf("..") < 0 && fsSync.existsSync(fPath) && !fsSync.lstatSync(fPath).isDirectory()) {
 						// return the file content
 						let reply = "";

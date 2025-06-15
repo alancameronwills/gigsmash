@@ -10,11 +10,11 @@ button {
     font: var(--menufont);
 }
 
-body.cy span.en {
+body.cy .en {
     display: none;
 }
 
-body:not(.cy) span.cy {
+body:not(.cy) .cy {
     display: none;
 }
 

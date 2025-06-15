@@ -11,6 +11,10 @@ function datex(dateString) {
     return dateString.trim().replace(/^[A-Z][a-z]+ +/, "").replace(/st|nd|rd|th|at/, "").replace(/\s+/sg, " ").trim();
 }
 
+function sl(en,cy) {
+    return `<span class='en'>${en}</span><span class='cy'>${cy}</span>`;
+}
+
 async function ftext(url, sendHeaders = false) {
     let headers = !sendHeaders ? null : {
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
@@ -39,7 +43,7 @@ let handlers = [];
         title: "Scaramella",
         text: "Choral. £10",
         category: "live",
-        venue: "St Mary's Church Cardigan",
+        venue: sl("St Mary's Church Cardigan","Eglwys Santes Fair, Aberteifi"),
         url: "https://gigiau.uk/pix/scaramella-2025-06-29.jpg",
         date: "29 June 2025 7pm",
         dt: new Date("29 June 2025").valueOf(),
@@ -48,7 +52,7 @@ let handlers = [];
     r.push({
         title: "Measure for Measure",
         text: "Summer outdoor performance",
-        venue: "St Dogmael's Abbey",
+        venue: sl("St Dogmael's Abbey","Abaty Llandudoch"),
         url: "https://www.abbeyshakespeare.co.uk/en/productions/measure-for-measure",
         category: "live",
         image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/06.measure-for-measure/rose%20pained.jpg",
@@ -58,7 +62,7 @@ let handlers = [];
     r.push({
         title: "Measure for Measure",
         text: "Summer outdoor performance",
-        venue: "St Dogmael's Abbey",
+        venue: sl("St Dogmael's Abbey","Abaty Llandudoch"),
         url: "https://www.abbeyshakespeare.co.uk/en/productions/measure-for-measure",
         category: "live",
         image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/06.measure-for-measure/rose%20pained.jpg",
@@ -68,7 +72,7 @@ let handlers = [];
     r.push({
         title: "Measure for Measure",
         text: "Summer outdoor performance",
-        venue: "St Dogmael's Abbey",
+        venue: sl("St Dogmael's Abbey","Abaty Llandudoch"),
         url: "https://www.abbeyshakespeare.co.uk/en/productions/measure-for-measure",
         category: "live",
         image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/06.measure-for-measure/rose%20pained.jpg",
@@ -78,7 +82,7 @@ let handlers = [];
     r.push({
         title: "Measure for Measure",
         text: "Summer outdoor performance",
-        venue: "St Dogmael's Abbey",
+        venue: sl("St Dogmael's Abbey","Abaty Llandudoch"),
         url: "https://www.abbeyshakespeare.co.uk/en/productions/measure-for-measure",
         category: "live",
         image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/06.measure-for-measure/rose%20pained.jpg",
@@ -118,6 +122,7 @@ let handlers = [];
     return r;
 }).friendly = "At Large";
 
+/*
 (handlers["folkfest"] = async () => {
     let events = ["23 May 2025", "24 May 2025", "25 May 2025", "26 May 2025"].map(date => {
         return {
@@ -143,15 +148,16 @@ let handlers = [];
     });
     return events;
 }).friendly = "Fishguard Folk";
+*/
 
 (handlers["othervoices"] = async () => {
     let events = ["30 October 2025", "31 October 2025", "1 November 2025"].map(date => {
         return {
-            title: "Other Voices",
+            title: sl("Other Voices","Lleisiau Eraill"),
             text: "Fills the town with incredible music and inspiring conversations. Buy tickets now for the Music Trail.",
             image: "https://cdn.prod.website-files.com/6086b948a54f081798acf981/6086bcfc0897470cb2ea3bfb_OV-logo.png",
             url: "https://www.othervoices.ie/events/other-voices-cardigan-2025",
-            venue: "Aberteifi",
+            venue: sl("Cardigan","Aberteifi"),
             date: date,
             category: "live",
             dt: new Date(date).valueOf()
@@ -177,7 +183,7 @@ let handlers = [];
                 image: m(ev, /src="(.*?)"/s),
                 url: m(ev, /href="(.*?)"/s),
                 category: "live",
-                venue: "Cardigan Castle",
+                venue: sl("Cardigan Castle", "Castell Aberteifi"),
                 text: m(ev, /<\/h3>.*<p>(.*?)<\/p>/s),
                 date: date,
                 dt: dt
@@ -259,7 +265,7 @@ let handlers = [];
             ri.date = m(event, /<[^>]+event-date.*?>(.*?)</s);
             ri.dt = new Date(ri.date.replace(",", "")).valueOf() || 0;
             ri.text = "";
-            ri.venue = "Queens Hall Narberth";
+            ri.venue = sl("Queens Hall Narberth","Queens Hall Arberth");
             ri.category = (event.match(/<[^>]+badge-event.*?>.*?</gs)?.map(b => m(b, />(.*)</s))?.join(", ") || "").toLowerCase();
             r.push(ri);
         })
@@ -288,7 +294,7 @@ let handlers = [];
             ri.title = (m(titleLine, /^(.*)[-<]/s) || m(titleLine, /^(.*?)[A-Z][a-z]+day/s) || titleLine).trim();
             ri.date = (m(titleLine, /-([^-]*)$/s) || m(titleLine, /([A-Z][a-z]+day\s.*)$/s)).trim();
             ri.dt = new Date(datex(ri.date))?.valueOf() || 0;
-            ri.venue = "Cellar Cardigan";
+            ri.venue = sl("Cellar Cardigan","Cellar Aberteifi");
             ri.text = "";
             ri.price = m(event, /<span class="price">(.*?)<\/span>/s);
             if (!ri.dt) {
@@ -376,7 +382,7 @@ let handlers = [];
         ri.image = m(show, /src=['"](.*?)['"]/s);
         ri.url = "https://www.smallworld.org.uk" + m(show, /href=['"](.*?)['"]/s);
         ri.title = m(show, /<h1.*?>(.*?)<\/h1>/s).replace(/<.*?>/s, "");
-        ri.venue = "SmallWorld";
+        ri.venue = sl("SmallWorld","Byd Bach");
         ri.text = "";
         //ri.date = m(show, /event-time[^>]+datetime=['"](.*?)['"](?:>[0-9:]+)?)/s).replace(/['"]>/, " ");
         ri.date = m(show, /event-time[^>]+datetime=['"](.*?['"](?:>[0-9:]+)?)/s).replace(/['"]>/, " ");
@@ -525,7 +531,7 @@ let handlers = [];
             ri.image = m(li, /<img [^>]*src=['"](.*?)['"]/s);
             ri.title = attr(li, "eventTitle");
             ri.subtitle = attr(li, "subtitle");
-            ri.venue = attr(li, "where") || "Moylgrove";
+            ri.venue = attr(li, "where") || sl("Moylgrove","Trewyddel");
             ri.price = attr(li, "eventPrice");
             ri.text = attr(li, "eventDescription");
             ri.category = "live";

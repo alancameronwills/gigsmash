@@ -113,7 +113,7 @@
         var monthIdCount = 0;
 
         function showOne(show, ix) {
-            const cacheImage = data + ((show?.image || "").replace("client/pix/", ""));
+            const cacheImage = show?.image ? data + show.image.replace("client/pix/", "") : "";
             const ifHidden = isShowVisible(show) ? "" : "hide";
             let dateHead = "";
             if (show.newDate) {
@@ -369,34 +369,7 @@
             <path d='M1 1h8M1 4h 8M1 7h8' stroke-width='2' stroke-linecap='round' />
         </svg>
     </div>
-
     <div>
-        <style>
-            #bottomMenu {
-                position: fixed;
-                bottom: 0;
-                width: 100%;
-                margin-bottom: -100%;
-                background-color: white;
-                display: flex;
-                justify-content: space-around;
-                z-index: 300;
-                padding: 6px;
-                transition: all 1s;
-            }
-
-            body.showMenus #bottomMenu {
-                margin-bottom: 0;
-            }
-
-            #bottomMenu button {
-                background-color: black;
-                color: white;
-                border: 0;
-                border-radius: 4px;
-                font-size: medium;
-            }
-        </style>
         <div id="bottomMenu" onclick="PromoterFilters.toggleMenu()">
             <!--<button id="installButton" onclick="installer()">Install</button>-->
             <button onclick="share()"><span class="en">Share</span><span class="cy">Rhannu</span></button>
@@ -430,8 +403,8 @@
             }
         </style>
         <div class="betabanner">
-            <div>Beta v0.81</div>
-            <div>Bugs, ideas: <a href="mailto:alan@cameronwills.org">alan@cameronwills.org</a></div>
+            <div>Beta v0.82</div>
+            <div><span class='en'>Bugs, ideas:</span><span class='cy' title="chwilod">Bwgiau, syniadau:</span> <a href="mailto:alan@cameronwills.org">alan@cameronwills.org</a></div>
         </div>
     </div>
 

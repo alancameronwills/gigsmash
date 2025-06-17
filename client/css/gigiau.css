@@ -173,6 +173,7 @@ a:link {
         border: 1px solid gray;
         max-width: 80vw;
         width: 80vw;
+        font-size: min(20px,3vw);
     }
 }
 
@@ -216,8 +217,8 @@ a:link {
     background-color: blue;
     position: absolute;
     font-size: large;
-    bottom: 3vh;
-    right: 15%;
+    bottom: max(8vh,40px);
+    right: max(15vw,40px);
     border-radius: 4px;
     color: white;
     padding: 0 4px;
@@ -307,7 +308,7 @@ body:not(.showMenus) #monthMenu {
 }
 
 .languageButton {
-    padding: 0 20px;
+    padding: 0 min(20px,3vw);
     border-right: 2px solid gray;
 }
 

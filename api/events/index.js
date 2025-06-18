@@ -549,7 +549,8 @@ let handlers = [];
     return r;
 }).friendly = "Moylegrove";
 
-let ticketsolve = async (tsid,categoryMap) => {
+let ticketsolve = async (tsid,categoryMap, venueNameFilter = null) => {
+    
     let response = await ftext(`https://${tsid}.ticketsolve.com/shows.xml`);
     let venues = response.split("</venue>");
 
@@ -558,6 +559,9 @@ let ticketsolve = async (tsid,categoryMap) => {
         let venueNameElement = v.match(/<name>.*?<\/name>/s);
         if (venueNameElement) {
             let venueName = m(venueNameElement[0], /<!\[CDATA\[(.*?)\]\]/s);
+            if (venueNameFilter) {
+                venueName = venueNameFilter(venueName);
+            }
             let shows = v.match(/<show .*?<\/show>/sg);
             shows?.forEach(s => {
                 let showNameElement = s.match(/<name>.*?<\/name>/s);
@@ -608,7 +612,7 @@ let ticketsolve = async (tsid,categoryMap) => {
 
 
 (handlers["mwldan"] = async () => {
-    return await ticketsolve("mwldan", {broadcast:/Broadcast/,live:/Live/,film:/Cinema|TMFS/});
+    return await ticketsolve("mwldan", {broadcast:/Broadcast/,live:/Live/,film:/Cinema|TMFS/}, n=>n.replace(/\s*[0-9]/,""));
 }).friendly = "Mwldan Cardigan";
 
 (handlers["span"] = async () => {

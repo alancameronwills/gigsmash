@@ -11,7 +11,7 @@ function datex(dateString) {
     return dateString.trim().replace(/^[A-Z][a-z]+ +/, "").replace(/st|nd|rd|th|at/, "").replace(/\s+/sg, " ").trim();
 }
 
-function sl(en,cy) {
+function sl(en, cy) {
     return `<span class='en'>${en}</span><span class='cy'>${cy}</span>`;
 }
 
@@ -38,12 +38,12 @@ async function ftext(url, sendHeaders = false) {
 let handlers = [];
 
 (handlers["assorted"] = async () => {
-    let r = [];    
+    let r = [];
     r.push({
         title: "Scaramella",
         text: "Choral. £10",
         category: "live",
-        venue: sl("St Mary's Church Cardigan","Eglwys Santes Fair, Aberteifi"),
+        venue: sl("St Mary's Church Cardigan", "Eglwys Santes Fair, Aberteifi"),
         url: "https://gigiau.uk/pix/scaramella-2025-06-29.jpg",
         date: "29 June 2025 7pm",
         dt: new Date("29 June 2025").valueOf(),
@@ -52,7 +52,7 @@ let handlers = [];
     r.push({
         title: "Measure for Measure",
         text: "Summer outdoor performance",
-        venue: sl("St Dogmael's Abbey","Abaty Llandudoch"),
+        venue: sl("St Dogmael's Abbey", "Abaty Llandudoch"),
         url: "https://www.abbeyshakespeare.co.uk/en/productions/measure-for-measure",
         category: "live",
         image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/06.measure-for-measure/rose%20pained.jpg",
@@ -62,7 +62,7 @@ let handlers = [];
     r.push({
         title: "Measure for Measure",
         text: "Summer outdoor performance",
-        venue: sl("St Dogmael's Abbey","Abaty Llandudoch"),
+        venue: sl("St Dogmael's Abbey", "Abaty Llandudoch"),
         url: "https://www.abbeyshakespeare.co.uk/en/productions/measure-for-measure",
         category: "live",
         image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/06.measure-for-measure/rose%20pained.jpg",
@@ -72,7 +72,7 @@ let handlers = [];
     r.push({
         title: "Measure for Measure",
         text: "Summer outdoor performance",
-        venue: sl("St Dogmael's Abbey","Abaty Llandudoch"),
+        venue: sl("St Dogmael's Abbey", "Abaty Llandudoch"),
         url: "https://www.abbeyshakespeare.co.uk/en/productions/measure-for-measure",
         category: "live",
         image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/06.measure-for-measure/rose%20pained.jpg",
@@ -82,7 +82,7 @@ let handlers = [];
     r.push({
         title: "Measure for Measure",
         text: "Summer outdoor performance",
-        venue: sl("St Dogmael's Abbey","Abaty Llandudoch"),
+        venue: sl("St Dogmael's Abbey", "Abaty Llandudoch"),
         url: "https://www.abbeyshakespeare.co.uk/en/productions/measure-for-measure",
         category: "live",
         image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/06.measure-for-measure/rose%20pained.jpg",
@@ -153,11 +153,11 @@ let handlers = [];
 (handlers["othervoices"] = async () => {
     let events = ["30 October 2025", "31 October 2025", "1 November 2025"].map(date => {
         return {
-            title: sl("Other Voices","Lleisiau Eraill"),
+            title: sl("Other Voices", "Lleisiau Eraill"),
             text: "Fills the town with incredible music and inspiring conversations. Buy tickets now for the Music Trail.",
             image: "https://cdn.prod.website-files.com/6086b948a54f081798acf981/6086bcfc0897470cb2ea3bfb_OV-logo.png",
             url: "https://www.othervoices.ie/events/other-voices-cardigan-2025",
-            venue: sl("Cardigan","Aberteifi"),
+            venue: sl("Cardigan", "Aberteifi"),
             date: date,
             category: "live",
             dt: new Date(date).valueOf()
@@ -265,7 +265,7 @@ let handlers = [];
             ri.date = m(event, /<[^>]+event-date.*?>(.*?)</s);
             ri.dt = new Date(ri.date.replace(",", "")).valueOf() || 0;
             ri.text = "";
-            ri.venue = sl("Queens Hall Narberth","Queens Hall Arberth");
+            ri.venue = sl("Queens Hall Narberth", "Queens Hall Arberth");
             ri.category = (event.match(/<[^>]+badge-event.*?>.*?</gs)?.map(b => m(b, />(.*)</s))?.join(", ") || "").toLowerCase();
             r.push(ri);
         })
@@ -294,7 +294,7 @@ let handlers = [];
             ri.title = (m(titleLine, /^(.*)[-<]/s) || m(titleLine, /^(.*?)[A-Z][a-z]+day/s) || titleLine).trim();
             ri.date = (m(titleLine, /-([^-]*)$/s) || m(titleLine, /([A-Z][a-z]+day\s.*)$/s)).trim();
             ri.dt = new Date(datex(ri.date))?.valueOf() || 0;
-            ri.venue = sl("Cellar Cardigan","Cellar Aberteifi");
+            ri.venue = sl("Cellar Cardigan", "Cellar Aberteifi");
             ri.text = "";
             ri.price = m(event, /<span class="price">(.*?)<\/span>/s);
             if (!ri.dt) {
@@ -382,7 +382,7 @@ let handlers = [];
         ri.image = m(show, /src=['"](.*?)['"]/s);
         ri.url = "https://www.smallworld.org.uk" + m(show, /href=['"](.*?)['"]/s);
         ri.title = m(show, /<h1.*?>(.*?)<\/h1>/s).replace(/<.*?>/s, "");
-        ri.venue = sl("SmallWorld","Byd Bach");
+        ri.venue = sl("SmallWorld", "Byd Bach");
         ri.text = "";
         //ri.date = m(show, /event-time[^>]+datetime=['"](.*?)['"](?:>[0-9:]+)?)/s).replace(/['"]>/, " ");
         ri.date = m(show, /event-time[^>]+datetime=['"](.*?['"](?:>[0-9:]+)?)/s).replace(/['"]>/, " ");
@@ -531,7 +531,7 @@ let handlers = [];
             ri.image = m(li, /<img [^>]*src=['"](.*?)['"]/s);
             ri.title = attr(li, "eventTitle");
             ri.subtitle = attr(li, "subtitle");
-            ri.venue = attr(li, "where") || sl("Moylgrove","Trewyddel");
+            ri.venue = attr(li, "where") || sl("Moylgrove", "Trewyddel");
             ri.price = attr(li, "eventPrice");
             ri.text = attr(li, "eventDescription");
             ri.category = "live";
@@ -549,62 +549,81 @@ let handlers = [];
     return r;
 }).friendly = "Moylegrove";
 
-let ticketsolve = async (tsid,categoryMap, venueNameFilter = null) => {
-    
+let ticketsolve = async (tsid, categoryMap, venueNameFilter = null) => {
+
     let response = await ftext(`https://${tsid}.ticketsolve.com/shows.xml`);
     let venues = response.split("</venue>");
 
     let r = [];
     venues.forEach(v => {
-        let venueNameElement = v.match(/<name>.*?<\/name>/s);
-        if (venueNameElement) {
-            let venueName = m(venueNameElement[0], /<!\[CDATA\[(.*?)\]\]/s);
-            if (venueNameFilter) {
-                venueName = venueNameFilter(venueName);
-            }
-            let shows = v.match(/<show .*?<\/show>/sg);
-            shows?.forEach(s => {
-                let showNameElement = s.match(/<name>.*?<\/name>/s);
-                if (showNameElement) {
-                    let showName = m(showNameElement[0], /<!\[CDATA\[(.*?)\]\]/s);
-                    let description = m(s, /<description>(.*?)<\/description>/s);
-                    let images = m(s, /<images>(.*)<\/images>/s);
-                    let imageUrl = m(images, /(https:[^<]*)/s);
-                    let url = m(s,/<url>(.*)<\/url>/);
-                    let eventCategory = m(s,/<event_category>(.*)<\/event_category>/s);
-                    let category = eventCategory ? Object.keys(categoryMap).find(k=> 
-                        eventCategory.match(categoryMap[k])) : "live";
-                    let eventSection = m(s, /<events>(.*?)<\/events>/s);
-                    let events = eventSection.split("</event>");
-                    let startDate, endDate = 0;
-                    events.forEach(e => {
-                        let date = m(e, /<date_.*?>(.*?)</s);
-                        if (!url) url = m(e, /<url>(.*?)<\/url>/s);
-                        if (date) {
-                            let dt = new Date(date).valueOf();
-                            if (!startDate) startDate = dt;
-                            endDate = dt;
-                        }
-                    });
-                    const options = {weekday: "short", day:"numeric", month:"short", year:"numeric"};
-                    const timeOptions = {weekday: "short", day:"numeric", month:"short", hour:"2-digit", minute:"2-digit"};
-                    
-                    let dateRange = (startDate == endDate) 
-                        ? new Date(startDate).toLocaleString("en-GB", timeOptions)
-                        :  "" + new Date(startDate).toLocaleString("en-GB", timeOptions)
-                        + " - " + new Date(endDate).toLocaleString("en-GB", options);
-                    r.push({
-                        venue: venueName,
-                        date: dateRange,
-                        dt: startDate,
-                        image: imageUrl,
-                        title: showName,
-                        url: url,
-                        text: m(description, /<!\[CDATA\[(.*?)\]\]/s).replace(/<.*?>/gs, " "),
-                        category: category
-                    });
+        try {
+            let venueNameElement = v.match(/<name>.*?<\/name>/s);
+            if (venueNameElement) {
+                let venueName = m(venueNameElement[0], /<!\[CDATA\[(.*?)\]\]/s);
+                if (venueNameFilter) {
+                    venueName = venueNameFilter(venueName);
                 }
-            })
+                let shows = v.match(/<show .*?<\/show>/sg);
+                shows?.forEach(s => {
+                    let showNameElement = s.match(/<name>.*?<\/name>/s);
+                    if (showNameElement) {
+                        let showName = m(showNameElement[0], /<!\[CDATA\[(.*?)\]\]/s);
+                        let description = m(s, /<description>(.*?)<\/description>/s);
+                        let images = m(s, /<images>(.*)<\/images>/s);
+                        let imageUrl = m(images, /(https:[^<]*)/s);
+                        let url = m(s, /<url>(.*)<\/url>/);
+                        let eventCategory = m(s, /<event_category>(.*)<\/event_category>/s);
+                        let category = eventCategory ? Object.keys(categoryMap).find(k =>
+                            eventCategory.match(categoryMap[k])) : "live";
+                        let eventSection = m(s, /<events>(.*?)<\/events>/s);
+                        let events = eventSection.split("</event>");
+                        let startDate, endDate = 0;
+                        let eventAttributes = [];
+                        events.forEach(e => {
+                            let date = m(e, /<date_.*?>(.*?)</s);
+                            if (!url) url = m(e, /<url>(.*?)<\/url>/s);
+                            if (date) {
+                                let dt = new Date(date).valueOf();
+                                if (!startDate) startDate = dt;
+                                endDate = dt;
+                            }
+                            let eventAttribute = m(e, /<event_attribute>(.*?)</s);
+                            if (eventAttribute && date) {
+                                if (!eventAttributes[eventAttribute]) eventAttributes[eventAttribute] = [];
+                                eventAttributes[eventAttribute].push(date);
+                            }
+                        });
+                        const options = { weekday: "short", day: "numeric", month: "short", year: "numeric" };
+                        const timeOptions = { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" };
+
+                        let dateRange = (startDate == endDate)
+                            ? new Date(startDate).toLocaleString("en-GB", timeOptions)
+                            : "" + new Date(startDate).toLocaleString("en-GB", timeOptions)
+                            + " - " + new Date(endDate).toLocaleString("en-GB", options);
+                        let specials = [];
+                        Object.keys(eventAttributes).forEach(k => {
+                            specials.push(k + ": " + eventAttributes[k]
+                                .map(d => new Date(d).toLocaleString("en-GB", { day: "numeric", month: "short" }))
+                                .join(", ")
+                            );
+                        })
+                        r.push({
+                            venue: venueName,
+                            date: dateRange,
+                            dt: startDate,
+                            image: imageUrl,
+                            title: showName,
+                            subtitle: specials.join("; "),
+                            url: url,
+                            text: m(description, /<!\[CDATA\[(.*?)\]\]/s).replace(/<.*?>/gs, " "),
+                            category: category
+                        });
+                    }
+                })
+
+            }
+        } catch (e) {
+            console.log(e);
         }
     })
     return r;
@@ -612,15 +631,15 @@ let ticketsolve = async (tsid,categoryMap, venueNameFilter = null) => {
 
 
 (handlers["mwldan"] = async () => {
-    return await ticketsolve("mwldan", {broadcast:/Broadcast/,live:/Live/,film:/Cinema|TMFS/}, n=>n.replace(/\s*[0-9]/,""));
+    return await ticketsolve("mwldan", { broadcast: /Broadcast/, live: /Live/, film: /Cinema|TMFS/ }, n => n.replace(/\s*[0-9]/, ""));
 }).friendly = "Mwldan Cardigan";
 
 (handlers["span"] = async () => {
-    return await ticketsolve("span-arts",{live:/./});
+    return await ticketsolve("span-arts", { live: /./ });
 }).friendly = "Span Arts";
 
 (handlers["stdavids"] = async () => {
-    return await ticketsolve("stdavidscathedral",{live:/./});
+    return await ticketsolve("stdavidscathedral", { live: /./ });
 }).friendly = "St Davids Cathedral";
 /*
 let ticketsource = async (source) => {

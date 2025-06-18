@@ -367,13 +367,20 @@
                 window.location = `mailto:?subject=${title}&body=${url}%0A%0A${text}`;
             }
         }
+
+        function checkClick(event) {
+            if (event.target?.tagName=="A" && event.target.href?.indexOf("ticketsolve")>0) {
+                let href = event.target.href.replace(/\?.*/, "");
+                event.target.href= `${href}?locale=${document.body.classList.contains("cy")?"cy-CY":"en-GB"}`;
+            }
+        }
     </script>
 </head>
 
 <body onload="go()">
     <div id="sources"></div>
     <div class="head"><img src="gigiau.png" /></div>
-    <div id="table" class="table"></div>
+    <div id="table" class="table" onclick="checkClick(event)"></div>
     <div id="date"></div>
     <div id="space">&nbsp;</div>
     <div id="filters">

@@ -24,6 +24,7 @@
 
         var events = [];
         var data = "https://pantywylan.blob.core.windows.net/gigsmash/client";
+        var counter = "https://pantywylan-2.azurewebsites.net/api/counter"
 
         function sl(en, cy) {
             return `<span class="cy">${cy}</span><span class="en">${en}</span>`;
@@ -46,6 +47,8 @@
             setTimeout(() => location.reload(), 1000 * 60 * 60 * 6);
             document.getElementById("date").innerText = "" + new Date(events.date).toISOString();
             setMonthMenu();
+            const zcode= (new URLSearchParams(document.location.search)).get('z') || 0;
+            fetch(`${counter}?z=${zcode}`); // no await - don't need the result
         }
 
         function markFirstShowOfEachDate() {

@@ -594,7 +594,7 @@ let ticketsolve = async (tsid, categoryMap, venueNameFilter = null) => {
                             }
                         });
                         const options = { weekday: "short", day: "numeric", month: "short", year: "numeric" };
-                        const timeOptions = { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" };
+                        const timeOptions = { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Europe/London"};
 
                         let dateRange = (startDate == endDate)
                             ? new Date(startDate).toLocaleString("en-GB", timeOptions)

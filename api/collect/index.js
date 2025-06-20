@@ -18,7 +18,6 @@ async function collect(context) {
     let handlers = await events(context, { query: {} });
     let handlerNames = Object.keys(handlers);
     let toDo = {};
-    let faults = [];
     handlerNames.forEach(n => toDo[n] = true);
     let eventsLists = {};
     await Promise.all(handlerNames.map(async n => {
@@ -30,7 +29,7 @@ async function collect(context) {
                 persistentStatus("Remaining sources: " + Object.keys(toDo).length);
             }
         } catch (e) {
-            faults.push(`Getting ${n} ${e.toString()}`)
+            fault(`Getting ${n} ${e.toString()}`)
         }
     }));
 
@@ -68,7 +67,7 @@ async function collect(context) {
     let package = { promoters: handlers, categories, shows: showsUnduplicated, toDo, faults, date: Date.now() };
 
     // Save the list:
-    storer.put("events.json", null, JSON.stringify(package, null, "  "));
+    await storer.put("events.json", null, JSON.stringify(package, null, "  "));
 
 }
 
@@ -142,6 +141,18 @@ function assert(condition, msg) {
     if (!condition) throw Error(msg);
 }
 
+
+var faults = [];
+function fault(s) {
+    console.log(s);
+    faults.push(s);
+}
+function getFaults() {
+    let v = faults.join("\n");
+    faults.length = 0;
+    return v;
+}
+
 async function testFilestore() {
     const tfr = "testFile";
     const tf = tfr + ".txt";
@@ -207,7 +218,7 @@ module.exports = async function (context, req) {
             if (await collectLock(true)) {
                 await persistentStatus("in progress");
                 collect(context)  // NB no await
-                    .then(() => { collectLock(false); persistentStatus("Done"); })
+                    .then(() => { collectLock(false); persistentStatus("Done " + getFaults()); })
                     .catch(e => { collectLock(false); persistentStatus(e.stack); });
 
                 r.status = "started";

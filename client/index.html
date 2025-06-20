@@ -36,7 +36,9 @@
         })();
 
         async function go() {
+            // Dev version is all on one machine:
             if (location.host == "localhost") data = "";
+
             events = await fetch(data + "/json/events.json?v=" + Date.now()).then(r => r.json());
             markFirstShowOfEachDate();
             setCategoryFilters();
@@ -44,11 +46,17 @@
             PromoterFilters.restore();
             restoreIaith();
             Filters.notify(showAllFiltered);
+            setMonthMenu();
+
+            // Count counters
+            const zcode = (new URLSearchParams(document.location.search)).get('z') || 0;
+            fetch(`${counter}?z=${zcode}`); // no await - don't need the result
+
+            tidyHistory();
+
+            // Refresh at intervals. Show edition date.
             setTimeout(() => location.reload(), 1000 * 60 * 60 * 6);
             document.getElementById("date").innerText = "" + new Date(events.date).toISOString();
-            setMonthMenu();
-            const zcode= (new URLSearchParams(document.location.search)).get('z') || 0;
-            fetch(`${counter}?z=${zcode}`); // no await - don't need the result
         }
 
         function markFirstShowOfEachDate() {
@@ -60,6 +68,14 @@
                 show.newDate = show.dtDayValue != groupDate;
                 groupDate = show.dtDayValue;
             });
+        }
+
+        function pushHistory(state, tag) {
+            history.pushState(state, "", "#");
+        }
+        function tidyHistory() {
+            // Tidy URL in browser address bar: Remove old page changes; Remove counters so we don't count twice.
+            history.replaceState({state:"tidy"}, "", location.href.replace(/#.*/, "").replace(/([?&])z=[^&#]+/, "$1").replace(/\?\&/,"?").replace(/[?&]$/,""));
         }
 
         function showAllFiltered() {
@@ -179,9 +195,14 @@
                 return filterSelections;
             }
 
+            /** 
+             * Show or hide the main menu
+             * @param (boolean) off - Hide the menu. Otherwise, toggle visibility.
+             * @returns boolean - true if it was previously showing 
+             */
             static toggleMenu(off) {
                 let menu = document.getElementById("promoterMenu");
-                if (off && !menu.classList.contains("visible")) return;
+                if (off && !menu.classList.contains("visible")) return false;
                 let showing = menu.classList.toggle("visible");
                 let body = document.body;
                 if (showing) body.classList.add("showMenus");
@@ -193,10 +214,12 @@
                         || !newSelection.every(k => PromoterFilters.#previousSelection[k])) {
                         PromoterFilters.save();
                     }
-                    history.pushState({ "showPromoterMenu": true }, "",
-                        "./#promoter");
+                    pushHistory({ "showPromoterMenu": true }, "./#promoter");
+                    return false;
                 } else {
                     PromoterFilters.#previousSelection = PromoterFilters.selections();
+                    tidyHistory();
+                    return true;
                 }
             }
 
@@ -293,22 +316,26 @@
 
         function showPageOver(id) {
             document.querySelector(id).classList.add("visible");
-            history.pushState({ "showPageOver": id }, "", "./#" + id);
+            pushHistory({ "showPageOver": id }, "./#" + id);
         }
-
-        onpopstate = e => {
-            if (e.state.showPageOver || e.state.showPromoterMenu) {
-                e.preventDefault();
-                hidePageOver();
-                PromoterFilters.toggleMenu(true);
-            }
-        };
 
         function hidePageOver() {
+            let thereWasOne = false;
             Array.from(document.querySelectorAll(".page")).forEach(el => {
+                if (el.classList.contains("visible")) thereWasOne = true;
                 el.classList.remove("visible");
             });
+            return thereWasOne;
         }
+
+        window.addEventListener("popstate", e => {
+            let doneSomething = PromoterFilters.toggleMenu(true);
+            doneSomething = hidePageOver() || doneSomething;
+            if (doneSomething) {
+                e.preventDefault();
+            }
+        });
+
         function setMonthMenu() {
             let monthButtons = [];
             const thisMonth = new Date().getMonth();
@@ -356,7 +383,7 @@
         function shareLink() {
             const title = "Gigiau - what's happening in North Pembs";
             const text = "Opens a listing of events in the venues around Newport, Cardigan and Fishguard";
-            const url = "https://gigiau.uk";
+            const url = "https://gigiau.uk?z=200";
             if (navigator.share) {
                 navigator
                     .share({
@@ -372,9 +399,9 @@
         }
 
         function checkClick(event) {
-            if (event.target?.tagName=="A" && event.target.href?.indexOf("ticketsolve")>0) {
+            if (event.target?.tagName == "A" && event.target.href?.indexOf("ticketsolve") > 0) {
                 let href = event.target.href.replace(/\?.*/, "");
-                event.target.href= `${href}?locale=${document.body.classList.contains("cy")?"cy-CY":"en-GB"}`;
+                event.target.href = `${href}?locale=${document.body.classList.contains("cy") ? "cy-CY" : "en-GB"}`;
             }
         }
     </script>
@@ -419,7 +446,7 @@
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: space-between;
-                font-size: min(20px,max(3vw,8px));
+                font-size: min(20px, max(3vw, 8px));
             }
 
             .betabanner>div {
@@ -485,7 +512,7 @@
         </div>
         <div id="share-page" class="page" onclick="hidePageOver()">
             <div style="grid-column:2;grid-row:1;">
-                <img src="qr-share.png" onclick="hidePageOver()" />
+                <img src="qr-share.png?v=200" onclick="hidePageOver()" />
             </div>
             <div style="grid-column:2;grid-row:2;">
                 <p class="en">Show the QR code to a friend to get this app on their phone.</p>

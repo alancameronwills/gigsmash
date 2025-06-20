@@ -55,7 +55,7 @@ let handlers = [];
         venue: sl("St Dogmael's Abbey", "Abaty Llandudoch"),
         url: "https://www.abbeyshakespeare.co.uk/en/productions/measure-for-measure",
         category: "live",
-        image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/06.measure-for-measure/rose%20pained.jpg",
+        image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/measure-for-measure/M4M_A4-web.jpg",
         date: "30 July 2025",
         dt: new Date("30 July 2025").valueOf()
     });
@@ -65,7 +65,7 @@ let handlers = [];
         venue: sl("St Dogmael's Abbey", "Abaty Llandudoch"),
         url: "https://www.abbeyshakespeare.co.uk/en/productions/measure-for-measure",
         category: "live",
-        image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/06.measure-for-measure/rose%20pained.jpg",
+        image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/measure-for-measure/M4M_A4-web.jpg",
         date: "30 July 2025",
         dt: new Date("31 July 2025").valueOf()
     });
@@ -75,7 +75,7 @@ let handlers = [];
         venue: sl("St Dogmael's Abbey", "Abaty Llandudoch"),
         url: "https://www.abbeyshakespeare.co.uk/en/productions/measure-for-measure",
         category: "live",
-        image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/06.measure-for-measure/rose%20pained.jpg",
+        image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/measure-for-measure/M4M_A4-web.jpg",
         date: "30 July 2025",
         dt: new Date("1 August 2025").valueOf()
     });
@@ -85,7 +85,7 @@ let handlers = [];
         venue: sl("St Dogmael's Abbey", "Abaty Llandudoch"),
         url: "https://www.abbeyshakespeare.co.uk/en/productions/measure-for-measure",
         category: "live",
-        image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/06.measure-for-measure/rose%20pained.jpg",
+        image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/measure-for-measure/M4M_A4-web.jpg",
         date: "30 July 2025",
         dt: new Date("2 August 2025").valueOf()
     });

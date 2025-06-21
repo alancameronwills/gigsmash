@@ -28,6 +28,7 @@ a:link {
     color: white;
     font-weight: bold;
     padding: 6px;
+    user-select:none;
 }
 
 .image img {
@@ -64,6 +65,7 @@ a:link {
 
 .show {
     user-select: none;
+    cursor: pointer;
     column-gap: 20px;
     display: flex;
     justify-content: start;

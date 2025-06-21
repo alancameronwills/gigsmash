@@ -39,6 +39,10 @@
         async function go() {
             // Dev version is all on one machine:
             if (location.host == "localhost") data = "";
+            if (location.href.indexOf("#clear")>=0) {
+                //To do this: Add "#clear" to the URL and then reload
+                localStorage.clear();
+            }
 
             events = await fetch(data + "/json/events.json?v=" + Date.now()).then(r => r.json());
             markFirstShowOfEachDate();

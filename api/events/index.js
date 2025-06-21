@@ -37,6 +37,7 @@ async function ftext(url, sendHeaders = false) {
 
 let handlers = [];
 
+/*
 (handlers["assorted"] = async () => {
     let r = [];
     r.push({
@@ -121,6 +122,7 @@ let handlers = [];
     })
     return r;
 }).friendly = "At Large";
+*/
 
 /*
 (handlers["folkfest"] = async () => {
@@ -594,7 +596,7 @@ let ticketsolve = async (tsid, categoryMap, venueNameFilter = null) => {
                             }
                         });
                         const options = { weekday: "short", day: "numeric", month: "short", year: "numeric" };
-                        const timeOptions = { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Europe/London"};
+                        const timeOptions = { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Europe/London" };
 
                         let dateRange = (startDate == endDate)
                             ? new Date(startDate).toLocaleString("en-GB", timeOptions)
@@ -636,11 +638,44 @@ let ticketsolve = async (tsid, categoryMap, venueNameFilter = null) => {
 
 (handlers["span"] = async () => {
     return await ticketsolve("span-arts", { live: /./ });
-}).friendly = "Span Arts";
+}).friendly = "SPAN Arts";
 
 (handlers["stdavids"] = async () => {
     return await ticketsolve("stdavidscathedral", { live: /./ });
 }).friendly = "St Davids Cathedral";
+
+let gigio = async (source) => {
+    let r = [];
+    try {
+        const response = await ftext(source);
+        const json = m(response, /<pre id='gigiau'.*?>(.*?)<\/pre>/s);
+        const events = JSON.parse(json);
+        const options = { weekday: "short", day: "numeric", month: "short", year: "numeric" };
+        r = events.map(event => {
+            let dateRange = new Date(event.meta.dtstart).toLocaleString("en-GB", options);
+            if (event.meta.dtstart != event.meta.dtend) {
+                dateRange += " - ";
+                dateRange += new Date(event.meta.dtend).toLocaleString("en-GB", options);
+            }
+            return {
+                title: event.title,
+                image: event.pic,
+                url: event.meta.bookinglink || "",
+                venue: event.meta.venue || "",
+                text: event.content,
+                subtitle: event.meta.dtinfo || "",
+                dt: new Date(event.meta.dtstart).valueOf(),
+                date: dateRange,
+                category: "live"
+            }
+        })
+    } catch (e) { console.log(e.toString()) }
+    return r;
+}
+(handlers["pawb"] = async () => {
+    return await gigio("https://www.gigiau.uk/pawb/?json=1");
+}).friendly = "Pawb";
+
 /*
 let ticketsource = async (source) => {
     console.log("1 [" + source + "]");

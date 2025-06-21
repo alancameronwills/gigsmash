@@ -131,7 +131,7 @@ a:link {
 
 @media (max-width:600px) {
     .table {
-        justify-content: space-evenly;
+        justify-content: center;
     }
 }
 

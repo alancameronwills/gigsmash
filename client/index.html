@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="gigiau.ico">
     <link rel="apple-touch-icon" href="gigiau-fav.png">
-    <link rel="stylesheet" type="text/css" href="css/gigiau.css?v=250618" />
+    <link rel="stylesheet" type="text/css" href="css/gigiau.css?v=250621" />
     <meta property="og:image" content="/gigiau.png">
     <meta property="og:title" content="Gigiau" />
     <meta property="og:url" content="https://gigiau.uk/" />
-    <meta property="og:description" content="Events and shows - What's On in North Pembrokshire" />
+    <meta property="og:description" content="Events and shows - What's On in North Pembrokshire and Cardigan" />
     <title>Gigiau - Shows in North Pembrokeshire</title>
     <script>
         const monthsEn = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -76,7 +76,7 @@
         }
         function tidyHistory() {
             // Tidy URL in browser address bar: Remove old page changes; Remove counters so we don't count twice.
-            history.replaceState({state:"tidy"}, "", location.href.replace(/#.*/, "").replace(/([?&])z=[^&#]+/, "$1").replace(/\?\&/,"?").replace(/[?&]$/,""));
+            history.replaceState({ state: "tidy" }, "", location.href.replace(/#.*/, "").replace(/([?&])z=[^&#]+/, "$1").replace(/\?\&/, "?").replace(/[?&]$/, ""));
         }
 
         function showAllFiltered() {
@@ -153,12 +153,13 @@
                     ${sl(dEn, dCy)}
                     </div>`;
             };
+            const link = show.url ? `href='${show.url}'` : show.imagesource ? `onclick='showBigPic("${show.imagesource}")'` : "";
 
             return dateHead
                 + `<div class='show ${ifHidden} ${show.category || ""} ${show.promoter}' id='show-${ix}'>
                     <div class='venue' onclick='venueFilter("${show.promoter}")'>${show.venue}</div>
-                    <div class='image'><a href='${show.url}'><img src='${cacheImage}'/></a></div>
-                    <div class='title'><a href='${show.url}'>${show.title}</a></div>
+                    <div class='image'><a ${link}><img src='${cacheImage}'/></a></div>
+                    <div class='title'><a ${link}>${show.title}</a></div>
                     <div class='subtitle'>${show.subtitle || ""}</div>
                     <div class='date'>${show.date}</div>
                     <div class='description'>${show.text}</div>
@@ -303,6 +304,11 @@
                 f.innerText = "";
                 f.style.display = "none";
             }
+        }
+
+        function showBigPic(src) {
+            document.querySelector("#big-pic-page").innerHTML = `<img src='${src}' style='margin:auto' onclick='hidePageOver()'/>`;
+            showPageOver("#big-pic-page");
         }
 
         function share() {
@@ -459,7 +465,7 @@
             }
         </style>
         <div class="betabanner">
-            <div>Beta v0.82</div>
+            <div>Beta v0.83</div>
             <div><span class='en'>Bugs, ideas:</span><span class='cy' title="chwilod">Bwgiau, syniadau:</span> <a
                     href="mailto:info@gigiau.uk">info@gigiau.uk</a></div>
         </div>
@@ -504,7 +510,18 @@
                 grid-column: 2;
                 grid-row: 2;
             }
+
+            #big-pic-page {
+                display: flex;
+                justify-content: space-around;
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+            #big-pic-page img {
+                max-width:100vw;
+                max-height:100vh;
+            }
         </style>
+        <div id="big-pic-page" class="page" onclick="hidePageOver()"></div>
         <div id="install-android-page" class="page" onclick="hidePageOver()">
             <div style="grid-column:3;grid-row:1;">
                 Keep this page as an app on your phone.<br />

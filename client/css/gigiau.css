@@ -78,6 +78,39 @@ a:link {
     border-radius: 4px;
     transition: all 1s;
     overflow: hidden;
+    position:relative;
+}
+.show.favorite::after {
+    content:"😊";
+    position:absolute;
+    top:0;
+    right:0;
+}
+.show.highlight {
+    outline: 4px dashed red;
+}
+.show:not(.favorite)::after {
+    content:"◯";
+    position:absolute;
+    top:0;
+    right:0;
+}
+.show:not(.favorite):hover::after {
+    content: "😊";
+    opacity:50%;
+}
+#favoriteButton {
+    margin-left: 1em;
+    width: 1em;
+    position:relative;
+}
+#favoriteButton::after {
+    content: "😊";
+    position:absolute;
+}
+#favoriteButton:hover::after {
+    background-color: dodgerblue;
+    border-radius:50%;
 }
 
 .date {
@@ -147,6 +180,11 @@ a:link {
     right: 0;
     margin: 10px 10px 0 0;
 }
+#menu>svg {
+    background-color:white;
+    border: 2px solid white;
+    border-radius: 2px;
+}
 
 #filters {
     display: flex;
@@ -154,13 +192,13 @@ a:link {
     padding: 0 6px 1px 2px;
     background-color: whitesmoke;
     position: fixed;
-    top: 10px;
+    top: 20px;
     right: 0;
     transform-origin: bottom right;
     transform: rotate(-90deg) translateY(-10px);
     border-radius: 4px;
     max-width: 90vh;
-    width: 90vh;
+    width: 85vh;
     font: var(--menufont);
     z-index: 2;
 }

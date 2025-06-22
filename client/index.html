@@ -45,12 +45,14 @@
             }
 
             events = await fetch(data + "/json/events.json?v=" + Date.now()).then(r => r.json());
+            assignIds();
             markFirstShowOfEachDate();
             setCategoryFilters();
             CategoryFilters.restore();
             PromoterFilters.restore();
             restoreIaith();
             Filters.notify(showAllFiltered);
+            Favorites.restore();
             setMonthMenu();
 
             // Count counters
@@ -88,6 +90,12 @@
                 window.removeEventListener("scroll", window.gigiauScroll);
             })
             localStorage.seenDisclaimer = 1;
+        }
+
+        function assignIds() {
+            events.shows.forEach(show => {
+                show.id = show.url || show.image || "" + show.dt + show.title;
+            })
         }
 
         function markFirstShowOfEachDate() {
@@ -133,6 +141,7 @@
                         if (showIf(item, isShowVisible(show))) {
                             showingShowsSincePreviousDateHeading++;
                         }
+                        item.showId = show.id;
                     }
                 } else if (item.classList.contains("dateHeading")) {
                     updatePreviousHeading();
@@ -284,7 +293,7 @@
                 filters.forEach(item => {
                     if (item.checked) countChecked++;
                 })
-                const newState = countChecked < filters.length/2;
+                const newState = countChecked < filters.length / 2;
                 filters.forEach(item => item.checked = newState);
             }
 
@@ -383,15 +392,15 @@
 
         // Hide menu if we start scrolling
         window.gigiauScrollstate = 0;
-        setInterval(()=>{
+        setInterval(() => {
             if (window.scrollY != window.gigiauScrollstate) {
                 window.gigiauScrollstate = window.scrollY;
                 PromoterFilters.toggleMenu(true);
             }
-        },300);
-        window.addEventListener("keydown", (w,e)=>{
-                PromoterFilters.toggleMenu(true);
-                hidePageOver();
+        }, 300);
+        window.addEventListener("keydown", (w, e) => {
+            PromoterFilters.toggleMenu(true);
+            hidePageOver();
         })
 
         function setMonthMenu() {
@@ -435,6 +444,7 @@
                     <label for="${k}filter">${filterSet[k]}</label>
                 </div>`);
             });
+            filterHtml.push("<div id='favoriteButton' onclick='Favorites.scrollToNext()'></div>");
             document.querySelector("#filters").innerHTML = filterHtml.join("\n");
         }
 
@@ -460,6 +470,63 @@
             if (event.target?.tagName == "A" && event.target.href?.indexOf("ticketsolve") > 0) {
                 let href = event.target.href.replace(/\?.*/, "");
                 event.target.href = `${href}?locale=${document.body.classList.contains("cy") ? "cy-CY" : "en-GB"}`;
+            } else if (event.target?.classList.contains("show")) {
+                if (event.target.classList.toggle("favorite")) {
+                    Favorites.add(event.target.showId);
+                } else {
+                    Favorites.remove(event.target.showId);
+                }
+
+            }
+        }
+
+        class Favorites {
+            static #favoriteSet = {};
+            static #currentFavorite = null;
+            static add(showId) {
+                if (!showId) return;
+                Favorites.#favoriteSet[showId] = true;
+                Favorites.save();
+            }
+            static remove(showId) {
+                if (!showId) return;
+                delete Favorites.#favoriteSet[showId];
+                Favorites.save();
+            }
+            static async save() {
+                localStorage.favorites = JSON.stringify(
+                    Object.keys(Favorites.#favoriteSet)
+                        .filter(k => Favorites.#favoriteSet[k]));
+            }
+            static async restore() {
+                const keys = JSON.parse(localStorage.favorites || "[]");
+                Favorites.#favoriteSet = {};
+                keys.forEach(k => { Favorites.#favoriteSet[k] = false; });
+                document.querySelectorAll(".show").forEach(show => {
+                    if (Favorites.#favoriteSet[show.showId] === false) {
+                        show.classList.add("favorite");
+                        Favorites.#favoriteSet[show.showId] = true;
+                    }
+                })
+            }
+            static scrollToNext() {
+                if (Favorites.#currentFavorite) {
+                    Favorites.#currentFavorite.classList?.remove("highlight");
+                }
+                if (Object.keys(Favorites.#favoriteSet).length == 0) return;
+                if (Favorites.#currentFavorite == null) {
+                    Favorites.#currentFavorite = document.querySelector(".show.favorite");
+                } else {
+                    let g = Favorites.#currentFavorite;
+                    do {
+                        g = g.nextElementSibling;
+                    } while (g && !g.classList?.contains("favorite"));
+                    Favorites.#currentFavorite = g;
+                }
+                if (Favorites.#currentFavorite) {
+                    Favorites.#currentFavorite.scrollIntoView(true);
+                    Favorites.#currentFavorite.classList.add("highlight");
+                }
             }
         }
     </script>
@@ -477,7 +544,7 @@
 
     </div>
     <div id="menu" onclick="PromoterFilters.toggleMenu()">
-        <svg viewBox='0 0 10 8' width='20'>
+        <svg viewBox='0 0 10 8' width='18'>
             <path d='M1 1h8M1 4h 8M1 7h8' stroke-width='2' stroke-linecap='round' />
         </svg>
     </div>
@@ -528,7 +595,7 @@
             }
         </style>
         <div class="betabanner">
-            <div>Beta v0.83</div>
+            <div>Beta v0.84</div>
             <div><span class='en'>Bugs, ideas:</span><span class='cy' title="chwilod">Bwgiau, syniadau:</span> <a
                     href="mailto:info@gigiau.uk">info@gigiau.uk</a></div>
         </div>
@@ -644,7 +711,7 @@
                 </li>
             </ul>
             <button onclick="setTimeout(()=>showPageOver('#about-page'),200)">
-                <span class="en" >more...</span>
+                <span class="en">more...</span>
                 <span class="cy">mwy...</span>
             </button>
         </div>

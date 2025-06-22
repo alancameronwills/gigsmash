@@ -38,93 +38,6 @@ async function ftext(url, sendHeaders = false) {
 let handlers = [];
 
 /*
-(handlers["assorted"] = async () => {
-    let r = [];
-    r.push({
-        title: "Scaramella",
-        text: "Choral. £10",
-        category: "live",
-        venue: sl("St Mary's Church Cardigan", "Eglwys Santes Fair, Aberteifi"),
-        url: "https://gigiau.uk/pix/scaramella-2025-06-29.jpg",
-        date: "29 June 2025 7pm",
-        dt: new Date("29 June 2025").valueOf(),
-        image: "https://gigiau.uk/pix/scaramella-2025-06-29.jpg"
-    });
-    r.push({
-        title: "Measure for Measure",
-        text: "Summer outdoor performance",
-        venue: sl("St Dogmael's Abbey", "Abaty Llandudoch"),
-        url: "https://www.abbeyshakespeare.co.uk/en/productions/measure-for-measure",
-        category: "live",
-        image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/measure-for-measure/M4M_A4-web.jpg",
-        date: "30 July 2025",
-        dt: new Date("30 July 2025").valueOf()
-    });
-    r.push({
-        title: "Measure for Measure",
-        text: "Summer outdoor performance",
-        venue: sl("St Dogmael's Abbey", "Abaty Llandudoch"),
-        url: "https://www.abbeyshakespeare.co.uk/en/productions/measure-for-measure",
-        category: "live",
-        image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/measure-for-measure/M4M_A4-web.jpg",
-        date: "30 July 2025",
-        dt: new Date("31 July 2025").valueOf()
-    });
-    r.push({
-        title: "Measure for Measure",
-        text: "Summer outdoor performance",
-        venue: sl("St Dogmael's Abbey", "Abaty Llandudoch"),
-        url: "https://www.abbeyshakespeare.co.uk/en/productions/measure-for-measure",
-        category: "live",
-        image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/measure-for-measure/M4M_A4-web.jpg",
-        date: "30 July 2025",
-        dt: new Date("1 August 2025").valueOf()
-    });
-    r.push({
-        title: "Measure for Measure",
-        text: "Summer outdoor performance",
-        venue: sl("St Dogmael's Abbey", "Abaty Llandudoch"),
-        url: "https://www.abbeyshakespeare.co.uk/en/productions/measure-for-measure",
-        category: "live",
-        image: "https://www.abbeyshakespeare.co.uk/user/pages/03.productions/measure-for-measure/M4M_A4-web.jpg",
-        date: "30 July 2025",
-        dt: new Date("2 August 2025").valueOf()
-    });
-    r.push({
-        title: "Chamber Music Festival",
-        text: "Three small concerts by leading musicians, with open gardens and cake",
-        url: "https://www.nantwen.co.uk/nantwen-chamber-music-festival",
-        category: "live",
-        venue: "Nantwen",
-        image: "https://images.squarespace-cdn.com/content/v1/611672a965ba847a959f198c/67fdb253-86c3-4d45-8f95-3bd802615b56/8B3AAB7D-8B83-4711-919F-65654662B100.jpeg?format=500w",
-        date: "5 July 2025",
-        dt: new Date("5 July 2025").valueOf()
-    });
-    r.push({
-        title: "Chamber Music Festival",
-        text: "Three small concerts by leading musicians, with open gardens and cake",
-        url: "https://www.nantwen.co.uk/nantwen-chamber-music-festival",
-        category: "live",
-        venue: "Nantwen",
-        image: "https://images.squarespace-cdn.com/content/v1/611672a965ba847a959f198c/67fdb253-86c3-4d45-8f95-3bd802615b56/8B3AAB7D-8B83-4711-919F-65654662B100.jpeg?format=500w",
-        date: "6 July 2025",
-        dt: new Date("6 July 2025").valueOf()
-    });
-    r.push({
-        title: "Summer Concert",
-        text: "Music by a distinguished chamber ensemble",
-        url: "https://www.nantwen.co.uk/nantwen-summer-concert",
-        image: "https://images.squarespace-cdn.com/content/v1/611672a965ba847a959f198c/d110923e-eaf9-4179-b4e1-57adb7e70afc/Heather_Birnie_Nantwen_Summer_Concert_2024_064.jpg",
-        category: "live",
-        venue: "Nantwen",
-        date: "9 August 2025",
-        dt: new Date("9 August 2025").valueOf()
-    })
-    return r;
-}).friendly = "At Large";
-*/
-
-/*
 (handlers["folkfest"] = async () => {
     let events = ["23 May 2025", "24 May 2025", "25 May 2025", "26 May 2025"].map(date => {
         return {
@@ -268,7 +181,7 @@ let handlers = [];
             ri.dt = new Date(ri.date.replace(",", "")).valueOf() || 0;
             ri.text = "";
             ri.venue = sl("Queens Hall Narberth", "Queens Hall Arberth");
-            ri.category = (event.match(/<[^>]+badge-event.*?>.*?</gs)?.map(b => m(b, />(.*)</s))?.join(", ") || "").toLowerCase();
+            ri.category = "live"; //(event.match(/<[^>]+badge-event.*?>.*?</gs)?.map(b => m(b, />(.*)</s))?.join(", ") || "").toLowerCase();
             r.push(ri);
         })
 
@@ -436,7 +349,7 @@ let handlers = [];
                         dt: dt,
                         url: url,
                         urlset: show.match(/href="(.*?)"/g).map(href => m(href, /"(.*?)"/s)),
-                        title: title,
+                        title: title.replace(/^FFS */,""),
                         image: image,
                         text: "",
                         venue: "Theatr Gwaun"

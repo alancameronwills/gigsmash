@@ -311,6 +311,26 @@ let handlers = [];
     return r;
 }).friendly = "Small World";
 
+(handlers["haverhub"] = async() => {
+    let source = await ftext("https://haverhub.org.uk/music-events/");
+    let shows = source.split(/<article /s);
+    let r= [];
+    shows.forEach(show => {
+        let ri = {};
+        ri.url = m(show, /href=['"](.*?)['"]/s);
+        ri.image = m(show, /src=['"](.*?)['"]/s);
+        ri.date = m(show, /<time [^>]* datetime="(.*?)"/);
+        ri.dt = new Date(ri.date).valueOf();
+        ri.title = m(show, /<h3.*?>\s*<a.*?title="(.*?)"/s);
+        ri.category = "live";
+        ri.venue = "HaverHub";
+        if (ri.dt) {
+            r.push(ri);
+        }
+    });
+    return r;
+}).friendly = "Haverhub";
+
 (handlers["gwaun"] = async (x) => {
     let fromSavoy = [], fromGwaun = [];
     {

@@ -631,13 +631,18 @@
 
             #big-pic-page {
                 display: flex;
-                justify-content: space-around;
+                justify-content: center;
                 background-color: rgba(0, 0, 0, 0.5);
+                max-width: 100vw;
+                max-height: 100vh;
+                padding: 0;
+                gap: 0;
             }
 
             #big-pic-page img {
-                max-width: 100vw;
-                max-height: 100vh;
+                max-width: calc(100vw - 10px);
+                max-height: calc(100vh - 10px);
+                margin: auto;
             }
 
             #install-android-page {

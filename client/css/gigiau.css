@@ -87,7 +87,7 @@ a:link {
     right:0;
 }
 .show.highlight {
-    outline: 4px dashed red;
+    outline: 4px dashed rgb(255, 174, 0);
 }
 .show:not(.favorite)::after {
     content:"◯";
@@ -97,7 +97,7 @@ a:link {
 }
 .show:not(.favorite):hover::after {
     content: "😊";
-    opacity:50%;
+    opacity:20%;
 }
 #favoriteButton {
     margin-left: 1em;

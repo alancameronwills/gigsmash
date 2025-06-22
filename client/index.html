@@ -279,9 +279,13 @@
                 });
             }
             static swogglePromoters() {
-                Array.from(document.querySelectorAll(".promoterFilter")).forEach(item => {
-                    item.checked = !item.checked;
+                let countChecked = 0;
+                const filters = Array.from(document.querySelectorAll(".promoterFilter"));
+                filters.forEach(item => {
+                    if (item.checked) countChecked++;
                 })
+                const newState = countChecked < filters.length/2;
+                filters.forEach(item => item.checked = newState);
             }
 
             static menuItemForPromoter(p) {

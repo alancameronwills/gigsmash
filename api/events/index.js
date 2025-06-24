@@ -577,7 +577,7 @@ let ticketsolve = async (tsid, categoryMap, venueNameFilter = null) => {
     return await ticketsolve("stdavidscathedral", { live: /./ });
 }).friendly = "St Davids Cathedral";
 
-let gigio = async (source) => {
+let gigio = async (source, defaultVenue = "") => {
     let r = [];
     try {
         const response = await ftext(source);
@@ -594,7 +594,7 @@ let gigio = async (source) => {
                 title: event.title,
                 image: event.pic,
                 url: event.meta.bookinglink || "",
-                venue: event.meta.venue || "",
+                venue: event.meta.venue || defaultVenue,
                 text: event.content,
                 subtitle: event.meta.dtinfo || "",
                 dt: new Date(event.meta.dtstart).valueOf(),
@@ -605,9 +605,14 @@ let gigio = async (source) => {
     } catch (e) { console.log(e.toString()) }
     return r;
 }
+
 (handlers["pawb"] = async () => {
     return await gigio("https://www.gigiau.uk/pawb/?json=1");
 }).friendly = "Pawb";
+
+(handlers["newportmh"] = async () => {
+    return await gigio("https://newportmemorialhall.co.uk/test-page-events/?json=1", "Newport Memorial Hall");
+}).friendly = "Newport MH";
 
 /*
 let ticketsource = async (source) => {

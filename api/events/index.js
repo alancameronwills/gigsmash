@@ -209,7 +209,7 @@ let handlers = [];
             ri.title = (m(titleLine, /^(.*)[-<]/s) || m(titleLine, /^(.*?)[A-Z][a-z]+day/s) || titleLine).trim();
             ri.date = (m(titleLine, /-([^-]*)$/s) || m(titleLine, /([A-Z][a-z]+day\s.*)$/s)).trim();
             ri.dt = new Date(datex(ri.date))?.valueOf() || 0;
-            ri.venue = sl("Cellar Cardigan", "Cellar Aberteifi");
+            ri.venue = sl("Cellar Cardigan", "Selar Aberteifi");
             ri.text = "";
             ri.price = m(event, /<span class="price">(.*?)<\/span>/s);
             if (!ri.dt) {

@@ -17,8 +17,43 @@ function sl(en, cy) {
 
 function langSplit(s) {
     let splits = s?.split(/ *\| */) || [""];
-    if (splits.length>1) return sl(splits[0],splits[1]);
+    if (splits.length > 1) return sl(splits[0], splits[1]);
     else return s;
+}
+
+/** Initially for Cellar Bar */
+class DateExtractor {
+    constructor() {
+        this.months = ["january", "february", "march", "april", "may", "june", "july",
+            "august", "september", "october", "november", "december"];
+        this.year = "2025";
+    }
+    extract(s) {
+        const nodots = s.replaceAll('.', "").toLocaleLowerCase();
+        const time = nodots.match(/[0-9:]+(?:a|pm)/)?.[0] || "";
+        const xTime = time ? nodots.replace(time, "") : nodots;
+        const daysIt = Array.from(xTime.matchAll(/[0-9]+(?:st|nd|th)/g)).map(d => d[0]);
+        let days = daysIt.map(d => d.replace(/[a-z]+/, ""));
+        let month = 0;
+        for (let m in this.months) {
+            if (xTime.indexOf(this.months[m]) >= 0) {
+                month = (1 * m) + 1; break;
+            }
+        }
+        if (!month) {
+            for (let m in this.months) {
+                if (xTime.indexOf(this.months[m].substring(0, 3)) >= 0) {
+                    month = (1 * m) + 1; break;
+                }
+            }
+        }
+        let foundyear = xTime.match(/20[2,3][0-9]/)?.[0] || "";
+        if (foundyear) this.year = foundyear;
+        const dtStart = `${this.year}-${month}-${days[0]}`;
+        const dtEnd = days.length < 2 ? dtStart :
+            `${this.year}-${month}-${days[days.length - 1]}`;
+        return { dtStart, dtEnd, time };
+    }
 }
 
 async function ftext(url, sendHeaders = false) {
@@ -186,7 +221,7 @@ let handlers = [];
             ri.date = m(event, /<[^>]+event-date.*?>(.*?)</s);
             ri.dt = new Date(ri.date.replace(",", "")).valueOf() || 0;
             ri.text = "";
-            ri.venue = sl("Queens Hall Narberth", "Queens Hall Arberth");
+            ri.venue = "Queens Hall Narberth";
             ri.category = "live"; //(event.match(/<[^>]+badge-event.*?>.*?</gs)?.map(b => m(b, />(.*)</s))?.join(", ") || "").toLowerCase();
             r.push(ri);
         })
@@ -196,6 +231,7 @@ let handlers = [];
 }).friendly = "Queens Theatre";
 
 (handlers["cellar"] = async () => {
+    let datex = new DateExtractor();
     let r = [];
 
     try {
@@ -210,21 +246,14 @@ let handlers = [];
             let ri = {};
             ri.url = root + m(event, /href="(.*?)"/s);
             ri.image = m(event, /<img.*?data-original="(.*?)"/) || m(event, /<img.*?src="(.*?)"/);
-            let titleLine = m(event, /<p class="title">(.*?)<\/p>/s);
-            if (!titleLine.match(/20[23][0-9]$/)) { titleLine += " 2025"; } // <<<< YEAR
+            const titleLine = m(event, /<p class="title">(.*?)<\/p>/s);
             ri.title = (m(titleLine, /^(.*)[-<]/s) || m(titleLine, /^(.*?)[A-Z][a-z]+day/s) || titleLine).trim();
-            ri.date = (m(titleLine, /-([^-]*)$/s) || m(titleLine, /([A-Z][a-z]+day\s.*)$/s)).trim();
-            ri.dt = new Date(datex(ri.date))?.valueOf() || 0;
+            let {dtStart, dtEnd, time} = datex.extract(titleLine);
+            ri.date = dtStart + (dtEnd != dtStart ? " - " + dtEnd : "") + " " + time;
+            ri.dt = new Date(dtStart)?.valueOf() || 0;
             ri.venue = sl("Cellar Cardigan", "Selar Aberteifi");
             ri.text = "";
             ri.price = m(event, /<span class="price">(.*?)<\/span>/s);
-            if (!ri.dt) {
-                // try harder - might be a date range
-                let day = m(titleLine, /([0-9]{1,2})[^0-9]/);
-                let monthYear = m(titleLine, /( [A-Za-z]+ 202[5-9])/);
-                ri.date = day + " " + monthYear;
-                ri.dt = new Date(datex(ri.date))?.valueOf() || 0;
-            }
             ri.category = "live";
             r.push(ri);
         })
@@ -317,10 +346,10 @@ let handlers = [];
     return r;
 }).friendly = "Small World";
 
-(handlers["haverhub"] = async() => {
+(handlers["haverhub"] = async () => {
     let source = await ftext("https://haverhub.org.uk/music-events/");
     let shows = source.split(/<article /s);
-    let r= [];
+    let r = [];
     shows.forEach(show => {
         let ri = {};
         ri.url = m(show, /href=['"](.*?)['"]/s);
@@ -375,7 +404,7 @@ let handlers = [];
                         dt: dt,
                         url: url,
                         urlset: show.match(/href="(.*?)"/g).map(href => m(href, /"(.*?)"/s)),
-                        title: title.replace(/^FFS */,""),
+                        title: title.replace(/^FFS */, ""),
                         image: image,
                         text: "",
                         venue: "Theatr Gwaun"
@@ -617,7 +646,7 @@ let gigio = async (source, defaultVenue = "") => {
 }).friendly = "Pawb";
 
 (handlers["newportmh"] = async () => {
-    return await gigio("https://newportmemorialhall.co.uk/test-page-events/?json=1", "Newport Memorial Hall");
+    return await gigio("https://newportmemorialhall.co.uk/test-page-events/?json=1", "Newport Memorial Hall|Neuadd Goffa Trefdraeth");
 }).friendly = "Newport MH";
 
 /*
@@ -691,7 +720,9 @@ module.exports = async function (context, req) {
         if (venue) {
             let handler = handlers[venue];
             if (handler) {
+                //console.log(venue);
                 r = await handler(x);
+                //console.log(venue, r.length);
             }
         } else {
             let kk = Object.keys(handlers);

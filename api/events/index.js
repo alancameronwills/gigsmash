@@ -15,6 +15,12 @@ function sl(en, cy) {
     return `<span class='en'>${en}</span><span class='cy'>${cy}</span>`;
 }
 
+function langSplit(s) {
+    let splits = s?.split(/ *\| */) || [""];
+    if (splits.length>1) return sl(splits[0],splits[1]);
+    else return s;
+}
+
 async function ftext(url, sendHeaders = false) {
     let headers = !sendHeaders ? null : {
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
@@ -591,12 +597,12 @@ let gigio = async (source, defaultVenue = "") => {
                 dateRange += new Date(event.meta.dtend).toLocaleString("en-GB", options);
             }
             return {
-                title: event.title,
+                title: langSplit(event.title),
                 image: event.pic,
                 url: event.meta.bookinglink || "",
-                venue: event.meta.venue || defaultVenue,
+                venue: langSplit(event.meta.venue || defaultVenue),
                 text: event.content,
-                subtitle: event.meta.dtinfo || "",
+                subtitle: langSplit(event.meta.dtinfo || ""),
                 dt: new Date(event.meta.dtstart).valueOf(),
                 date: dateRange,
                 category: "live"

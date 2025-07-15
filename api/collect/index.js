@@ -26,7 +26,7 @@ async function collect(context) {
             eventsLists[n].forEach(s => s.promoter = n);
             if (eventsLists[n].length > 0) {
                 delete toDo[n];
-                persistentStatus("Remaining sources: " + Object.keys(toDo).length);
+                persistentStatus("Remaining sources: " + Object.keys(toDo).join(" "));
             }
         } catch (e) {
             fault(`Getting ${n} ${e.toString()}`)
@@ -37,7 +37,7 @@ async function collect(context) {
     let shows = [];
     handlerNames.forEach(n => shows = shows.concat(eventsLists[n]));
 
-    shows.sort((a, b) => a.dt - b.dt);
+    shows.sort((a, b) => (a.dt || 0) - (b.dt || 0));
 
     let showsUnduplicated = [];
     let previous = null;

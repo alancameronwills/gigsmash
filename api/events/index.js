@@ -170,7 +170,7 @@ let handlers = [];
                 category: title.toLowerCase().indexOf("quiz") < 0 ? "live" : "quiz",
                 text: "",
                 date: dateString,
-                dt: new Date(dateString.replace(/at.*/, "")).valueOf()
+                dt: new Date(dateString.replace(/at.*/, "")).valueOf() || 0
             }
         });
     } catch (e) { return { e: e.toString() } }
@@ -248,7 +248,7 @@ let handlers = [];
             ri.image = m(event, /<img.*?data-original="(.*?)"/) || m(event, /<img.*?src="(.*?)"/);
             const titleLine = m(event, /<p class="title">(.*?)<\/p>/s);
             ri.title = (m(titleLine, /^(.*)[-<]/s) || m(titleLine, /^(.*?)[A-Z][a-z]+day/s) || titleLine).trim();
-            let {dtStart, dtEnd, time} = datex.extract(titleLine);
+            let { dtStart, dtEnd, time } = datex.extract(titleLine);
             ri.date = dtStart + (dtEnd != dtStart ? " - " + dtEnd : "") + " " + time;
             ri.dt = new Date(dtStart)?.valueOf() || 0;
             ri.venue = sl("Cellar Cardigan", "Selar Aberteifi");
@@ -646,7 +646,7 @@ let gigio = async (source, defaultVenue = "") => {
 }).friendly = "Pawb";
 
 (handlers["newportmh"] = async () => {
-    return await gigio("https://newportmemorialhall.co.uk/test-page-events/?json=1", "Newport Memorial Hall|Neuadd Goffa Trefdraeth");
+    return await gigio("https://newportmemorialhall.co.uk/whats-on/?json=1", "Newport Memorial Hall|Neuadd Goffa Trefdraeth");
 }).friendly = "Newport MH";
 
 /*
@@ -710,6 +710,29 @@ handlers["cordyfed"] = await ticketsource("cor-dyfed-choir");
     });
     return r;
 }).friendly = "Rhosygilwen";
+
+(handlers["festivalarts"] = async () => {
+    let response = await ftext("https://www.festivalartsuk.com/current-season");
+    let major = response.substring(Math.max(0, response.indexOf("EVENTS_ROOT_NODE")));
+    let chunks = major.split(/<\/li>/);
+    let r = [];
+    chunks.forEach(v => {
+        let item = {};
+        item.image = m(v, /<img[^>]+src="([^"]*?\/media\/[^\/"?]+)/s);
+        item.title = m(v, /data-hook="ev-list-item-title".*?>(.*?)<\/span>/s);
+        item.category = "live";
+        item.date = m(v, /data-hook="date".*?>([^<]+)/s);
+        item.dt = new Date(item.date.replace(/[-–].*/, ""))?.valueOf() || 0;
+        item.venue = m(v, /data-hook="ev-list-item-location".*?>(.*?)<\/div>/s).replaceAll(/<.+?>/g, "");
+        item.description = m(v, /data-hook="ev-list-item-description".*?>([^<]*)/s);
+        item.url = m(v, /data-hook="ev-rsvp-button".*?href="(.*?)"/s);
+        if (item.dt && item.title) {
+            r.push(item);
+        }
+    });
+    return r;
+}).friendly = "Festival Arts";
+
 
 module.exports = async function (context, req) {
     let r = [];

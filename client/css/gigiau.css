@@ -1,11 +1,14 @@
 :root {
     --font: 1.2rem Arial, Geneva, Helvetica, sans-serif;
     --menufont: 1rem Arial, Geneva, Helvetica, sans-serif;
+    box-sizing: border-box;
 }
+
 body {
     font: var(--font);
     margin: 0;
 }
+
 button {
     font: var(--menufont);
 }
@@ -28,7 +31,7 @@ a:link {
     color: white;
     font-weight: bold;
     padding: 6px;
-    user-select:none;
+    user-select: none;
 }
 
 .image img {
@@ -78,39 +81,46 @@ a:link {
     border-radius: 4px;
     transition: all 1s;
     overflow: hidden;
-    position:relative;
+    position: relative;
 }
+
 .show.favorite::after {
-    content:"😊";
-    position:absolute;
-    top:0;
-    right:0;
+    content: "😊";
+    position: absolute;
+    top: 0;
+    right: 0;
 }
+
 .show.highlight {
     outline: 4px dashed rgb(255, 174, 0);
 }
+
 .show:not(.favorite)::after {
-    content:"◯";
-    position:absolute;
-    top:0;
-    right:0;
+    content: "◯";
+    position: absolute;
+    top: 0;
+    right: 0;
 }
+
 .show:not(.favorite):hover::after {
     content: "😊";
-    opacity:20%;
+    opacity: 20%;
 }
+
 #favoriteButton {
     margin-left: 1em;
     width: 1em;
-    position:relative;
+    position: relative;
 }
+
 #favoriteButton::after {
     content: "😊";
-    position:absolute;
+    position: absolute;
 }
+
 #favoriteButton:hover::after {
     background-color: dodgerblue;
-    border-radius:50%;
+    border-radius: 50%;
 }
 
 .date {
@@ -180,43 +190,30 @@ a:link {
     right: 0;
     margin: 10px 10px 0 0;
 }
+
 #menu>svg {
-    background-color:white;
+    background-color: white;
     border: 2px solid white;
     border-radius: 2px;
 }
 
-#filters {
+#sideButtons {
     display: flex;
     column-gap: 10px;
     padding: 0 6px 1px 2px;
-    background-color: whitesmoke;
     position: fixed;
-    top: 20px;
-    right: 0;
-    transform-origin: bottom right;
-    transform: rotate(-90deg) translateY(-10px);
+    top: 40px;
+    right: 10px;
     border-radius: 4px;
-    max-width: 90vh;
-    width: 85vh;
     font: var(--menufont);
     z-index: 2;
 }
 
 
-@media (max-height:500px) {
-    #filters {
-        top: auto;
-        bottom: 20px;
-        left: 10px;
-        right: auto;
-        transform: none;
-        border: 1px solid gray;
-        max-width: 80vw;
-        width: 80vw;
-        font-size: min(20px,3vw);
-    }
+#filters {
+    margin-bottom: 20px;
 }
+
 
 .table.no-film>.show.film {
     display: none;
@@ -239,17 +236,17 @@ a:link {
     opacity: 0.6;
 }
 
-#promoterMenu {
+.slideout {
     position: fixed;
     display: flex;
+    flex-wrap:wrap;
     justify-content: center;
-    top: 10px;
     left: 0;
-    width: 0;
+    right: 0;
+    top: -150vh;
     padding: 3vh 0;
     transition: all 1s ease-in-out;
-    background-color: rgba(255, 255, 255, 0.5);
-    max-height: 80vh;
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .page::after,
@@ -258,31 +255,64 @@ a:link {
     background-color: blue;
     position: absolute;
     font-size: large;
-    bottom: max(8vh,40px);
-    right: max(15vw,40px);
+    bottom: max(8vh, 40px);
+    right: max(15vw, 40px);
     border-radius: 4px;
     color: white;
     padding: 0 4px;
     border: 1px solid blue;
+    transform: rotate(90deg);
+}
+.slideout-content {
+    background-color: rgba(192, 192, 192, 0.92);
+    border-radius: 6px;
+    padding: 6px;
+    margin-top: -100vh;
+    height: 80vh;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 20px;
+    align-items: center;
+    overflow-y:auto;
+    flex-direction: column;
+}
+@media (max-width: 450px) {
+    .slideout-content {
+        height: auto;
+    }
 }
 
-#promoterMenu>div {
+.slideout.visible {
+    top: 0;
+}
+.slideout.visible .slideout-content {
+    margin-top: 0;
+}
+.slideout-content>div {
+    overflow-y:auto;
+}
+
+#promoterMenu {
+    padding: 10px;
+}
+/*
+.slideout>div {
     margin-left: -100vw;
     border-radius: 4px;
     padding: 3vw;
-    background-color: lightgray;
+    background-color: rgba(192, 192, 192, 0.92);
     transition: all 1s ease-in-out;
     color: darkblue;
     overflow-y: auto;
 }
 
-#promoterMenu.visible {
-    width: 100vw;
-}
 
-#promoterMenu.visible>div {
+.slideout.visible>div {
     margin-left: 0px;
 }
+    */
 
 #flag {
     display: none;
@@ -349,8 +379,7 @@ body:not(.showMenus) #monthMenu {
 }
 
 .languageButton {
-    padding: 0 min(20px,3vw);
-    border-right: 2px solid gray;
+    padding: 0 min(20px, 3vw);
 }
 
 

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="gigiau.ico">
     <link rel="apple-touch-icon" href="gigiau-fav.png">
-    <link rel="stylesheet" type="text/css" href="css/gigiau.css?v=250622" />
+    <link rel="stylesheet" type="text/css" href="css/gigiau.css?v=160722" />
     <meta property="og:image" content="/gigiau.png">
     <meta property="og:title" content="Gigiau" />
     <meta property="og:url" content="https://gigiau.uk/" />
@@ -47,7 +47,7 @@
             events = await fetch(data + "/json/events.json?v=" + Date.now()).then(r => r.json());
             assignIds();
             markFirstShowOfEachDate();
-            setCategoryFilters();
+            setSideButtons();
             CategoryFilters.restore();
             PromoterFilters.restore();
             restoreIaith();
@@ -215,6 +215,7 @@
 
                 // Saving promoters across sessions too liable to lead to mistakes:
                 Filters.filters.promoterExclude = {};
+                Filters.filters.categoryExclude = {};
             }
             static save() {
                 localStorage.setItem("filters", JSON.stringify(Filters.filters))
@@ -245,7 +246,7 @@
              * @returns boolean - true if it was previously showing 
              */
             static toggleMenu(off) {
-                let menu = document.getElementById("promoterMenu");
+                let menu = document.querySelector(".slideout");
                 if (off && !menu.classList.contains("visible")) return false;
                 let showing = menu.classList.toggle("visible");
                 let body = document.body;
@@ -281,11 +282,7 @@
                 document.getElementById("promoterMenu").innerHTML =
                     `<div><div><input type="checkbox" onclick="PromoterFilters.swogglePromoters()" id="promoterSwoggle"/>
                         <label for="promoterAll">~~~</label></div>${menuItems}</div>`;
-                document.querySelectorAll("#promoterMenu>div").forEach(ip => {
-                    ip.onclick = e => {
-                        e.stopPropagation();
-                    };
-                });
+                menuClick("#promoterMenu>div", null);
             }
             static swogglePromoters() {
                 let countChecked = 0;
@@ -324,17 +321,46 @@
                 Filters.notify();
             }
             static restore() {
+                const filterSet = {
+                    film: sl("films", "ffilmiau"),
+                    quiz: sl("quizzes", "cwisiau"),
+                    broadcast: sl("broadcast", "darllediad"),
+                    live: sl("live", "byw")
+                };
+                let filterHtml = [];
+                Object.keys(filterSet).forEach(k => {
+                    filterHtml.push(`
+                <div class="filter">
+                    <input type="checkbox" id="${k}filter" onchange="CategoryFilters.save()" />
+                    <label for="${k}filter">${filterSet[k]}</label>
+                </div>`);
+                });
+                document.querySelector("#filters").innerHTML = filterHtml.join("\n");
                 Filters.restore();
-                document.querySelectorAll(".filter input").forEach(ip => {
+                menuClick(".filter input", ip => {
                     let restoreValue = Filters.filters.categoryExclude[ip.id.replace(/filter/, "")];
                     if (restoreValue !== null) {
                         ip.checked = !restoreValue;
                     }
-                })
+                });
             }
             static includes(c) {
                 return !Filters.filters.categoryExclude[c];
             }
+        }
+
+        function menuClick (selector, setup=null, onclick=null) {
+            document.querySelectorAll(selector).forEach(button => {
+                button.onclick = e => {
+                    e.stopPropagation();
+                    if (onclick) {
+                        onclick(e);
+                    }
+                };
+                if (setup) {
+                    setup(button)
+                }
+            })
         }
 
         class Flag {
@@ -429,23 +455,11 @@
                 document.body.classList.add("cy");
             }
         }
-        function setCategoryFilters() {
-            const filterSet = {
-                film: sl("films", "ffilmiau"),
-                quiz: sl("quizzes", "cwisiau"),
-                broadcast: sl("broadcast", "darllediad"),
-                live: sl("live", "byw")
-            };
-            let filterHtml = [`<div class="languageButton" onclick="toggleIaith()">${sl("Cymraeg", "English")}</div>`];
-            Object.keys(filterSet).forEach(k => {
-                filterHtml.push(`
-                <div class="filter">
-                    <input type="checkbox" id="${k}filter" onchange="CategoryFilters.save()" />
-                    <label for="${k}filter">${filterSet[k]}</label>
-                </div>`);
-            });
-            filterHtml.push("<div id='favoriteButton' onclick='Favorites.scrollToNext()'></div>");
-            document.querySelector("#filters").innerHTML = filterHtml.join("\n");
+        function setSideButtons() {
+            menuClick(".languageButton", null, event=>{toggleIaith();});
+            let sideButtonHtml = [];
+            sideButtonHtml.push("<div id='favoriteButton' onclick='Favorites.scrollToNext()'></div>");
+            document.querySelector("#sideButtons").innerHTML = sideButtonHtml.join("\n");
         }
 
         function shareLink() {
@@ -538,10 +552,14 @@
     <div id="table" class="table" onclick="checkClick(event)"></div>
     <div id="date"></div>
     <div id="space">&nbsp;</div>
-    <div id="filters">
+    <div id="sideButtons">
     </div>
-    <div id="promoterMenu" class="slideout" onclick="PromoterFilters.toggleMenu()">
-
+    <div class="slideout" onclick="PromoterFilters.toggleMenu()">
+        <div class="slideout-content">
+            <button class="languageButton"><span class="en">Cymraeg</span><span class="cy">English</span></button>
+            <div id="filters"></div>
+            <div id="promoterMenu"></div>
+        </div>
     </div>
     <div id="menu" onclick="PromoterFilters.toggleMenu()">
         <svg viewBox='0 0 10 8' width='18'>

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="gigiau.ico">
     <link rel="apple-touch-icon" href="gigiau-fav.png">
-    <link rel="stylesheet" type="text/css" href="css/gigiau.css?v=160722" />
+    <link rel="stylesheet" type="text/css" href="css/gigiau.css?v=160725" />
     <meta property="og:image" content="/gigiau.png">
     <meta property="og:title" content="Gigiau" />
     <meta property="og:url" content="https://gigiau.uk/" />
@@ -337,7 +337,9 @@
                 });
                 document.querySelector("#filters").innerHTML = filterHtml.join("\n");
                 Filters.restore();
-                menuClick(".filter input", ip => {
+                menuClick(".filter ", div => {
+                    let ip = div.querySelector("input");
+                    if (!ip) return;
                     let restoreValue = Filters.filters.categoryExclude[ip.id.replace(/filter/, "")];
                     if (restoreValue !== null) {
                         ip.checked = !restoreValue;
@@ -456,7 +458,6 @@
             }
         }
         function setSideButtons() {
-            menuClick(".languageButton", null, event=>{toggleIaith();});
             let sideButtonHtml = [];
             sideButtonHtml.push("<div id='favoriteButton' onclick='Favorites.scrollToNext()'></div>");
             document.querySelector("#sideButtons").innerHTML = sideButtonHtml.join("\n");
@@ -527,7 +528,14 @@
                 if (Favorites.#currentFavorite) {
                     Favorites.#currentFavorite.classList?.remove("highlight");
                 }
-                if (Object.keys(Favorites.#favoriteSet).length == 0) return;
+                if (Object.keys(Favorites.#favoriteSet).length == 0) {
+                    let t = document.querySelector("#table");
+                    t.classList.add("prompt-favorites");
+                    setTimeout(()=>{
+                        t.classList.remove("prompt-favorites");
+                    },1000);
+                    return;
+                }
                 if (Favorites.#currentFavorite == null) {
                     Favorites.#currentFavorite = document.querySelector(".show.favorite");
                 } else {
@@ -556,7 +564,6 @@
     </div>
     <div class="slideout" onclick="PromoterFilters.toggleMenu()">
         <div class="slideout-content">
-            <button class="languageButton"><span class="en">Cymraeg</span><span class="cy">English</span></button>
             <div id="filters"></div>
             <div id="promoterMenu"></div>
         </div>
@@ -583,6 +590,7 @@
                     class="cy">Gosod</span></button>
             <button onclick="share()"><span class="en">Share</span><span class="cy">Rhannu</span></button>
             <button onclick="about()"><span class="en">About</span><span class="cy">Am hyn</span></button>
+            <button onclick="toggleIaith()"><span class="en">Cymraeg</span><span class="cy">English</span></button>
         </div>
         <div id="monthMenu">
 

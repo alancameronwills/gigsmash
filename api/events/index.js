@@ -519,6 +519,33 @@ let handlers = [];
     return r;
 }).friendly = "Moylegrove";
 
+(handlers["stdavidscathedral"] = async () => {
+    let source = await ftext("https://www.stdavidscathedral.org.uk/whats-on/events");
+    let eventSection = m(source, /<section id="block-views-events(.*?)<\/section>/s);
+    let eventDiv = eventSection.split('<div class="event">');
+    let r = [];
+    eventDiv.forEach(div => {
+        try {
+            let ri = {};
+            ri.image = m(div, /<img [^>]*src=['"](.*?)['"]/s);
+            ri.url = m(div, /href=['"](.*?)['"]/s);
+            if (ri.url.indexOf("https" != 0)) {
+                ri.url = "https://www.stdavidscathedral.org.uk" + ri.url;
+            }
+            ri.title = m(div, /<div class="std-event-title".*?>(.*?)<\/div>/s);
+            ri.venue = "St Davids Cathedral";
+            ri.category = "live";
+            let dtISO = m(div, /std-event-date.*?content="(.*?)"/s);
+            if (dtISO) {
+                ri.dt = new Date(dtISO).valueOf() || 0;
+                ri.date = dtISO.substring(0, 16).replace("T", " ");
+                r.push(ri);
+            }
+        } catch (e) { console.log(e) }
+    });
+    return r;
+}).friendly = "St Davids Cathedral";
+
 let ticketsolve = async (tsid, categoryMap, venueNameFilter = null) => {
 
     let response = await ftext(`https://${tsid}.ticketsolve.com/shows.xml`);
@@ -608,9 +635,11 @@ let ticketsolve = async (tsid, categoryMap, venueNameFilter = null) => {
     return await ticketsolve("span-arts", { live: /./ });
 }).friendly = "SPAN Arts";
 
+/*  -- NOW GOT FROM WEBSITE
 (handlers["stdavids"] = async () => {
     return await ticketsolve("stdavidscathedral", { live: /./ });
 }).friendly = "St Davids Cathedral";
+*/
 
 let gigio = async (source, defaultVenue = "") => {
     let r = [];

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="gigiau.ico">
     <link rel="apple-touch-icon" href="gigiau-fav.png">
-    <link rel="stylesheet" type="text/css" href="css/gigiau.css?v=160725" />
+    <link rel="stylesheet" type="text/css" href="css/gigiau.css?v=1707251" />
     <meta property="og:image" content="/gigiau.png">
     <meta property="og:title" content="Gigiau" />
     <meta property="og:url" content="https://gigiau.uk/" />
@@ -55,6 +55,8 @@
             Favorites.restore();
             setMonthMenu();
 
+            fixSlideOutScroll();
+
             // Count counters
             const zcode = (new URLSearchParams(document.location.search)).get('z') || 0;
             fetch(`${counter}?z=${zcode}`); // no await - don't need the result
@@ -67,6 +69,14 @@
             // Refresh at intervals. Show edition date.
             setTimeout(() => location.reload(), 1000 * 60 * 60 * 6);
             document.getElementById("date").innerText = "" + new Date(events.date).toISOString();
+        }
+
+        function fixSlideOutScroll() {
+            let slideout = document.querySelector(".slideout-content");
+            slideout.addEventListener("scroll", e => {
+                e.stopPropagation();
+                e.preventDefault();
+            });
         }
 
         function setUpInstaller() {
@@ -192,7 +202,7 @@
                     ${sl(dEn, dCy)}
                     </div>`;
             };
-            const link = show.url ? `href='${show.url}'` : show.imagesource ? `onclick='showBigPic("${show.imagesource}")'` : "";
+            const link = show.url ? `href='${show.url}' target='_top'` : show.imagesource ? `onclick='showBigPic("${show.imagesource}")'` : "";
 
             return dateHead
                 + `<div class='show ${ifHidden} ${show.category || ""} ${show.promoter}' id='show-${ix}'>
@@ -423,7 +433,7 @@
         setInterval(() => {
             if (window.scrollY != window.gigiauScrollstate) {
                 window.gigiauScrollstate = window.scrollY;
-                PromoterFilters.toggleMenu(true);
+                //PromoterFilters.toggleMenu(true);
             }
         }, 300);
         window.addEventListener("keydown", (w, e) => {

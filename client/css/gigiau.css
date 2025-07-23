@@ -104,8 +104,7 @@ a:link {
 
 
 .table.prompt-favorites .show:not(.favorite)::after {
-    color:red;
-    font-weight:bold;
+    content: "🔴";
 }
 
 .show:not(.favorite):hover::after {

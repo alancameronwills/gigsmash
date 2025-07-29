@@ -25,7 +25,22 @@
 
         var events = [];
         var data = "https://pantywylan.blob.core.windows.net/gigsmash/client";
-        var counter = "https://pantywylan-2.azurewebsites.net/api/counter"
+
+        class CodeCounter {
+            static #zcode = 0;
+            static #scrollCount = 0;
+            static #counter = "https://pantywylan-2.azurewebsites.net/api/counter";
+            static #scrollCounter(d, e) {
+                if (CodeCounter.#scrollCount++ == 10) {
+                    document.removeEventListener("scroll", CodeCounter.#scrollCounter);
+                    fetch(`${CodeCounter.#counter}?z=${CodeCounter.#zcode}`); // no await - don't need the result
+                }
+            }
+            static set() {
+                CodeCounter.#zcode = (new URLSearchParams(document.location.search)).get('z') || 0;
+                document.addEventListener("scroll", CodeCounter.#scrollCounter);
+            }
+        }
 
         function sl(en, cy) {
             return `<span class="cy">${cy}</span><span class="en">${en}</span>`;
@@ -58,8 +73,7 @@
             fixSlideOutScroll();
 
             // Count counters
-            const zcode = (new URLSearchParams(document.location.search)).get('z') || 0;
-            fetch(`${counter}?z=${zcode}`); // no await - don't need the result
+            CodeCounter.set();
 
             tidyHistory();  // ! after counters !
 
@@ -361,7 +375,7 @@
             }
         }
 
-        function menuClick (selector, setup=null, onclick=null) {
+        function menuClick(selector, setup = null, onclick = null) {
             document.querySelectorAll(selector).forEach(button => {
                 button.onclick = e => {
                     e.stopPropagation();
@@ -541,9 +555,9 @@
                 if (Object.keys(Favorites.#favoriteSet).length == 0) {
                     let t = document.querySelector("#table");
                     t.classList.add("prompt-favorites");
-                    setTimeout(()=>{
+                    setTimeout(() => {
                         t.classList.remove("prompt-favorites");
-                    },1000);
+                    }, 1000);
                     return;
                 }
                 if (Favorites.#currentFavorite == null) {

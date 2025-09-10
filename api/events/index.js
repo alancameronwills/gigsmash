@@ -236,14 +236,19 @@ let handlers = [];
     // Get images from separate event pages
     await Promise.all(r.map(async ri => {
         try {
-            let eventFile = await ftext(ri.uri);
-            let content = m(eventFile,/<div[^>]*entry-content.*?>(.*?)<\/div>/s);
+            //console.log("event: " + ri.title);
+            let eventFile = await ftext(ri.url);
+            let content = m(eventFile,/<div[^>]*tribe-events-single-event-description.*?>(.*?)<\/div>/s);
+            //console.log(content);
             let img = m(content, /<img(.*?)>/s);
             let src = m(img,/src=['"](.*?)['"]/s);
+            //console.log(`${eventFile.length} ${content.length}  ${img}   === ${src}`);
             if (src) {
                 ri.image = src;
             }
-        } catch { }
+        } catch (e) {
+            //console.log(e);
+         }
     }));
     return r;
 }).friendly = "Narberth Jazz";

@@ -206,6 +206,48 @@ let handlers = [];
     return r;
 }).friendly = "Fishguard Festival";
 
+
+(handlers["narberthjazz"] = async () => {
+    let r = [];
+    try {
+        let root = "https://narberthjazz.wales";
+        let source = await ftext(root + "/events");
+        let eventSection = m(source, /<section[^>]+events.*?>(.*)<\/section>/s);
+        let events = eventSection.match(/<article.*?>.*?<\/article>/gs);
+        events.forEach(event => {
+            if (!event.match("event-date-end")) { // exclude membership renewal
+                let ri = {};
+                let header = m(event, /<header.*?>(.*?)<\/header>/s);
+                ri.dt = new Date(m(event, /datetime="(.*?)"/s)).valueOf() || 0;
+                ri.date = m(event, /event-date-start".*?>(.*?)</s);
+                let title = m(header, /<h3.*?>(.*?)<\/h3>/s);
+                ri.url = m(title, /href="(.*?)"/s) || "";
+                ri.title = m(title, /title="(.*?)"/s); //title.replace(/<.*?>/gs, "");
+                ri.venue = "The Plas, Narberth|Y Plas, Arberth";
+                let address = m(event, /<address.*?>(.*?)<\/address>/s);
+                let venue = m(address, /venue-title.*?>(.*?)</s);
+                if (venue) ri.venue = venue;
+                // default:
+                ri.image = "https://narberthjazz.wales/wp-content/uploads/2022/11/cropped-header-new-mobile-jpg-768x221.jpg";
+                r.push(ri);
+            }
+        });
+    } catch (e) { return { e: e.toString() } }
+    // Get images from separate event pages
+    await Promise.all(r.map(async ri => {
+        try {
+            let eventFile = await ftext(ri.uri);
+            let content = m(eventFile,/<div[^>]*entry-content.*?>(.*?)<\/div>/s);
+            let img = m(content, /<img(.*?)>/s);
+            let src = m(img,/src=['"](.*?)['"]/s);
+            if (src) {
+                ri.image = src;
+            }
+        } catch { }
+    }));
+    return r;
+}).friendly = "Narberth Jazz";
+
 (handlers["queens"] = async () => {
     let r = [];
     try {
@@ -347,7 +389,7 @@ let handlers = [];
 }).friendly = "Small World";
 
 (handlers["haverhub"] = async () => {
-    let source = await ftext("https://haverhub.org.uk/music-events/");
+    let source = await ftext("https://haverhub.org.uk/events/");
     let shows = source.split(/<article /s);
     let r = [];
     shows.forEach(show => {

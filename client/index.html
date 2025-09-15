@@ -97,9 +97,7 @@
             if (screen.height > 450 && screen.width > 450) return;
             const triedInstaller = Number(localStorage.triedInstaller || 0);
             if (triedInstaller > 2) return;
-            if (navigator.userAgentData?.platform == "Android") {
-                document.querySelector("#installButton").classList.remove("hide");
-            }
+            document.querySelector("#installButton").classList.remove("hide");
         }
 
         function setUpDisclaimer() {
@@ -719,14 +717,19 @@
         <div id="big-pic-page" class="page" onclick="hidePageOver()"></div>
         <div id="install-android-page" class="page" onclick="hidePageOver()">
             <div>
-                Save Gigiau as an app on your Android phone:
+                Save Gigiau as an app on your phone:
                 <ul>
                     <li>
-                        Tap the three dots at the top right of the phone. (You might need to scroll down a bit.)
+                        
+                        If yours is an <b>Android</b> phone, tap the three dots at top right.
+                        <img src="threedots.jpg"/>
+                        
                     </li>
                     <li>
-                        Tap <b>Open in Chrome browser</b> if it's on the menu.
-                        <br /> Then tap the three dots again and...
+                        If it's an <b>iPhone</b>, look at the the bottom of the screen and tap the box with the arrow.
+                        <img src="iphone-export.png"/>
+                        Then scroll the options that appear.
+                        <br/>
                     </li>
                     <li>
                         Tap <b>Add to Home Screen</b>

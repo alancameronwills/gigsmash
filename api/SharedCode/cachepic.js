@@ -44,18 +44,23 @@ class Cache {
         const TE = new TextEncoder();
         const padding = "        ".substring(0, 8 - trimmed.length % 8);
         const code = TE.encode(trimmed + padding);
-        let bb = new BigUint64Array(code.buffer);
-        for (let i = 1; i < bb.length; i++) {
-            bb[0] ^= bb[i];
+        try {
+            let bb = new BigUint64Array(code.buffer, 0, Math.floor(code.length/8));
+            for (let i = 1; i < bb.length; i++) {
+                bb[0] ^= bb[i];
+            }
+            return "" + bb[0] + suffix;
+        } catch (e) {
+            console.log(`url "${url}"\n ${e}`);
+            return "";
         }
-        return "" + bb[0] + suffix;
     }
 
-/*
- async getCache(url, get = true, name, size = 300) {
-        return {name: url};
- }
- */
+    /*
+     async getCache(url, get = true, name, size = 300) {
+            return {name: url};
+     }
+     */
     /**
      * get and cache - stores a local compressed copy of a picture
      * @param {string} url Source pic
@@ -63,12 +68,12 @@ class Cache {
      * @param {string} name [opt]
      * @param {number} size [opt] required width default 300px
      * @returns {pic ArrayBuffer, name}
-  */   
+  */
     async getCache(url, get = true, name, size = 300) {
-        if (url.indexOf("//")==0) url = "https:"+url; // fix bluestone
+        if (url.indexOf("//") == 0) url = "https:" + url; // fix bluestone
         let hashName = name || this.#hashUrl(url);
         //this.#context.log(hashName);
-        let storeName = (await this.#storer.has(hashName))?.name ||""; // may have suffix appended
+        let storeName = (await this.#storer.has(hashName))?.name || ""; // may have suffix appended
         let wasCached = false;
         if (!storeName) {
             //this.#context.log("not got " + hashName);
@@ -78,10 +83,10 @@ class Cache {
                 const fileType = blob.type;
                 const arrayBuffer = await blob.arrayBuffer();
                 const resized = await sharp(arrayBuffer).resize({ width: size || this.#picSize }).toBuffer();
-                if (storeName.indexOf('.')<0) {
-                    if (fileType.indexOf("jp")>0) storeName += ".jpg";
-                    else if (fileType.indexOf("png")>0) storeName += ".png";
-                    else if (fileType.indexOf("gif")>0) storeName += ".gif";
+                if (storeName.indexOf('.') < 0) {
+                    if (fileType.indexOf("jp") > 0) storeName += ".jpg";
+                    else if (fileType.indexOf("png") > 0) storeName += ".png";
+                    else if (fileType.indexOf("gif") > 0) storeName += ".gif";
                     else this.#context.log("File type:" + fileType);
                 }
                 await this.#storer.put(storeName, fileType, resized);

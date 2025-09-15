@@ -206,6 +206,28 @@ let handlers = [];
     return r;
 }).friendly = "Fishguard Festival";
 
+(handlers["filmonsunday"] = async () => {
+    let r = [];
+    try {
+        let sourceUrl = "https://filmonsunday.co.uk";
+        let source = await ftext(sourceUrl);
+        let eventSection = m(source, /<article[^>]*portfolio.*?>(.*)<\/article>/s);
+        let events = eventSection.match(/<li .*?>.*?<\/li>/gs);
+        events.forEach(event => {
+            let ri = {};
+            ri.image = m(event, /src="(https:.*?)"/s);
+            ri.title = m(event, /eg-film-grid-element-0.*?>(.*?)<\/div>/s);
+            ri.date = m(event, /eg-film-grid-element-25.*?>(.*?)<\/div>/s);
+            ri.dt = new Date(datex(ri.date)).valueOf();
+            ri.category = "film";
+            ri.url = m(event, /href="(https:\/\/filmon.*?)"/s);
+            ri.venue = "Templeton Village Hall";
+            r.push(ri);
+        });
+    } catch (e) { r.push({ e: e.toString() }); console.log(e); }
+    return r;
+}).friendly = "Film On Sunday";
+
 
 (handlers["narberthjazz"] = async () => {
     let r = [];
@@ -223,6 +245,7 @@ let handlers = [];
                 let title = m(header, /<h3.*?>(.*?)<\/h3>/s);
                 ri.url = m(title, /href="(.*?)"/s) || "";
                 ri.title = m(title, /title="(.*?)"/s); //title.replace(/<.*?>/gs, "");
+                ri.category = "live";
                 ri.venue = "The Plas, Narberth|Y Plas, Arberth";
                 let address = m(event, /<address.*?>(.*?)<\/address>/s);
                 let venue = m(address, /venue-title.*?>(.*?)</s);

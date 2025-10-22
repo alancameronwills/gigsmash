@@ -64,7 +64,14 @@ async function collect(context) {
     // Cache the images and replace their URLs with our caches:
     await replaceImageUrls(showsUnduplicated);
 
-    let package = { promoters: handlers, categories, shows: showsUnduplicated, toDo, faults, date: Date.now() };
+    let package = {
+        promoters: handlers,
+        categories,
+        shows: showsUnduplicated,
+        toDo,
+        faults,
+        date: Date.now()
+    };
 
     // Save the list:
     await storer.put("events.json", null, JSON.stringify(package, null, "  "));

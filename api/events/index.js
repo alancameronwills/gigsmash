@@ -1,3 +1,5 @@
+const DMhmformat = { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Europe/London" };
+const DMYformat = { weekday: "short", day: "numeric", month: "short", year: "numeric" };
 
 function attr(s, cls) {
     return s.match(new RegExp(`<div[^>]+class=['"]${cls}['"].*?>(.*?)</div>`, "s"))?.[1]?.replace(/<div.*?>/, "") || "";
@@ -418,7 +420,8 @@ let handlers = [];
 
 (handlers["haverhub"] = async () => {
     let source = await ftext("https://haverhub.org.uk/events/");
-    let shows = source.split(/<article /s);
+    let showList = m(source, /<div [^>]*tribe-events-pro-photo.*?>.*?<ul.*?>(.*)<\/ul>/s);
+    let shows = showList.split(/<li.*?>/s);
     let r = [];
     shows.forEach(show => {
         let ri = {};
@@ -660,13 +663,11 @@ let ticketsolve = async (tsid, categoryMap, venueNameFilter = null) => {
                                 eventAttributes[eventAttribute].push(date);
                             }
                         });
-                        const options = { weekday: "short", day: "numeric", month: "short", year: "numeric" };
-                        const timeOptions = { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Europe/London" };
 
                         let dateRange = (startDate == endDate)
-                            ? new Date(startDate).toLocaleString("en-GB", timeOptions)
-                            : "" + new Date(startDate).toLocaleString("en-GB", timeOptions)
-                            + " - " + new Date(endDate).toLocaleString("en-GB", options);
+                            ? new Date(startDate).toLocaleString("en-GB", DMhmformat)
+                            : "" + new Date(startDate).toLocaleString("en-GB", DMhmformat)
+                            + " - " + new Date(endDate).toLocaleString("en-GB", DMYformat);
                         let specials = [];
                         Object.keys(eventAttributes).forEach(k => {
                             specials.push(k + ": " + eventAttributes[k]
@@ -711,18 +712,45 @@ let ticketsolve = async (tsid, categoryMap, venueNameFilter = null) => {
 }).friendly = "St Davids Cathedral";
 */
 
+
+(handlers["dyfed"] = async () => {
+    let r = [];
+    try {
+    const json = await ftext("https://dyfedchoir.co.uk/events.json");
+    const strip = json.replace(/\/\*.*?\*\//gs, "").replace(/\s+/," ");
+    const eventList = JSON.parse(strip);
+    if (eventList && eventList.length>0) {
+        r = eventList.map(event => {
+            let dt = new Date(event['date-utc']);
+            return {
+                title: event.title,
+                image: event.image,
+                url: event.book,
+                venue: event.venue,
+                subtitle: event.info,
+                text: event.description,
+                dt: dt.valueOf(),
+                date: dt.toLocaleDateString("en-GB", DMhmformat),
+                category: "live"
+            }
+        });
+    }
+    } catch (e){};
+
+    return r;
+}).friendly = "Cor Dyfed";
+
 let gigio = async (source, defaultVenue = "") => {
     let r = [];
     try {
         const response = await ftext(source);
         const json = m(response, /<pre id='gigiau'.*?>(.*?)<\/pre>/s);
         const events = JSON.parse(json);
-        const options = { weekday: "short", day: "numeric", month: "short", year: "numeric" };
         r = events.map(event => {
-            let dateRange = new Date(event.meta.dtstart).toLocaleString("en-GB", options);
+            let dateRange = new Date(event.meta.dtstart).toLocaleString("en-GB", DMYformat);
             if (event.meta.dtstart != event.meta.dtend) {
                 dateRange += " - ";
-                dateRange += new Date(event.meta.dtend).toLocaleString("en-GB", options);
+                dateRange += new Date(event.meta.dtend).toLocaleString("en-GB", DMYformat);
             }
             return {
                 title: langSplit(event.title),

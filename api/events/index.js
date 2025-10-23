@@ -697,6 +697,49 @@ let ticketsolve = async (tsid, categoryMap, venueNameFilter = null) => {
     return r;
 };
 
+/* TicketSource prohibits bots from extracting info, so this doesn't work! */
+let ticketsource = async (tsid) => {
+    let html = await ftext(`https://www.ticketsource.co.uk/${tsid}`);
+    let eventsSection = m(html, /<section [^>]*id="events".*?>(.*?)<\/section>/s);
+    let eventsBlocks = eventsSection.split(/<div[^>]*eventRow.*?>/);
+    let now = new Date().valueOf();
+    let r = [];
+    eventsBlocks.forEach(block => {
+        try {
+            let titleDiv = m(block,/<div [^>]*eventTitle.*?>(.*?)<\/div>/s);
+            let title = m(titleDiv, /<span[^>]*"name".*?>(.*?)</s);
+            let dateDiv = m(block, /(<div[^>]*startDate.*?<\/div>)/s);
+            let event = {
+                title: title,
+                image: m(block, /src="(.*?)"/s),
+                url: `https://ticketsource.co.uk${m(titleDiv, /href="(.*?)"/s)}`,
+                date: dateDiv.replaceAll(/<.*?>\s*/gs,""),
+                dt: new Date(m(dateDiv, /content="(.*?)"/s)).valueOf(),
+                venue: m(block, /<div[^>]*venueAddress.*?>(.*?)<\/span>/s).replaceAll(/<.*?>/gs, ""),
+                category: title.indexOf("NTLive")>=0 ? "broadcast" : "live"
+            };
+            if (event.title && event.dt && event.dt > now) {
+                r.push(event);
+            }
+        } catch(e) {
+            r.push({e:e.toString()});
+        }
+    });
+    for (let i=0, j=1; j<r.length; j++) {
+        if (r[i].url == r[j].url) {
+            r[i].endDate = r[j].date;
+            r[j].dup = true;
+        } else {
+            i = j;
+        }
+    }
+    r.forEach(event => {
+        if (event.endDate) {
+            event.date = `${event.date} - ${event.endDate}`;
+        }
+    });
+    return r.filter(event => !event.dup);
+};
 
 (handlers["mwldan"] = async () => {
     return await ticketsolve("mwldan", { broadcast: /Broadcast/, live: /Live/, film: /Cinema|TMFS/ }, n => n.replace(/\s*[0-9]/, ""));
@@ -711,6 +754,12 @@ let ticketsolve = async (tsid, categoryMap, venueNameFilter = null) => {
     return await ticketsolve("stdavidscathedral", { live: /./ });
 }).friendly = "St Davids Cathedral";
 */
+
+/* Doesn't work from server, prohibited by TicketSource */
+(handlers["_attic"] = async () => {
+    return await ticketsource("attic");
+}).friendly = "Attic Newcastle Emlyn";
+
 
 
 (handlers["dyfed"] = async () => {
@@ -761,7 +810,7 @@ let gigio = async (source, defaultVenue = "") => {
                 subtitle: langSplit(event.meta.dtinfo || ""),
                 dt: new Date(event.meta.dtstart).valueOf(),
                 date: dateRange,
-                category: "live"
+                category: (event.title.indexOf("NTLive")<0 ? "live" : "broadcast")
             }
         })
     } catch (e) { console.log(e.toString()) }
@@ -877,7 +926,7 @@ module.exports = async function (context, req) {
         } else {
             let kk = Object.keys(handlers);
             r = {};
-            kk.forEach(k => r[k] = handlers[k].friendly || k);
+            kk.forEach(k => { if (k.indexOf("_")!=0) {r[k] = handlers[k].friendly || k; }});
         }
         context.res = {
             body: JSON.stringify(r),

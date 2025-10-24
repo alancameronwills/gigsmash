@@ -54,12 +54,12 @@ a:link {
     overflow: hidden;
 }
 
-.dateHeading.hide {
+.dateHeading.hide, .dateHeading.unsearch  {
     height: 0;
     padding: 0;
 }
 
-.show.hide {
+.show.hide, .show.unsearch {
     width: 0;
     height: 0;
     padding: 0;
@@ -112,20 +112,33 @@ a:link {
     opacity: 20%;
 }
 
-#favoriteButton {
-    margin-left: 1em;
-    width: 1em;
+#sideButtons>div {
+    width: 2em;
+    height: 2em;
     position: relative;
+    font-size:large;
 }
+
+#sideButtons>div::after {
+    position: absolute;
+    scale: 1.4;
+} 
 
 #favoriteButton::after {
     content: "😊";
-    position: absolute;
-    scale: 1.4;
+}
+
+#searchButton::after {
+    content: "🔍";
 }
 
 #favoriteButton:hover::after {
     background-color: yellow;
+    border-radius: 50%;
+}
+
+#searchButton:hover::after {
+    transform: scale(1.2);
     border-radius: 50%;
 }
 
@@ -205,15 +218,27 @@ a:link {
 }
 
 #sideButtons {
-    display: flex;
-    column-gap: 10px;
-    padding: 0 6px 1px 2px;
     position: fixed;
     top: 40px;
-    right: 10px;
+    right: 4px;
     border-radius: 4px;
     font: var(--menufont);
     z-index: 2;
+}
+
+#searchField:not(.reveal) {
+    display:none;
+}
+#searchField {
+    top: 10px;
+    left: 25vw;
+    position: fixed;
+    background-color: dodgerblue;
+    padding: 2px;
+    border-radius: 4px;
+}
+#searchField>input {
+    width: 40vw;
 }
 
 

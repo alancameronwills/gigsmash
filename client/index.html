@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-gb">
+<!-- 2025-10-24 -->
 
 <head>
     <meta charset="UTF-8">
@@ -23,13 +24,31 @@
             location.replace(location.href.replace("http:", "https:"));
         }
 
+        var platform = "azure";
+        if (location.host == "localhost" && !location.search.match(/server/)) {
+            platform = "local";
+        } else if (location.search.match(/azure/)) {
+            platform = "azure";
+        } else if (location.search.match(/aws/)) {
+            platform = "aws";
+        }
+        var data = {
+            local: "",
+            azure: "https://pantywylan.blob.core.windows.net/gigsmash/client",
+            aws: "https://gigsmash-events-prod.s3.eu-west-2.amazonaws.com/client"
+        }[platform];
+        var api = {
+            local: "",
+            azure: "https://pantywylan-2.azurewebsites.net/api",
+            aws: "https://0qa9ai0tq5.execute-api.eu-west-2.amazonaws.com"
+        }[platform];
+
         var events = [];
-        var data = "https://pantywylan.blob.core.windows.net/gigsmash/client";
 
         class CodeCounter {
             static #zcode = 0;
             static #scrollCount = 0;
-            static #counter = "https://pantywylan-2.azurewebsites.net/api/counter";
+            static #counter = `${api}/counter`;
             static #scrollCounter(d, e) {
                 if (CodeCounter.#scrollCount++ == 10) {
                     document.removeEventListener("scroll", CodeCounter.#scrollCounter);
@@ -52,8 +71,6 @@
         })();
 
         async function go() {
-            // Dev version is all on one machine:
-            if (location.host == "localhost") data = "";
             if (location.href.indexOf("#clear") >= 0) {
                 //To do this: Add "#clear" to the URL and then reload
                 localStorage.clear();
@@ -481,7 +498,8 @@
         }
         function setSideButtons() {
             let sideButtonHtml = [];
-            sideButtonHtml.push("<div id='favoriteButton' onclick='Favorites.scrollToNext()'></div>");
+            sideButtonHtml.push("<div id='favoriteButton' onclick='Favorites.scrollToNext()'>&nbsp;</div>");
+            sideButtonHtml.push("<div id='searchButton' onclick='TextFilter.toggle()'>&nbsp;</div>");
             document.querySelector("#sideButtons").innerHTML = sideButtonHtml.join("\n");
         }
 
@@ -573,6 +591,59 @@
                 }
             }
         }
+        class TextFilter {
+            static #searchInput = null;
+            static #searchInputTimeout = null;
+            static toggle(force) {
+                let t = document.querySelector("#searchField");
+                if (!TextFilter.#searchInput) {
+                    TextFilter.#searchInput = t.querySelector("input");
+                }
+                t.classList.toggle("reveal", force);
+                if (!t.classList.contains("reveal")) {
+                    TextFilter.clear();
+                } else {
+                    TextFilter.#searchInput.focus();
+                }
+            }
+            static clear() {
+                TextFilter.#searchInput.value = "";
+                TextFilter.go();
+            }
+            static go() {
+                if (TextFilter.#searchInputTimeout) {
+                    clearTimeout(TextFilter.#searchInputTimeout);
+                    TextFilter.#searchInputTimeout = null;
+                }
+                let v = TextFilter.#searchInput.value.trim();
+                let showsAndDates = document.querySelectorAll("#table>*");
+                if (v.length > 2) {
+                    let recentDateHeader = null;
+                    let visibleShowsInDate = false;
+                    showsAndDates.forEach(showOrDate => {
+                        if (showOrDate.classList.contains("show")) {
+                            let hideIt = !showOrDate.innerText.match(new RegExp(v, "i"));
+                            showOrDate.classList.toggle("unsearch", hideIt);
+                            if (!hideIt) visibleShowsInDate = true;
+                        } else {
+                            if (recentDateHeader) {
+                                recentDateHeader.classList.toggle("unsearch", !visibleShowsInDate);
+                            }
+                            recentDateHeader = showOrDate;
+                            visibleShowsInDate = false;
+                        }
+                    });
+                    if (recentDateHeader) {
+                        recentDateHeader.classList.toggle("unsearch", !visibleShowsInDate);
+                    }
+                } else if (v.length == 0) {
+                    showsAndDates.forEach(showOrDate => showOrDate.classList.toggle("unsearch", false));
+                    TextFilter.#searchInputTimeout = setTimeout(() => {
+                        TextFilter.toggle(false);
+                    }, 10000);
+                }
+            }
+        }
     </script>
 </head>
 
@@ -584,13 +655,17 @@
     <div id="space">&nbsp;</div>
     <div id="sideButtons">
     </div>
+    <div id="searchField">
+        <input type="text" onkeyup="TextFilter.go()" />
+        <button onclick="TextFilter.clear()">X</button>
+    </div>
     <div class="slideout" onclick="PromoterFilters.toggleMenu()">
         <div class="slideout-content">
             <div id="filters"></div>
             <div id="promoterMenu"></div>
         </div>
     </div>
-    <div id="menu" onclick="PromoterFilters.toggleMenu()">
+    <div id="menu" onclick="PromoterFilters.toggleMenu(); TextFilter.toggle(false);">
         <svg viewBox='0 0 10 8' width='18'>
             <path d='M1 1h8M1 4h 8M1 7h8' stroke-width='2' stroke-linecap='round' />
         </svg>
@@ -720,16 +795,16 @@
                 Save Gigiau as an app on your phone:
                 <ul>
                     <li>
-                        
+
                         If yours is an <b>Android</b> phone, tap the three dots at top right.
-                        <img src="threedots.jpg"/>
-                        
+                        <img src="threedots.jpg" />
+
                     </li>
                     <li>
                         If it's an <b>iPhone</b>, look at the the bottom of the screen and tap the box with the arrow.
-                        <img src="iphone-export.png"/>
+                        <img src="iphone-export.png" />
                         Then scroll the options that appear.
-                        <br/>
+                        <br />
                     </li>
                     <li>
                         Tap <b>Add to Home Screen</b>

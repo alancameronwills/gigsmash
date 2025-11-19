@@ -7,12 +7,33 @@
     <link rel="icon" type="image/x-icon" href="/gigiau.ico">
     <title>Collection runner</title>
     <script>
+        
+        var platform = "aws";
+        if (location.host == "localhost" && !location.search.match(/server/)) {
+            platform = "local";
+        } else if (location.search.match(/azure/)) {
+            platform = "azure";
+        } else if (location.search.match(/aws/)) {
+            platform = "aws";
+        }
+        
+        var data = {
+            local: "",
+            azure:"https://pantywylan.blob.core.windows.net/gigsmash/client",
+            aws:"https://gigsmash-events-prod.s3.eu-west-2.amazonaws.com/client"
+        }[platform];
+        var api = {
+            local:"/api",
+            azure:"https://pantywylan-2.azurewebsites.net/api",
+            aws: "https://0qa9ai0tq5.execute-api.eu-west-2.amazonaws.com"
+        } [platform];
+
         async function f(p="") {
             const params = (p ? '?'+p : '');
             const msg = document.getElementById("msg");
             const status = document.getElementById("status");
             status.style.backgroundColor = "pink";
-            let m = (await fetch(`/api/collect${params}`).then(j => j.text())).replace(/\\n/g, "\n").replace(/\\\\/g, "\\");
+            let m = (await fetch(`${api}/collect${params}`).then(j => j.text())).replace(/\\n/g, "\n").replace(/\\\\/g, "\\");
             if (m.indexOf("status")>=0) status.innerText = m;
             else {
                 msg.innerText += m;
